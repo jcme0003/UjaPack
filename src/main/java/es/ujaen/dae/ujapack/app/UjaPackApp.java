@@ -22,6 +22,6 @@ public class UjaPackApp {
         ApplicationContext context = servidor.run(args);
         
         ServicioUjaPack servicio = context.getBean(ServicioUjaPack.class);
-        servicio.nuevoEnvio();
+        for(int i = 0; i < 100; i++) servicio.nuevoEnvio();
     }
 }
