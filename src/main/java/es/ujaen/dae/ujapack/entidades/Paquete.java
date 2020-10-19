@@ -9,6 +9,6 @@ package es.ujaen.dae.ujapack.entidades;
  *
  * @author joseo
  */
-public class Prueba {
+public class Paquete {
     
 }
