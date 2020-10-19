@@ -30,11 +30,19 @@ public class Envio {
     /** Cuentas asociadas al cliente */
     //List<PasoPuntoControl> ruta;
     
-    public Envio(int localizador){
+    /** Cliente asociado a remitente */
+    private Cliente remitente;
+    /** Cliente asociado a destinatario */
+    private Cliente destinatario;
+    
+    public Envio(int localizador, Cliente remitente, Cliente destinatario){
         this.localizador = localizador;
         
         //paquetes = new ArrayList<>();
         //ruta = new ArrayList<>();
+        
+        this.remitente = remitente;
+        this.destinatario = destinatario;
     }
 
     /**
@@ -92,6 +100,34 @@ public class Envio {
     public void setImporte(float importe) {
         this.importe = importe;
     }
+
+    /**
+     * @return el remitente
+     */
+    public Cliente getRemitente() {
+        return remitente;
+    }
+
+    /**
+     * @param remitente el remitente a insertar
+     */
+    public void setRemitente(Cliente remitente) {
+        this.remitente = remitente;
+    }
+
+    /**
+     * @return el destinatario
+     */
+    public Cliente getDestinatario() {
+        return destinatario;
+    }
+
+    /**
+     * @param destinatario el destinatario a insertar
+     */
+    public void setDestinatario(Cliente destinatario) {
+        this.destinatario = destinatario;
+    }
     
     /**
      * Calcula importe del envio
@@ -100,4 +136,6 @@ public class Envio {
     public float calcularImporte(){
         return 0;
     }
+    
+    
 }
