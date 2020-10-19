@@ -42,10 +42,12 @@ public class ServicioUjaPack {
     public void nuevoEnvio(){
         // Generar localizador de 10 dígitos aleatorio y no usado previamente
         int localizador;
+        Long min = 1000000000L;
+        Long max = 9999999999L;
         do {
-            localizador = (int)((new Random().nextLong() % 9000000000L) + 1000000000L);
+            localizador = (int)Math.floor(Math.random()*(max-min+1)+min);
         } while(envios.containsKey(localizador));
-        
+        envios.put(localizador, new Envio(localizador));
         System.out.println(localizador);
         
         /*if(envios.containsKey(localizador)){
