@@ -5,10 +5,11 @@
  */
 package es.ujaen.dae.ujapack.servicios;
 
-import es.ujaen.dae.ujapack.entidades.CentroLogistico;
+import es.ujaen.dae.ujapack.entidades.puntocontrol.CentroLogistico;
 import es.ujaen.dae.ujapack.entidades.Cliente;
 import es.ujaen.dae.ujapack.entidades.Envio;
-import es.ujaen.dae.ujapack.excepciones.LocalizadorYaRegistrado;
+import es.ujaen.dae.ujapack.objetosvalor.Paquete;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,9 @@ public class ServicioUjaPack {
     /** Mapa con la lista de centros logisticos ordenada por codigo id del centro */
     Map<String, CentroLogistico> centrosLogisticos;
     
+    /**
+     * Constructor del servicio UjaPack
+     */
     public ServicioUjaPack(){
         envios = new TreeMap<>();
         centrosLogisticos = new TreeMap<>();
@@ -38,13 +42,14 @@ public class ServicioUjaPack {
     
     /**
      * Crear un nuevo envio en el sistema y calcular su ruta
+     * @param paquetes paquetes que componen el envio
      * @param remitente cliente que realiza el envio
      * @param destinatario cliente que recibira el/los paquete/s
      */
-    public void nuevoEnvio(Cliente remitente, Cliente destinatario){
+    public void nuevoEnvio(List<Paquete> paquetes, Cliente remitente, Cliente destinatario){
         int localizador = generaLocalizador();
         
-        envios.put(localizador, new Envio(localizador, remitente, destinatario));
+        envios.put(localizador, new Envio(localizador, remitente, destinatario, paquetes));
     }
     
     /**
