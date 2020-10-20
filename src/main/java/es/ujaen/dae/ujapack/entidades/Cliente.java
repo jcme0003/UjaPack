@@ -18,16 +18,29 @@ public class Cliente {
     private String apellidos;
     /** Direccion del cliente */
     private String direccion;
+    /** Provincia del cliente */
+    private String provincia;
     /** Telefono del cliente */
     private String telefono;
     /** Email del cliente */
     private String email;
     
-    public Cliente(String dni, String nombre, String apellidos, String direccion, String telefono, String email){
+    /**
+     * Constructor de cliente
+     * @param dni dni (identificador) del cliente
+     * @param nombre nombre del cliente
+     * @param apellidos apellidos del cliente
+     * @param direccion direccion del cliente
+     * @param provincia provincia del cliente
+     * @param telefono telefono de contacto del cliente
+     * @param email email de contacto del cliente
+     */
+    public Cliente(String dni, String nombre, String apellidos, String direccion, String provincia, String telefono, String email){
         this.dni = dni;
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.direccion = direccion;
+        this.provincia = provincia;
         this.telefono = telefono;
         this.email = email;
     }
@@ -86,6 +99,20 @@ public class Cliente {
      */
     public void setDireccion(String direccion) {
         this.direccion = direccion;
+    }
+
+    /**
+     * @return la provincia
+     */
+    public String getProvincia() {
+        return provincia;
+    }
+
+    /**
+     * @param provincia la provincia a insertar
+     */
+    public void setProvincia(String provincia) {
+        this.provincia = provincia;
     }
 
     /**
