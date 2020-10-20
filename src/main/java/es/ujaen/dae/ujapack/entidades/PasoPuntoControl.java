@@ -5,6 +5,7 @@
  */
 package es.ujaen.dae.ujapack.entidades;
 
+import es.ujaen.dae.ujapack.entidades.puntocontrol.PuntoControl;
 import java.time.LocalDate;
 
 /**
@@ -17,12 +18,15 @@ public class PasoPuntoControl {
     /** Fecha de salida del punto de control */
     private LocalDate fechaSalida;
     /** Punto de control */
-    //private PuntoControl puntoDeControl;
+    private PuntoControl puntoDeControl;
     
+    /**
+     * Constructor de paso por punto de control
+     */
     public PasoPuntoControl(){
         this.fechaLlegada = LocalDate.now();
         this.fechaSalida = LocalDate.now();
-        //this.puntoDeControl = null;
+        this.puntoDeControl = null;
     }
 
     /**
@@ -51,6 +55,20 @@ public class PasoPuntoControl {
      */
     public void setFechaSalida(LocalDate fechaSalida) {
         this.fechaSalida = fechaSalida;
+    }
+
+    /**
+     * @return el puntoDeControl
+     */
+    public PuntoControl getPuntoDeControl() {
+        return puntoDeControl;
+    }
+
+    /**
+     * @param puntoDeControl el puntoDeControl a insertar
+     */
+    public void setPuntoDeControl(PuntoControl puntoDeControl) {
+        this.puntoDeControl = puntoDeControl;
     }
     
     /**
