@@ -8,6 +8,7 @@ package es.ujaen.dae.ujapack.servicios;
 import es.ujaen.dae.ujapack.entidades.puntocontrol.CentroLogistico;
 import es.ujaen.dae.ujapack.entidades.Cliente;
 import es.ujaen.dae.ujapack.entidades.Envio;
+import es.ujaen.dae.ujapack.entidades.puntocontrol.Oficina;
 import es.ujaen.dae.ujapack.objetosvalor.Paquete;
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,9 +16,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.TreeMap;
 import java.util.logging.Level;
@@ -76,8 +79,9 @@ public class ServicioUjaPack {
             String id;
             String nombre;
             String localizacion;
+            String provincia;
+            int conexion;
             List<String> provincias = new ArrayList<>();
-            List<Integer> conexiones = new ArrayList<>();
             
             // Cargamos datos de cada identificador del Json "1", "2", ... "10"
             for(int i = 1; i <= 10; i++){
@@ -90,25 +94,61 @@ public class ServicioUjaPack {
                 localizacion = elem.getString("localización");
 //                System.out.println(localizacion);
                 
+                // Oficinas correspondientes a este centro logistico
+                List<Oficina> oficinas = new ArrayList<>();
                 // Cargamos las provincias correspondientes al identificador actual i
                 arr = elem.getJSONArray("provincias");
                 for(int j = 0; j < arr.length(); j++){
-                    provincias.add(arr.getString(j));
+                    provincia = arr.getString(j);
 //                    System.out.println(arr.getString(j));
+                    // Añadir a array de provincias y crear Oficina (provincia) si no esta creada
+                    if(!provincias.contains(arr.getString(j))){
+                        provincias.add(provincia);
+                        oficinas.add(new Oficina(provincia));
+                    }
                 }
                 
+                // Conexiones correspondientes a este centro logistico
+                List<Integer> conexiones = new ArrayList<>();
                 // Cargamos las conexiones correspondientes al identificador actual i
                 arr = elem.getJSONArray("conexiones");
                 for(int j = 0; j < arr.length(); j++){
-                    conexiones.add(arr.getInt(j));
+                    conexion = arr.getInt(j);
+                    if(!conexiones.contains(conexion)){
+                        conexiones.add(arr.getInt(j));
+                    }
 //                    System.out.println(arr.getInt(j));
                 }
+                
+                // Creamos nuestro centro logistico y lo añadir a la lista de centros logisticos del sistema
+                CentroLogistico centroLogistico = new CentroLogistico(Integer.parseInt(id), nombre, localizacion, oficinas, conexiones);
+                centrosLogisticos.put(id, centroLogistico);
             }
            
         } catch (FileNotFoundException e){
             System.out.println(e.getMessage());
         }
         
+    }
+    
+    /**
+     * Lista los centros logisticos de nuestra aplicacion
+     */
+    public void listarCentrosLogisticos(){
+        Iterator it = centrosLogisticos.entrySet().iterator();
+        
+        while(it.hasNext()){
+            Map.Entry e = (Map.Entry<String, CentroLogistico>)it.next();
+            CentroLogistico cl = centrosLogisticos.get(e.getKey());
+            System.out.println(e.getKey() + " " + cl.getNombre() + " " + cl.getConexiones());
+            System.out.println("Oficinas:");
+            System.out.println("----------------------------:");
+            List<Oficina> of = cl.getOficinas();
+            for(int i = 0; i < of.size(); i++){
+                System.out.println(of.get(i).getNombreProvincia());
+            }
+            System.out.println("----------------------------:");
+        }
     }
     
     /**

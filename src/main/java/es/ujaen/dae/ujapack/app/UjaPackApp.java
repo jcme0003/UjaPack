@@ -23,6 +23,7 @@ public class UjaPackApp {
         
         ServicioUjaPack servicio = context.getBean(ServicioUjaPack.class);
         servicio.cargaJSon("redujapack.json");
+        servicio.listarCentrosLogisticos();
 //        servicio.generaLocalizador();
     }
 }
