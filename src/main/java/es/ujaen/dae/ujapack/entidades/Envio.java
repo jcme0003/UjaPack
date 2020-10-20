@@ -5,6 +5,8 @@
  */
 package es.ujaen.dae.ujapack.entidades;
 
+
+import es.ujaen.dae.ujapack.objetosvalor.Paquete;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -25,7 +27,7 @@ public class Envio {
     private float importe;
     
     /** Paquetes asociadas al envio */
-    //List<Paquete> paquetes;
+    List<Paquete> paquetes;
     
     /** Cuentas asociadas al cliente */
     //List<PasoPuntoControl> ruta;
@@ -131,10 +133,13 @@ public class Envio {
     
     /**
      * Calcula importe del envio
+     * 
      * @return importe que cuesta el envio
      */
-    public float calcularImporte(){
-        return 0;
+    public float calcularImporte(List<Paquete> lp){
+        importe = 0.0f;
+        //importe = peso(kg) * dim(cm2) * (num_puntos_control + 1) / 1000;
+        return importe;
     }
     
     

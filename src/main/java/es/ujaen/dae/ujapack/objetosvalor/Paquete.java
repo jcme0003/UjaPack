@@ -10,5 +10,15 @@ package es.ujaen.dae.ujapack.objetosvalor;
  * @author joseo
  */
 public class Paquete {
+    /** Peso del paquete*/
+    private float peso;
     
+    /** Altura en cm del paquete*/
+    private float altura;
+    
+    /** Anchura en cm del paquete*/
+    private float anchura;
+    
+    /** Profundidad en cm del paquete*/
+    private float profuncidad;
 }
