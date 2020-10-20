@@ -22,6 +22,8 @@ public class UjaPackApp {
         ApplicationContext context = servidor.run(args);
         
         ServicioUjaPack servicio = context.getBean(ServicioUjaPack.class);
-        servicio.generaLocalizador();
+        servicio.cargaJSon("redujapack.json");
+        servicio.listarCentrosLogisticos();
+//        servicio.generaLocalizador();
     }
 }
