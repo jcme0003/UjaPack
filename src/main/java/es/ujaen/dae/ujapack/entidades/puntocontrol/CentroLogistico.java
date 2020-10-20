@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package es.ujaen.dae.ujapack.entidades;
+package es.ujaen.dae.ujapack.entidades.puntocontrol;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,13 +12,17 @@ import java.util.List;
  * Centro logistico gestionado por ujapack
  * @author Jose Carlos Mena
  */
-public class CentroLogistico {
+public class CentroLogistico extends PuntoControl {
     /** Identificador del centro logistico */
     private String idCentro;
     
     /** Oficinas asociadas al centro logistico */
     List<Oficina> oficinas;
     
+    /**
+     * Constructor CentroLogistico
+     * @param idCentro identificador del centro logistico
+     */
     public CentroLogistico(String idCentro){
         this.idCentro = idCentro;
         

@@ -5,7 +5,9 @@
  */
 package es.ujaen.dae.ujapack.entidades;
 
+import es.ujaen.dae.ujapack.objetosvalor.Paquete;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,10 +15,18 @@ import java.util.List;
  * @author Jose Carlos Mena
  */
 public class Envio {
+    /** Enum que indicara el estado del envio */
+    public enum Estado{
+        PENDIENTE,  //aun no se ha enviado
+        TRANSITO,   //el paquete está en una oficina provincial o en un centro de logística
+        REPARTO,    //en el vehículo de reparto
+        ENTREGADO;  //entregado por el vehículo de reparto
+    }
+    
     /** Localizador del envio */
     private int localizador;
     /** Estado del pedido */
-    
+    private Estado estado;
     /** Fecha de llegada del envio */
     private LocalDate fechaLlegada;
     /** Hora de llegada del envio */
@@ -25,24 +35,35 @@ public class Envio {
     private float importe;
     
     /** Paquetes asociadas al envio */
-    //List<Paquete> paquetes;
-    
+    List<Paquete> paquetes;
     /** Cuentas asociadas al cliente */
-    //List<PasoPuntoControl> ruta;
+    List<PasoPuntoControl> ruta;
     
     /** Cliente asociado a remitente */
     private Cliente remitente;
     /** Cliente asociado a destinatario */
     private Cliente destinatario;
     
-    public Envio(int localizador, Cliente remitente, Cliente destinatario){
+    /**
+     * Constructor de envio
+     * @param localizador numero entero de 10 digitos (unico) generado aleatoriamente
+     * @param remitente cliente que realiza el envio
+     * @param destinatario cliente que recibira el envio
+     * @param paquetes lista de paquetes que componen el envio
+     */
+    public Envio(int localizador, Cliente remitente, Cliente destinatario, List<Paquete> paquetes){
         this.localizador = localizador;
+        this.estado = Estado.PENDIENTE;
+        this.fechaLlegada = LocalDate.MIN;
+        this.horaLlegada = LocalDate.MIN;
         
-        //paquetes = new ArrayList<>();
-        //ruta = new ArrayList<>();
+        this.paquetes = paquetes;
         
         this.remitente = remitente;
         this.destinatario = destinatario;
+        
+        this.ruta = calculaRuta();
+        this.importe = calculaImporte();
     }
 
     /**
@@ -57,6 +78,20 @@ public class Envio {
      */
     public void setLocalizador(int localizador) {
         this.localizador = localizador;
+    }
+
+    /**
+     * @return el estado
+     */
+    public Estado getEstado() {
+        return estado;
+    }
+
+    /**
+     * @param estado el estado a insertar
+     */
+    public void setEstado(Estado estado) {
+        this.estado = estado;
     }
 
     /**
@@ -131,11 +166,19 @@ public class Envio {
     
     /**
      * Calcula importe del envio
-     * @return importe que cuesta el envio
+     * @return importe que cuesta realizar el envio
      */
-    public float calcularImporte(){
+    private float calculaImporte(){
         return 0;
     }
     
+    /**
+     * Calcula ruta que debe seguir el envio
+     * @return ruta calcula para el envio
+     */
+    private List<PasoPuntoControl> calculaRuta(){
+        
+        return new ArrayList<>();
+    }
     
 }
