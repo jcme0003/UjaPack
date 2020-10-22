@@ -33,6 +33,8 @@ public class CentroLogistico extends PuntoControl {
      * @param conexiones
      */
     public CentroLogistico(int idCentro, String nombre, String localizacion, List<Oficina> oficinas, List<Integer> conexiones){
+//        super(idCentro, localizacion);
+        super();
         this.idCentro = idCentro;
         this.nombre = nombre;
         this.localizacion = localizacion;
