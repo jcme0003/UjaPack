@@ -10,8 +10,6 @@ package es.ujaen.dae.ujapack.entidades.puntocontrol;
  * @author Jose Carlos Mena
  */
 public class Oficina extends PuntoControl {
-    /** Identificador de oficina */
-//    private String idOficina;
     /** Nombre de provincia a la que corresponde esta oficina */
     private String nombreProvincia;
     
@@ -30,6 +28,8 @@ public class Oficina extends PuntoControl {
      * @param nombreProvincia nombre de provincia a la que pertenece la oficina
      */
     public Oficina(String nombreProvincia){
+//        super(nombreProvincia);
+        super();
         this.nombreProvincia = nombreProvincia;
     }
 

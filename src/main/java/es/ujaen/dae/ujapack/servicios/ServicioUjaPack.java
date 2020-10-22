@@ -10,6 +10,7 @@ import es.ujaen.dae.ujapack.entidades.Cliente;
 import es.ujaen.dae.ujapack.entidades.Envio;
 import es.ujaen.dae.ujapack.entidades.PasoPuntoControl;
 import es.ujaen.dae.ujapack.entidades.puntocontrol.Oficina;
+import es.ujaen.dae.ujapack.entidades.puntocontrol.PuntoControl;
 import es.ujaen.dae.ujapack.excepciones.ProvinciaDestinatarioNoValida;
 import es.ujaen.dae.ujapack.excepciones.ProvinciaRemitenteNoValida;
 import es.ujaen.dae.ujapack.objetosvalor.Paquete;
@@ -197,11 +198,17 @@ public class ServicioUjaPack {
      * @return ruta que debe seguir el paquete para llegar a su destino
      */
     private List<PasoPuntoControl> calculaRuta(String pRemitente, String pDestinatario){
+        // Comprueba si las provincias introducidas son validas
         provinciasValidas(pRemitente, pDestinatario);
+        
+        List<PasoPuntoControl> ruta = new ArrayList<>();
         
         // Tipo de envio 1
         if(pRemitente.equals(pDestinatario)){
             System.out.println("Envio tipo 1");
+            
+            PasoPuntoControl ppc = new PasoPuntoControl(buscaProvincia(pRemitente));
+            ruta.add(ppc);
         }
         
         // Tipo de envio 2
@@ -209,7 +216,12 @@ public class ServicioUjaPack {
             System.out.println("Envio tipo 2");
         }
         
-        return new ArrayList<>();
+        // Tipo de envio 3
+        if(!pRemitente.equals(pDestinatario) && !mismoCentroLogistico(pRemitente, pDestinatario)){
+            System.out.println("Envio tipo 3");
+        }
+        
+        return ruta;
     }
     
     /**
@@ -272,5 +284,27 @@ public class ServicioUjaPack {
         if(buscaCentroLogistico(pDestinatario) == -1){
             throw new ProvinciaDestinatarioNoValida();
         }
+    }
+    
+    
+    private Oficina buscaProvincia(String provincia){
+        Iterator it = centrosLogisticos.entrySet().iterator();
+        
+        Map.Entry e;
+        CentroLogistico cl;
+        List<Oficina> of;
+        
+        while(it.hasNext()){
+            e = (Map.Entry<String, CentroLogistico>)it.next();
+            cl = centrosLogisticos.get(e.getKey());
+            of = cl.getOficinas();
+            for(int i = 0; i < of.size(); i++){
+                if(provincia.equals(of.get(i).getNombreProvincia())){
+                    return of.get(i);
+                }
+            }
+        }
+        
+        return null;
     }
 }
