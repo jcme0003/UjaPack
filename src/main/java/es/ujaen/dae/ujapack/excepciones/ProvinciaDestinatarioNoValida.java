@@ -6,10 +6,11 @@
 package es.ujaen.dae.ujapack.excepciones;
 
 /**
- * Excepcion producida por intento de registro de localizador ya existente en el envio
- * @author Jose Carlos Mena
+ *
+ * @author Root
  */
-public class LocalizadorYaRegistrado extends RuntimeException {
-    public LocalizadorYaRegistrado() {
+public class ProvinciaDestinatarioNoValida extends RuntimeException {
+    public ProvinciaDestinatarioNoValida(){
+        
     }
 }
