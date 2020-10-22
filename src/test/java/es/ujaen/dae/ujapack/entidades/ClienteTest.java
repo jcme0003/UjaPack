@@ -9,6 +9,10 @@ import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+
 
 /**
  *
@@ -18,7 +22,7 @@ public class ClienteTest {
      public ClienteTest() {
     }
 
-//    @Test
+    @Test
     void testValidacionCliente() {
  
         Cliente cliente = new Cliente(
@@ -34,7 +38,7 @@ public class ClienteTest {
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Cliente>> violations = validator.validate(cliente);
                 
-//        Assertions.assertThat(violations).isEmpty();
+        Assertions.assertThat(violations).isEmpty();
     }
 
 }
