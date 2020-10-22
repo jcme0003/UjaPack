@@ -62,7 +62,7 @@ public class Envio {
         this.remitente = remitente;
         this.destinatario = destinatario;
         
-//        this.ruta = calculaRuta(remitente.getProvincia(), destinatario.getProvincia());
+        this.ruta = new ArrayList<>();
         this.importe = calculaImporte();
     }
 
@@ -199,22 +199,5 @@ public class Envio {
     private float calculaImporte(){
         return 0;
     }
-    
-    /**
-     * Calcula ruta que debe seguir el envio
-     * @return ruta calcula para el envio
-     */
-//    private List<PasoPuntoControl> calculaRuta(String pRemitente, String pDestinatario){
-//        // Misma provincia - Envio tipo 1
-//        if(pRemitente.equals(pDestinatario)){
-//            // 
-//            System.out.println("Envio tipo 1");
-//        }
-//        
-//        // Si el origen y destino están en distintas provincias gestionadas por el mismo centro de logística
-//        
-//        
-//        return new ArrayList<>();
-//    }
     
 }
