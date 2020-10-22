@@ -35,9 +35,9 @@ public class Envio {
     private float importe;
     
     /** Paquetes asociadas al envio */
-    List<Paquete> paquetes;
+    private List<Paquete> paquetes;
     /** Cuentas asociadas al cliente */
-    List<PasoPuntoControl> ruta;
+    private List<PasoPuntoControl> ruta;
     
     /** Cliente asociado a remitente */
     private Cliente remitente;
@@ -62,7 +62,7 @@ public class Envio {
         this.remitente = remitente;
         this.destinatario = destinatario;
         
-        this.ruta = calculaRuta();
+        this.ruta = new ArrayList<>();
         this.importe = calculaImporte();
     }
 
@@ -137,6 +137,34 @@ public class Envio {
     }
 
     /**
+     * @return the paquetes
+     */
+    public List<Paquete> getPaquetes() {
+        return paquetes;
+    }
+
+    /**
+     * @param paquetes the paquetes to set
+     */
+    public void setPaquetes(List<Paquete> paquetes) {
+        this.paquetes = paquetes;
+    }
+
+    /**
+     * @return the ruta
+     */
+    public List<PasoPuntoControl> getRuta() {
+        return ruta;
+    }
+
+    /**
+     * @param ruta the ruta to set
+     */
+    public void setRuta(List<PasoPuntoControl> ruta) {
+        this.ruta = ruta;
+    }
+
+    /**
      * @return el remitente
      */
     public Cliente getRemitente() {
@@ -170,15 +198,6 @@ public class Envio {
      */
     private float calculaImporte(){
         return 0;
-    }
-    
-    /**
-     * Calcula ruta que debe seguir el envio
-     * @return ruta calcula para el envio
-     */
-    private List<PasoPuntoControl> calculaRuta(){
-        
-        return new ArrayList<>();
     }
     
 }

@@ -5,6 +5,8 @@
  */
 package es.ujaen.dae.ujapack.entidades;
 
+import es.ujaen.dae.ujapack.entidades.puntocontrol.CentroLogistico;
+import es.ujaen.dae.ujapack.entidades.puntocontrol.Oficina;
 import es.ujaen.dae.ujapack.entidades.puntocontrol.PuntoControl;
 import java.time.LocalDate;
 
@@ -22,11 +24,22 @@ public class PasoPuntoControl {
     
     /**
      * Constructor de paso por punto de control
+     * @param oficina Oficina de origen o destino
      */
-    public PasoPuntoControl(){
-        this.fechaLlegada = LocalDate.now();
-        this.fechaSalida = LocalDate.now();
-        this.puntoDeControl = null;
+    public PasoPuntoControl(Oficina oficina){
+        this.fechaLlegada = LocalDate.MIN;
+        this.fechaSalida = LocalDate.MIN;
+        this.puntoDeControl = oficina;
+    }
+    
+    /**
+     * Constructor de paso por punto de control
+     * @param centroLogistico Centro logistico de origen, destino o intermediario/s
+     */
+    public PasoPuntoControl(CentroLogistico centroLogistico){
+        this.fechaLlegada = LocalDate.MIN;
+        this.fechaSalida = LocalDate.MIN;
+        this.puntoDeControl = centroLogistico;
     }
 
     /**
@@ -75,13 +88,13 @@ public class PasoPuntoControl {
      * Notificacion al sistema del paso por punto de control del envio
      */
     public void notificacionLlegada(){
-        
+        this.fechaLlegada = LocalDate.now();
     }
     
     /**
      * Notificacion al sistema de la salida por punto de control del envio
      */
     public void notificacionSalida(){
-        
+        this.fechaSalida = LocalDate.now();
     }
 }

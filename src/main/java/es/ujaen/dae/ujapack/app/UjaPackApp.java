@@ -5,7 +5,9 @@
  */
 package es.ujaen.dae.ujapack.app;
 
+import es.ujaen.dae.ujapack.entidades.Cliente;
 import es.ujaen.dae.ujapack.servicios.ServicioUjaPack;
+import java.util.ArrayList;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -22,6 +24,16 @@ public class UjaPackApp {
         ApplicationContext context = servidor.run(args);
         
         ServicioUjaPack servicio = context.getBean(ServicioUjaPack.class);
-        servicio.generaLocalizador();
+        servicio.cargaJSon("redujapack.json");
+        servicio.listarCentrosLogisticos();
+        
+//        servicio.provinciasValidas("Jaén", "Madrid");
+//        servicio.generaLocalizador();
+
+        Cliente cl1 = new Cliente("12345678A", "Paco", "Perez", "Calle falsa", "Jaén", "999000111", "email@email.com");
+        Cliente cl2 = new Cliente("87654321B", "Maria", "Muñoz", "Calle verdadera", "Jaén", "555666777", "gmail@gmail.com");
+        
+        servicio.nuevoEnvio(new ArrayList<>(), cl1, cl2);
+
     }
 }

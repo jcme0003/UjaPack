@@ -10,8 +10,6 @@ package es.ujaen.dae.ujapack.entidades.puntocontrol;
  * @author Jose Carlos Mena
  */
 public class Oficina extends PuntoControl {
-    /** Identificador de oficina */
-    private String idOficina;
     /** Nombre de provincia a la que corresponde esta oficina */
     private String nombreProvincia;
     
@@ -20,24 +18,34 @@ public class Oficina extends PuntoControl {
      * @param idOficina identificador de la oficina
      * @param nombreProvincia nombre de provincia a la que pertenece la oficina
      */
-    public Oficina(String idOficina, String nombreProvincia){
-        this.idOficina = idOficina;
+//    public Oficina(String idOficina, String nombreProvincia){
+//        this.idOficina = idOficina;
+//        this.nombreProvincia = nombreProvincia;
+//    }
+    
+    /**
+     * Constructor de oficina
+     * @param nombreProvincia nombre de provincia a la que pertenece la oficina
+     */
+    public Oficina(String nombreProvincia){
+//        super(nombreProvincia);
+        super();
         this.nombreProvincia = nombreProvincia;
     }
 
     /**
      * @return el identificador de la oficina
      */
-    public String getIdOficina() {
-        return idOficina;
-    }
+//    public String getIdOficina() {
+//        return idOficina;
+//    }
 
     /**
      * @param idOficina el identificador de la oficina a insertar
      */
-    public void setIdOficina(String idOficina) {
-        this.idOficina = idOficina;
-    }
+//    public void setIdOficina(String idOficina) {
+//        this.idOficina = idOficina;
+//    }
 
     /**
      * @return el nombre de la provincia
