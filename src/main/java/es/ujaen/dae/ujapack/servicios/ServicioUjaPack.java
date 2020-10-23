@@ -46,6 +46,10 @@ public class ServicioUjaPack {
         centrosLogisticos = new TreeMap<>();
     }
     
+    public Map<Integer, Envio> getEnvios(){
+        return this.envios;
+    }
+    
     /**
      * Comprobar que el proyecto ha sido configurado correctamente
      */
@@ -161,14 +165,12 @@ public class ServicioUjaPack {
      */
     public void nuevoEnvio(List<Paquete> paquetes, Cliente remitente, Cliente destinatario){
         int localizador = generaLocalizador();
-        // Envio envio = new Envio(localizador, remitente, destinatario, paquetes);
-        // envio.setRuta(calculaRuta(remitente.getProvincia(), destinatario.getProvincia()));
         
+        Envio envio = new Envio(localizador, remitente, destinatario, paquetes);
+        envio.setRuta(calculaRuta(remitente.getProvincia(), destinatario.getProvincia()));
+        envio.calculaImporte();
         
-        List<PasoPuntoControl> laRuta = calculaRuta(remitente.getProvincia(), destinatario.getProvincia());
-        
-        
-        envios.put(localizador, new Envio(localizador, remitente, destinatario, paquetes));
+        envios.put(localizador, envio);
     }
     
     /**
@@ -217,7 +219,8 @@ public class ServicioUjaPack {
             PasoPuntoControl paso = new PasoPuntoControl(buscaProvincia(pRemitente));
             ruta.add(paso);
             
-            //PasoPuntoControl pasoCl = new PasoPuntoControl(buscaCentroLogistico(pRemitente));
+            PasoPuntoControl pasoCl = new PasoPuntoControl(buscaCentroLogistico(pRemitente));
+            ruta.add(pasoCl);
             
             PasoPuntoControl pasoDestino = new PasoPuntoControl(buscaProvincia(pDestinatario));
             ruta.add(pasoDestino);
@@ -230,8 +233,11 @@ public class ServicioUjaPack {
             PasoPuntoControl paso = new PasoPuntoControl(buscaProvincia(pRemitente));
             ruta.add(paso);
             
-            //PasoPuntoControl pasoClR = new PasoPuntoControl(buscaCentroLogistico(pRemitente));
-            //PasoPuntoControl pasoClD = new PasoPuntoControl(buscaCentroLogistico(pRemitente));
+            PasoPuntoControl pasoClR = new PasoPuntoControl(buscaCentroLogistico(pRemitente));
+            ruta.add(pasoClR);
+            
+            PasoPuntoControl pasoClD = new PasoPuntoControl(buscaCentroLogistico(pRemitente));
+            ruta.add(pasoClD);
             
             PasoPuntoControl pasoDestino = new PasoPuntoControl(buscaProvincia(pDestinatario));
             ruta.add(pasoDestino);
@@ -247,10 +253,7 @@ public class ServicioUjaPack {
      * @return true en caso de que pertenezcan al mismo centro logistico y false en caso contrario
      */
     private boolean mismoCentroLogistico(String pRemitente, String pDestinatario){
-        int clRemitente = buscaCentroLogistico(pRemitente);
-        int clDestinatario = buscaCentroLogistico(pDestinatario);
-        
-        return (clRemitente == clDestinatario);
+        return (buscaCentroLogistico(pRemitente).getIdCentro() == buscaCentroLogistico(pDestinatario).getIdCentro());
     }
     
     /**
@@ -259,51 +262,7 @@ public class ServicioUjaPack {
      * @param provincia Provincia de la que buscaremos su centro logistico
      * @return id del centro logistico al que pertenece la provincia
      */
-    private int buscaCentroLogistico(String provincia){
-        Iterator it = centrosLogisticos.entrySet().iterator();
-        
-        // ID de centro logistico donde se encuentra la provincia
-        // -1 no encontrado
-        int id = -1;
-        
-        Map.Entry e;
-        CentroLogistico cl;
-        List<Oficina> of;
-        
-        while(it.hasNext() && id == -1){
-            e = (Map.Entry<String, CentroLogistico>)it.next();
-            cl = centrosLogisticos.get(e.getKey());
-            of = cl.getOficinas();
-            for(int i = 0; i < of.size() && id == -1; i++){
-                if(provincia.equals(of.get(i).getNombreProvincia())){
-                    id = cl.getIdCentro();
-                    System.out.println("Centro logistico encontrado");
-                    System.out.println("Provincia: " + provincia);
-                    System.out.println("ID Centro logistico: " + id);
-                }
-            }
-        }
-        
-        return id;
-    }
-    
-    /**
-     * Comprueba si las provincias del envio son validas y en caso contrario genera excepcion
-     * @param pRemitente provincia del remitente
-     * @param pDestinatario provincia del destinatario
-     */
-    private void provinciasValidas(String pRemitente, String pDestinatario){
-        if(buscaCentroLogistico(pRemitente) == -1){
-            throw new ProvinciaRemitenteNoValida();
-        }
-        
-        if(buscaCentroLogistico(pDestinatario) == -1){
-            throw new ProvinciaDestinatarioNoValida();
-        }
-    }
-    
-    
-    private Oficina buscaProvincia(String provincia){
+    private CentroLogistico buscaCentroLogistico(String provincia){
         Iterator it = centrosLogisticos.entrySet().iterator();
         
         Map.Entry e;
@@ -316,6 +275,48 @@ public class ServicioUjaPack {
             of = cl.getOficinas();
             for(int i = 0; i < of.size(); i++){
                 if(provincia.equals(of.get(i).getNombreProvincia())){
+                    System.out.println("Centro logistico encontrado");
+                    System.out.println("Provincia: " + provincia);
+                    System.out.println("ID Centro logistico: " + cl.getIdCentro());
+                    return centrosLogisticos.get(e.getKey());
+                }
+            }
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Comprueba si las provincias del envio son validas y en caso contrario genera excepcion
+     * @param pRemitente provincia del remitente
+     * @param pDestinatario provincia del destinatario
+     */
+    private void provinciasValidas(String pRemitente, String pDestinatario){
+        if(buscaCentroLogistico(pRemitente) == null){
+            throw new ProvinciaRemitenteNoValida();
+        }
+        
+        if(buscaCentroLogistico(pDestinatario) == null){
+            throw new ProvinciaDestinatarioNoValida();
+        }
+    }
+    
+    /**
+     * Buscar Provincia
+     * @param provincia provincia a buscar
+     * @return el objeto provincia encontrado
+     */
+    private Oficina buscaProvincia(String provincia){
+        Iterator it = centrosLogisticos.entrySet().iterator();
+        
+        Map.Entry e;
+        List<Oficina> of;
+        
+        while(it.hasNext()){
+            e = (Map.Entry<String, CentroLogistico>)it.next();
+            of = centrosLogisticos.get(e.getKey()).getOficinas();
+            for(int i = 0; i < of.size(); i++){
+                if(provincia.equals(of.get(i).getNombreProvincia())){
                     return of.get(i);
                 }
             }
@@ -323,4 +324,66 @@ public class ServicioUjaPack {
         
         return null;
     }
+    
+    /***
+     * Busqueda en profundidad para calcular ruta
+     * 
+     */
+//     public List<Oficina> DPSRuta(Oficina pRemitente, Oficina pDestinatario){
+//        ArrayList<Oficina> visitadas = new ArrayList<>();
+
+//        Stack<Oficina> control = new Stack<>();
+//
+//        //Inicia en el origen
+//        Oficina actual = pRemitente;
+//
+//        do {
+//            visitadas.add(actual);                                      
+//            control.add(actual);                                        
+//
+//            Optional<Oficina> siguiente = adyacentes(actual).stream()   
+//                    .filter((Oficina of) -> !visitadas.contains(of))      
+//                    .findFirst();                                       
+//
+//            if(siguiente.isPresent()){                                  
+//                actual = siguiente.get();                               
+//            }else {                                                     
+//                control.pop();                                          
+//                if(control.empty()) return null;                        
+//                actual = control.pop();                                 
+//            }
+//
+//            if(actual.equals(pDestinatario)){                           
+//                control.add(actual);                                   
+//                return new ArrayList<>(control);                       
+//            }
+//
+//        }while (!actual.equals(pDestinatario));
+//
+//        return null;
+//    }
+    
+    
+    /**
+     * Calcular ruta (CentrosLogisticos) de la regiones intermedias hasta destino
+     * @param pRemitente provincia del remitente
+     * @param pDestinatario provincia del destinatario
+     * @return 
+     */
+    private void calculaRutaCL (String pRemitente, String pDestinatario){
+        
+    }
+    
+    
+    /**
+     * Listado de los Puntos de Control por los que pasa un envio
+     * @param localizador número entero aleatorio de 10 cifras
+     * @return listado
+     */
+    private PuntoControl listaPuntosControl(int localizador){
+        return null;
+    
+    }
+    
+    
 }
