@@ -111,13 +111,13 @@ public class ServicioUjaPack {
                 }
                 
                 // Conexiones correspondientes a este centro logistico
-                List<Integer> conexiones = new ArrayList<>();
+                List<CentroLogistico> conexiones = new ArrayList<>();
                 // Cargamos las conexiones correspondientes al identificador actual i
                 arr = elem.getJSONArray("conexiones");
                 for(int j = 0; j < arr.length(); j++){
                     conexion = arr.getInt(j);
                     if(!conexiones.contains(conexion)){
-                        conexiones.add(arr.getInt(j));
+                        conexiones.add(centrosLogisticos.get(j));
                     }
 //                    System.out.println(arr.getInt(j));
                 }
