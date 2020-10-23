@@ -5,6 +5,7 @@
  */
 package es.ujaen.dae.ujapack.entidades;
 
+import es.ujaen.dae.ujapack.excepciones.PedidoEntregado;
 import es.ujaen.dae.ujapack.objetosvalor.Paquete;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -25,22 +26,28 @@ public class Envio {
     
     /** Localizador del envio */
     private int localizador;
+    
     /** Estado del pedido */
     private Estado estado;
+    
     /** Fecha de llegada del envio */
     private LocalDate fechaLlegada;
+    
     /** Hora de llegada del envio */
     private LocalDate horaLlegada;
+    
     /** Coste de realizar el envio */
     private float importe;
     
     /** Paquetes asociadas al envio */
     private List<Paquete> paquetes;
+    
     /** Cuentas asociadas al cliente */
     private List<PasoPuntoControl> ruta;
     
     /** Cliente asociado a remitente */
     private Cliente remitente;
+    
     /** Cliente asociado a destinatario */
     private Cliente destinatario;
     
@@ -63,7 +70,7 @@ public class Envio {
         this.destinatario = destinatario;
         
         this.ruta = new ArrayList<>();
-        this.importe = calculaImporte();
+        this.importe = 0;
     }
 
     /**
@@ -194,10 +201,51 @@ public class Envio {
     
     /**
      * Calcula importe del envio
-     * @return importe que cuesta realizar el envio
      */
-    private float calculaImporte(){
-        return 0;
+    public void calculaImporte(){
+        // Formula: importe = peso(kg) * dim(cm2) * (num_puntos_control + 1) / 1000
+        Paquete paquete;
+        float dim;
+        
+        for(int i = 0; i < paquetes.size(); i++){
+            paquete = paquetes.get(i);
+            dim = paquete.getAltura() * paquete.getAnchura() * paquete.getProfundidad();
+            this.importe += ((paquete.getPeso() * dim * (ruta.size() + 1)) / 1000);
+        }
+        
+        System.out.println(importe + "€");
+    }
+    
+    /**
+     * Actualiza el estado del envio
+     */
+    public void actualizaEstadoEnvio(){
+        // Si el pedido esta entregado no se puede actualizar
+        if(this.estado == Estado.ENTREGADO){
+            throw new PedidoEntregado();
+        }
+        
+        PasoPuntoControl ppc;
+        for(int i = 0; i < ruta.size(); i++){
+            ppc = ruta.get(i);
+            
+            // Si ha llegado 
+            
+            // Si el estado es pendiente y sabemos que ya ha salido de la oficina origen cambiamos estado a transito
+            if(ppc.getFechaSalida() != LocalDate.MIN && this.estado == Estado.PENDIENTE){
+                this.estado = Estado.TRANSITO;
+            }
+            
+            // Si sabemos que ya ha salido de la oficina de entrega lo actualizamos a reparto
+            if(ppc.getFechaSalida() != LocalDate.MIN && i == ruta.size()-1){
+                this.estado = Estado.REPARTO;
+            }
+            
+            // Si ha salido del ultimo punto de control consideramos que ha sido entregado
+//            if(ppc.getFechaSalida() != LocalDate.MIN && i == ruta.size()-1){
+//                this.estado = Estado.ENTREGADO;
+//            }
+        }
     }
     
 }

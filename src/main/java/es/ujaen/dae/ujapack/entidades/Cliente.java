@@ -5,6 +5,10 @@
  */
 package es.ujaen.dae.ujapack.entidades;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+
 /**
  * Clientes de UjaPack
  * @author Jose Carlos Mena
@@ -12,17 +16,28 @@ package es.ujaen.dae.ujapack.entidades;
 public class Cliente {
     /** DNI del cliente */
     private String dni;
+    
     /** Nombre del cliente */
+    @NotBlank
     private String nombre;
+    
     /** Apellidos del cliente */
+    @NotBlank
     private String apellidos;
+    
     /** Direccion del cliente */
+    @NotBlank
     private String direccion;
+    
     /** Provincia del cliente */
+    @NotBlank
     private String provincia;
+    
     /** Telefono del cliente */
     private String telefono;
+    
     /** Email del cliente */
+    @Email
     private String email;
     
     /**
