@@ -12,10 +12,13 @@ package es.ujaen.dae.ujapack.objetosvalor;
 public class Paquete {
     /** Peso del paquete */
     private float peso;
+    
     /** Anchura del paquete */
     private float anchura;
+    
     /** Altura del paquete */
     private float altura;
+    
     /** Profundidad del paquete */
     private float profundidad;
     

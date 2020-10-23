@@ -26,22 +26,28 @@ public class Envio {
     
     /** Localizador del envio */
     private int localizador;
+    
     /** Estado del pedido */
     private Estado estado;
+    
     /** Fecha de llegada del envio */
     private LocalDate fechaLlegada;
+    
     /** Hora de llegada del envio */
     private LocalDate horaLlegada;
+    
     /** Coste de realizar el envio */
     private float importe;
     
     /** Paquetes asociadas al envio */
     private List<Paquete> paquetes;
+    
     /** Cuentas asociadas al cliente */
     private List<PasoPuntoControl> ruta;
     
     /** Cliente asociado a remitente */
     private Cliente remitente;
+    
     /** Cliente asociado a destinatario */
     private Cliente destinatario;
     

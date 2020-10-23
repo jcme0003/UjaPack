@@ -5,35 +5,40 @@
  */
 package es.ujaen.dae.ujapack.entidades;
 
-import org.junit.jupiter.api.Assertions;
+import java.util.Set;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+
 
 /**
  *
- * @author Jose Carlos Mena
+ * @author Ana
  */
 public class ClienteTest {
-    
-    public ClienteTest(){
-        
+     public ClienteTest() {
     }
-    
-//    Cuando utilicemos beans validations
-//    @Test
-//    void testValidacionCliente() {
-//        Cliente cliente = new Cliente(
-//                "11995667D",
-//                "Juan",
-//                "España España",
-//                "Cl La Luz, 13",
-//                "Jaén",
-//                "988674533",
-//                "jee@gmail.com");
-//        
-//        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-//        Set<ConstraintViolation<Cliente>> violations = validator.validate(cliente);
-//        
-//        Assertions.assertThat(violations).isEmpty();
-//    }
-    
+
+    @Test
+    void testValidacionCliente() {
+ 
+        Cliente cliente = new Cliente(
+                "45789632M", 
+                "Jose",
+                "Bermudez Carvajal", 
+                "Calle La Luna",
+                "Jaén",
+                "953010203",
+                "jbc@gmail.com");
+               
+        
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        Set<ConstraintViolation<Cliente>> violations = validator.validate(cliente);
+                
+        Assertions.assertThat(violations).isEmpty();
+    }
+
 }

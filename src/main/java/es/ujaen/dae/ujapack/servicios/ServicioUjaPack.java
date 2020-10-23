@@ -216,11 +216,27 @@ public class ServicioUjaPack {
         // Tipo de envio 2
         if(!pRemitente.equals(pDestinatario) && mismoCentroLogistico(pRemitente, pDestinatario)){
             System.out.println("Envio tipo 2");
+            PasoPuntoControl paso = new PasoPuntoControl(buscaProvincia(pRemitente));
+            ruta.add(paso);
+            
+            //PasoPuntoControl pasoCl = new PasoPuntoControl(buscaCentroLogistico(pRemitente));
+            
+            PasoPuntoControl pasoDestino = new PasoPuntoControl(buscaProvincia(pDestinatario));
+            ruta.add(pasoDestino);
+            
         }
         
         // Tipo de envio 3
         if(!pRemitente.equals(pDestinatario) && !mismoCentroLogistico(pRemitente, pDestinatario)){
             System.out.println("Envio tipo 3");
+            PasoPuntoControl paso = new PasoPuntoControl(buscaProvincia(pRemitente));
+            ruta.add(paso);
+            
+            //PasoPuntoControl pasoClR = new PasoPuntoControl(buscaCentroLogistico(pRemitente));
+            //PasoPuntoControl pasoClD = new PasoPuntoControl(buscaCentroLogistico(pRemitente));
+            
+            PasoPuntoControl pasoDestino = new PasoPuntoControl(buscaProvincia(pDestinatario));
+            ruta.add(pasoDestino);
         }
         
         return ruta;
