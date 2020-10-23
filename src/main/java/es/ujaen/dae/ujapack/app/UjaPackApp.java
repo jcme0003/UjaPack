@@ -8,6 +8,7 @@ package es.ujaen.dae.ujapack.app;
 import es.ujaen.dae.ujapack.entidades.Cliente;
 import es.ujaen.dae.ujapack.entidades.Envio;
 import es.ujaen.dae.ujapack.objetosvalor.Paquete;
+import es.ujaen.dae.ujapack.servicios.ServicioJSon;
 import es.ujaen.dae.ujapack.servicios.ServicioUjaPack;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -30,7 +31,13 @@ public class UjaPackApp {
         ApplicationContext context = servidor.run(args);
         
         ServicioUjaPack servicio = context.getBean(ServicioUjaPack.class);
-        servicio.cargaJSon("redujapack.json");
+        
+        ServicioJSon servicioJSon = new ServicioJSon();
+        servicioJSon.cargaJSon("redujapack.json");
+        servicioJSon.cargaConexiones("redujapack.json");
+        servicio.setCentrosLogisticos(servicioJSon.getCentrosLogisticos());
+        
+//        servicio.cargaJSon("redujapack.json");
         servicio.listarCentrosLogisticos();
         
 //        servicio.provinciasValidas("Jaén", "Madrid");

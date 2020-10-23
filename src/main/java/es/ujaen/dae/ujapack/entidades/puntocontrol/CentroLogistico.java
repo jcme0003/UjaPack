@@ -112,5 +112,19 @@ public class CentroLogistico extends PuntoControl {
         this.conexiones = conexiones;
     }
     
+    public void setConexion(CentroLogistico conexion){
+        this.conexiones.add(conexion);
+    }
+    
+    public Oficina buscarOficinaDependiente(String provincia){
+        for(Oficina oficina : this.oficinas){
+            if(oficina.getNombreProvincia().equals(provincia)){
+                return oficina;
+            }
+        }
+        
+        return null;
+    }
+    
     
 }
