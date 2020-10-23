@@ -111,13 +111,13 @@ public class ServicioUjaPack {
                 }
                 
                 // Conexiones correspondientes a este centro logistico
-                List<Integer> conexiones = new ArrayList<>();
+                List<CentroLogistico> conexiones = new ArrayList<>();
                 // Cargamos las conexiones correspondientes al identificador actual i
                 arr = elem.getJSONArray("conexiones");
                 for(int j = 0; j < arr.length(); j++){
                     conexion = arr.getInt(j);
                     if(!conexiones.contains(conexion)){
-                        conexiones.add(arr.getInt(j));
+                        conexiones.add(centrosLogisticos.get(j));
                     }
 //                    System.out.println(arr.getInt(j));
                 }
@@ -235,6 +235,7 @@ public class ServicioUjaPack {
             
             PasoPuntoControl pasoClR = new PasoPuntoControl(buscaCentroLogistico(pRemitente));
             ruta.add(pasoClR);
+            
             PasoPuntoControl pasoClD = new PasoPuntoControl(buscaCentroLogistico(pRemitente));
             ruta.add(pasoClD);
             
@@ -323,4 +324,66 @@ public class ServicioUjaPack {
         
         return null;
     }
+    
+    /***
+     * Busqueda en profundidad para calcular ruta
+     * 
+     */
+//     public List<Oficina> DPSRuta(Oficina pRemitente, Oficina pDestinatario){
+//        ArrayList<Oficina> visitadas = new ArrayList<>();
+
+//        Stack<Oficina> control = new Stack<>();
+//
+//        //Inicia en el origen
+//        Oficina actual = pRemitente;
+//
+//        do {
+//            visitadas.add(actual);                                      
+//            control.add(actual);                                        
+//
+//            Optional<Oficina> siguiente = adyacentes(actual).stream()   
+//                    .filter((Oficina of) -> !visitadas.contains(of))      
+//                    .findFirst();                                       
+//
+//            if(siguiente.isPresent()){                                  
+//                actual = siguiente.get();                               
+//            }else {                                                     
+//                control.pop();                                          
+//                if(control.empty()) return null;                        
+//                actual = control.pop();                                 
+//            }
+//
+//            if(actual.equals(pDestinatario)){                           
+//                control.add(actual);                                   
+//                return new ArrayList<>(control);                       
+//            }
+//
+//        }while (!actual.equals(pDestinatario));
+//
+//        return null;
+//    }
+    
+    
+    /**
+     * Calcular ruta (CentrosLogisticos) de la regiones intermedias hasta destino
+     * @param pRemitente provincia del remitente
+     * @param pDestinatario provincia del destinatario
+     * @return 
+     */
+    private void calculaRutaCL (String pRemitente, String pDestinatario){
+        
+    }
+    
+    
+    /**
+     * Listado de los Puntos de Control por los que pasa un envio
+     * @param localizador número entero aleatorio de 10 cifras
+     * @return listado
+     */
+    private PuntoControl listaPuntosControl(int localizador){
+        return null;
+    
+    }
+    
+    
 }
