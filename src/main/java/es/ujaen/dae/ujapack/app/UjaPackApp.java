@@ -37,7 +37,7 @@ public class UjaPackApp {
 //        servicio.generaLocalizador();
 
         Cliente cl1 = new Cliente("12345678A", "Paco", "Perez", "Calle falsa", "Jaén", "999000111", "email@email.com");
-        Cliente cl2 = new Cliente("87654321B", "Maria", "Muñoz", "Calle verdadera", "Jaén", "555666777", "gmail@gmail.com");
+        Cliente cl2 = new Cliente("87654321B", "Maria", "Muñoz", "Calle verdadera", "Madrid", "555666777", "gmail@gmail.com");
         
         List<Paquete> paquetes = new ArrayList<>();
         paquetes.add(new Paquete(1.5f, 50.0f, 10.0f, 15.0f));

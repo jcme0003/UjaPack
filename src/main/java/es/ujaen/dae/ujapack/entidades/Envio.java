@@ -205,7 +205,7 @@ public class Envio {
     public void calculaImporte(){
         // Formula: importe = peso(kg) * dim(cm2) * (num_puntos_control + 1) / 1000
         Paquete paquete;
-        float dim;
+        float dim = 0.0f;
         
         for(int i = 0; i < paquetes.size(); i++){
             paquete = paquetes.get(i);
