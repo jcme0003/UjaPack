@@ -199,26 +199,12 @@ public class ServicioUjaPack {
      * @return id del centro logistico al que pertenece la provincia
      */
     private CentroLogistico buscaCentroLogistico(String provincia){
-        Iterator it = centrosLogisticos.entrySet().iterator();
-        
-        Map.Entry e;
-        CentroLogistico cl;
-        List<Oficina> of;
-        
-        while(it.hasNext()){
-            e = (Map.Entry<String, CentroLogistico>)it.next();
-            cl = centrosLogisticos.get(e.getKey());
-            of = cl.getOficinas();
-            for(int i = 0; i < of.size(); i++){
-                if(provincia.equals(of.get(i).getNombreProvincia())){
-                    System.out.println("Centro logistico encontrado");
-                    System.out.println("Provincia: " + provincia);
-                    System.out.println("ID Centro logistico: " + cl.getIdCentro());
-                    return centrosLogisticos.get(e.getKey());
-                }
+        for(CentroLogistico centro: centrosLogisticos.values()){
+            Oficina oficina = centro.buscarOficinaDependiente(provincia);
+            if(oficina != null){
+                return centro;
             }
         }
-        
         return null;
     }
     
@@ -257,38 +243,18 @@ public class ServicioUjaPack {
      * Busqueda en profundidad para calcular ruta
      * 
      */
-//     public List<Oficina> DPSRuta(Oficina pRemitente, Oficina pDestinatario){
-//        ArrayList<Oficina> visitadas = new ArrayList<>();
-
-//        Stack<Oficina> control = new Stack<>();
-//
-//        //Inicia en el origen
-//        Oficina actual = pRemitente;
-//
-//        do {
-//            visitadas.add(actual);                                      
-//            control.add(actual);                                        
-//
-//            Optional<Oficina> siguiente = adyacentes(actual).stream()   
-//                    .filter((Oficina of) -> !visitadas.contains(of))      
-//                    .findFirst();                                       
-//
-//            if(siguiente.isPresent()){                                  
-//                actual = siguiente.get();                               
-//            }else {                                                     
-//                control.pop();                                          
-//                if(control.empty()) return null;                        
-//                actual = control.pop();                                 
+//    public void DPSRuta (String pRemitente, String pDestino){
+//        int contador = 0;
+//        for(int i = 0; i < this.centrosLogisticos.size(); i++){
+//            for(int j = 0; j < centrosLogisticos.get(visitadas.get(i)).getProvincia().size(); j++){
+//                 if (pDestino == centrosLogisticos.get(visitadas.get(i)).getProvincias().get(j)) {
+//                    ruta.add(centrosLogisticos.get(visitadas.get(i)).getLocalizacion());
+//                    ruta.add(pDestino);
+//                }
 //            }
-//
-//            if(actual.equals(pDestinatario)){                           
-//                control.add(actual);                                   
-//                return new ArrayList<>(control);                       
-//            }
-//
-//        }while (!actual.equals(pDestinatario));
-//
-//        return null;
+//            ruta.add(centrosLogisticos.get(visitadas.get(i)).getLocalizacion());
+//            DPSRuta(centrosLogisticos.get(visitadas.get(i)).getConexiones());
+//        }
 //    }
     
     
@@ -299,6 +265,7 @@ public class ServicioUjaPack {
      * @return 
      */
     private void calculaRutaCL (String pRemitente, String pDestinatario){
+        ArrayList<Oficina> conexiones = new ArrayList<>();
         
     }
     
@@ -308,7 +275,8 @@ public class ServicioUjaPack {
      * @param localizador número entero aleatorio de 10 cifras
      * @return listado
      */
-    private PuntoControl listaPuntosControl(int localizador){
+    private List<PuntoControl> listaPuntosControl(int localizador){
+        
         return null;
     
     }
