@@ -14,6 +14,8 @@ import es.ujaen.dae.ujapack.entidades.puntocontrol.PuntoControl;
 import es.ujaen.dae.ujapack.excepciones.ProvinciaDestinatarioNoValida;
 import es.ujaen.dae.ujapack.excepciones.ProvinciaRemitenteNoValida;
 import es.ujaen.dae.ujapack.objetosvalor.Paquete;
+import es.ujaen.dae.ujapack.util.profundidad.Nodo;
+import es.ujaen.dae.ujapack.util.profundidad.Profundidad;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -38,6 +40,8 @@ public class ServicioUjaPack {
     Map<Integer, Envio> envios;
     /** Mapa con la lista de centros logisticos ordenada por codigo id del centro */
     private Map<Integer, CentroLogistico> centrosLogisticos;
+    /**  */
+    Profundidad conexionesNodos;
     
     /**
      * Constructor del servicio UjaPack
@@ -45,8 +49,13 @@ public class ServicioUjaPack {
     public ServicioUjaPack(){
         this.envios = new TreeMap<>();
         this.centrosLogisticos = new TreeMap<>();
+        this.conexionesNodos = new Profundidad();
     }
     
+    /**
+     * Devuelve los envios del sistema
+     * @return Envios realizados por el sistema
+     */
     public Map<Integer, Envio> getEnvios(){
         return this.envios;
     }
@@ -56,6 +65,7 @@ public class ServicioUjaPack {
      */
     public void setCentrosLogisticos(Map<Integer, CentroLogistico> centrosLogisticos) {
         this.centrosLogisticos = centrosLogisticos;
+        this.conexionesNodos.generaNodos(centrosLogisticos);
     }
     
     /**
@@ -138,7 +148,7 @@ public class ServicioUjaPack {
     private List<PasoPuntoControl> calculaRuta(String pRemitente, String pDestinatario){
         // Comprueba si las provincias introducidas son validas
         provinciasValidas(pRemitente, pDestinatario);
-        
+        /** Lista de pasos por punto de control que indicara la ruta de nuestro envio */
         List<PasoPuntoControl> ruta = new ArrayList<>();
         
         // Tipo de envio 1
@@ -169,11 +179,22 @@ public class ServicioUjaPack {
             PasoPuntoControl paso = new PasoPuntoControl(buscaProvincia(pRemitente));
             ruta.add(paso);
             
-            PasoPuntoControl pasoClR = new PasoPuntoControl(buscaCentroLogistico(pRemitente));
-            ruta.add(pasoClR);
+//            PasoPuntoControl pasoClR = new PasoPuntoControl(buscaCentroLogistico(pRemitente));
+//            ruta.add(pasoClR);
             
-            PasoPuntoControl pasoClD = new PasoPuntoControl(buscaCentroLogistico(pRemitente));
-            ruta.add(pasoClD);
+//            Nodo nodoInicial = new Nodo(buscaCentroLogistico(pRemitente));
+//            Nodo nodoFinal = new Nodo(buscaCentroLogistico(pDestinatario));
+//            Profundidad busquedaProfundidad = new Profundidad();
+//            for(Nodo nodo : this.conexionesNodos.profundidad(buscaCentroLogistico(pRemitente), buscaCentroLogistico(pDestinatario))){
+//                ruta.add(new PasoPuntoControl(nodo.getCentroLogistico()));
+//            }
+
+            for(Nodo nodo : this.conexionesNodos.profundidad(buscaCentroLogistico(pRemitente), buscaCentroLogistico(pDestinatario))){
+                ruta.add(new PasoPuntoControl(nodo.getCentroLogistico()));
+            }
+            
+//            PasoPuntoControl pasoClD = new PasoPuntoControl(buscaCentroLogistico(pRemitente));
+//            ruta.add(pasoClD);
             
             PasoPuntoControl pasoDestino = new PasoPuntoControl(buscaProvincia(pDestinatario));
             ruta.add(pasoDestino);
