@@ -10,45 +10,42 @@ package es.ujaen.dae.ujapack.entidades.puntocontrol;
  * @author Jose Carlos Mena
  */
 public abstract class PuntoControl {
-//    /** Centro logistico del punto de control */
-//    private final int idCentro;
-//    /** Provincia en la que se encuentra el punto de control */
-//    private final String oficinaEntrega;
+    /** Centro logistico del punto de control */
+    private final int idCentro;
+    /** Provincia en la que se encuentra el punto de control */
+    private final String oficinaEntrega;
     
-    public PuntoControl(){
-        
+    
+    /**
+     * Constructor de punto de control
+     * @param oficinaEntrega nombre de la provincia
+     */
+    public PuntoControl(String oficinaEntrega){
+        this.idCentro = -1;
+        this.oficinaEntrega = oficinaEntrega;
     }
     
     /**
      * Constructor de punto de control
      * @param oficinaEntrega nombre de la provincia
      */
-//    public PuntoControl(String oficinaEntrega){
-//        this.idCentro = -1;
-//        this.oficinaEntrega = oficinaEntrega;
-//    }
-    
-    /**
-     * Constructor de punto de control
-     * @param oficinaEntrega nombre de la provincia
-     */
-//    public PuntoControl(int idCentro, String oficinaEntrega){
-//        this.idCentro = idCentro;
-//        this.oficinaEntrega = oficinaEntrega;
-//    }
+    public PuntoControl(int idCentro, String oficinaEntrega){
+        this.idCentro = idCentro;
+        this.oficinaEntrega = oficinaEntrega;
+    }
 
     /**
      * @return el identificador del centro logistico
      */
-//    public int getIdCentro() {
-//        return idCentro;
-//    }
+    public int getIdCentro() {
+        return idCentro;
+    }
 
     /**
      * @return la provincia
      */
-//    public String getProvincia() {
-//        return oficinaEntrega;
-//    }
+    public String getProvincia() {
+        return oficinaEntrega;
+    }
     
 }

@@ -26,7 +26,6 @@ public class OficinaTest {
     void testValidacionOficina() {
  
         Oficina of = new Oficina(
-                "74152369", 
                 "Jaén");
 
         

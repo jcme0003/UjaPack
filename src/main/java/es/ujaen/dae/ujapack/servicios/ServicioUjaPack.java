@@ -17,6 +17,7 @@ import es.ujaen.dae.ujapack.objetosvalor.Paquete;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import static java.lang.Integer.parseInt;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -36,18 +37,25 @@ public class ServicioUjaPack {
     /** Mapa con la lista de envios ordenada por codigo localizador */
     Map<Integer, Envio> envios;
     /** Mapa con la lista de centros logisticos ordenada por codigo id del centro */
-    Map<String, CentroLogistico> centrosLogisticos;
+    private Map<Integer, CentroLogistico> centrosLogisticos;
     
     /**
      * Constructor del servicio UjaPack
      */
     public ServicioUjaPack(){
-        envios = new TreeMap<>();
-        centrosLogisticos = new TreeMap<>();
+        this.envios = new TreeMap<>();
+        this.centrosLogisticos = new TreeMap<>();
     }
     
     public Map<Integer, Envio> getEnvios(){
         return this.envios;
+    }
+
+    /**
+     * @param centrosLogisticos the centrosLogisticos to set
+     */
+    public void setCentrosLogisticos(Map<Integer, CentroLogistico> centrosLogisticos) {
+        this.centrosLogisticos = centrosLogisticos;
     }
     
     /**
@@ -55,82 +63,6 @@ public class ServicioUjaPack {
      */
     public void helloUja(){
         System.out.println("Hello Uja");
-    }
-    
-    /**
-     * Carga archivo JSon que contiene los centros logisticos, oficinas y conexiones
-     * @param url url donde esta guardado el fichero JSon
-     */
-    public void cargaJSon(String url){
-        try{
-            // Carga y almacena en un string el archivo json
-            File file = new File(url);
-            String data;
-            try (Scanner sc = new Scanner(new FileInputStream(file), "UTF-8")) {
-                data = new String();
-                while(sc.hasNextLine()){
-                    data += sc.nextLine();
-                }
-            }
-//            System.out.println(data);
-            
-            JSONObject obj = new JSONObject(data);
-            JSONObject elem;
-            JSONArray arr;
-            
-            String id;
-            String nombre;
-            String localizacion;
-            String provincia;
-            int conexion;
-            List<String> provincias = new ArrayList<>();
-            
-            // Cargamos datos de cada identificador del Json "1", "2", ... "10"
-            for(int i = 1; i <= 10; i++){
-                id = Integer.toString(i);
-                elem = obj.getJSONObject(id);
-                
-                nombre = elem.getString("nombre");
-//                System.out.println(nombre);
-                
-                localizacion = elem.getString("localización");
-//                System.out.println(localizacion);
-                
-                // Oficinas correspondientes a este centro logistico
-                List<Oficina> oficinas = new ArrayList<>();
-                // Cargamos las provincias correspondientes al identificador actual i
-                arr = elem.getJSONArray("provincias");
-                for(int j = 0; j < arr.length(); j++){
-                    provincia = arr.getString(j);
-//                    System.out.println(arr.getString(j));
-                    // Añadir a array de provincias y crear Oficina (provincia) si no esta creada
-                    if(!provincias.contains(arr.getString(j))){
-                        provincias.add(provincia);
-                        oficinas.add(new Oficina(provincia));
-                    }
-                }
-                
-                // Conexiones correspondientes a este centro logistico
-                List<Integer> conexiones = new ArrayList<>();
-                // Cargamos las conexiones correspondientes al identificador actual i
-                arr = elem.getJSONArray("conexiones");
-                for(int j = 0; j < arr.length(); j++){
-                    conexion = arr.getInt(j);
-                    if(!conexiones.contains(conexion)){
-                        conexiones.add(arr.getInt(j));
-                    }
-//                    System.out.println(arr.getInt(j));
-                }
-                
-                // Creamos nuestro centro logistico y lo añadir a la lista de centros logisticos del sistema
-                CentroLogistico centroLogistico = new CentroLogistico(Integer.parseInt(id), nombre, localizacion, oficinas, conexiones);
-                centrosLogisticos.put(id, centroLogistico);
-            }
-           
-        } catch (FileNotFoundException e){
-            System.out.println(e.getMessage());
-        }
-        
     }
     
     /**
@@ -146,9 +78,13 @@ public class ServicioUjaPack {
         while(it.hasNext()){
             e = (Map.Entry<String, CentroLogistico>)it.next();
             cl = centrosLogisticos.get(e.getKey());
-            System.out.println(e.getKey() + " " + cl.getNombre() + " " + cl.getConexiones());
+            System.out.println(e.getKey() + " " + cl.getNombre() + " ");
+            
             System.out.println("Oficinas:");
-            System.out.println("----------------------------:");
+            for (CentroLogistico c : cl.getConexiones()) {
+                System.out.print(c.getIdCentro() + " ");
+            }
+            System.out.println("\n----------------------------:");
             of = cl.getOficinas();
             for(int i = 0; i < of.size(); i++){
                 System.out.println(of.get(i).getNombreProvincia());
@@ -307,18 +243,10 @@ public class ServicioUjaPack {
      * @return el objeto provincia encontrado
      */
     private Oficina buscaProvincia(String provincia){
-        Iterator it = centrosLogisticos.entrySet().iterator();
-        
-        Map.Entry e;
-        List<Oficina> of;
-        
-        while(it.hasNext()){
-            e = (Map.Entry<String, CentroLogistico>)it.next();
-            of = centrosLogisticos.get(e.getKey()).getOficinas();
-            for(int i = 0; i < of.size(); i++){
-                if(provincia.equals(of.get(i).getNombreProvincia())){
-                    return of.get(i);
-                }
+        for (CentroLogistico centro: centrosLogisticos.values()) {
+            Oficina oficina = centro.buscarOficinaDependiente(provincia);
+            if (oficina != null) {
+                return oficina;
             }
         }
         

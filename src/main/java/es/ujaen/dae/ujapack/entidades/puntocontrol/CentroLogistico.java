@@ -22,7 +22,7 @@ public class CentroLogistico extends PuntoControl {
     /** Oficinas asociadas al centro logistico */
     private List<Oficina> oficinas;
     /** Centros logisticos con los que esta conectado este centro logistico */
-    private List<Integer> conexiones;
+    private List<CentroLogistico> conexiones;
     
     /**
      * Constructor CentroLogistico
@@ -32,9 +32,9 @@ public class CentroLogistico extends PuntoControl {
      * @param oficinas
      * @param conexiones
      */
-    public CentroLogistico(int idCentro, String nombre, String localizacion, List<Oficina> oficinas, List<Integer> conexiones){
-//        super(idCentro, localizacion);
-        super();
+    public CentroLogistico(int idCentro, String nombre, String localizacion, List<Oficina> oficinas, List<CentroLogistico> conexiones){
+        super(idCentro, localizacion);
+        
         this.idCentro = idCentro;
         this.nombre = nombre;
         this.localizacion = localizacion;
@@ -101,15 +101,29 @@ public class CentroLogistico extends PuntoControl {
     /**
      * @return las conexiones
      */
-    public List<Integer> getConexiones() {
+    public List<CentroLogistico> getConexiones() {
         return conexiones;
     }
 
     /**
      * @param conexiones las conexiones a insertar
      */
-    public void setConexiones(List<Integer> conexiones) {
+    public void setConexiones(List<CentroLogistico> conexiones) {
         this.conexiones = conexiones;
+    }
+    
+    public void setConexion(CentroLogistico conexion){
+        this.conexiones.add(conexion);
+    }
+    
+    public Oficina buscarOficinaDependiente(String provincia){
+        for(Oficina oficina : this.oficinas){
+            if(oficina.getNombreProvincia().equals(provincia)){
+                return oficina;
+            }
+        }
+        
+        return null;
     }
     
     
