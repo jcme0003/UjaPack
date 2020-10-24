@@ -6,6 +6,9 @@
 package es.ujaen.dae.ujapack.entidades;
 
 import es.ujaen.dae.ujapack.entidades.puntocontrol.CentroLogistico;
+import es.ujaen.dae.ujapack.entidades.puntocontrol.Oficina;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -24,17 +27,36 @@ public class CentroLogisticoTest {
     @Test
     void testValidacionCentroLogistico() {
  
-//        CentroLogistico cl = new CentroLogistico(
-//                29630, 
-//                "Logistic",
-//                "Jaén",
-//                "oficinas", //private List<Oficina> oficinas;
-//                "jbc@gmail.com"); //private List<Integer> conexiones;
-//
-//        
-//        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-//        Set<ConstraintViolation<CentroLogistico>> violations = validator.validate(cl);
-//                
-//        Assertions.assertThat(violations).isEmpty();
+        List<Oficina> of = new ArrayList<Oficina>();
+        of.add(new Oficina("Jaén"));
+        
+        List<Oficina> of1 = new ArrayList<Oficina>();
+        of.add(new Oficina("Madrid"));
+        
+        List<Oficina> of2 = new ArrayList<Oficina>();
+        of.add(new Oficina("Santa Cruz de Tenerife"));
+        
+       
+        List<CentroLogistico> centro = new ArrayList<CentroLogistico>();
+        List<CentroLogistico> centro1 = new ArrayList<CentroLogistico>();
+        List<CentroLogistico> centro2 = new ArrayList<CentroLogistico>();
+        CentroLogistico pru2 = new CentroLogistico(8745, "CL Canarias", "Santa Cruz de Tenerife", of2, centro);
+        centro2.add(pru2);
+        CentroLogistico pru1 = new CentroLogistico(4245, "CL Madrid", "Madrid", of1, centro2);
+        centro1.add(pru1);
+        CentroLogistico pru = new CentroLogistico(3345, "CL Andalucía-Extremadura", "Sevilla", of, centro1);
+        centro.add(pru);
+ 
+        pru2.setConexion(pru);
+       
+        
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        Set<ConstraintViolation<CentroLogistico>> violations = validator.validate(pru);
+        Set<ConstraintViolation<CentroLogistico>> violations1 = validator.validate(pru1);
+        Set<ConstraintViolation<CentroLogistico>> violations2 = validator.validate(pru2);        
+        
+        Assertions.assertThat(violations).isEmpty();
+        Assertions.assertThat(violations1).isEmpty();
+        Assertions.assertThat(violations2).isEmpty();
     }
 }
