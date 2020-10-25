@@ -8,153 +8,89 @@ package es.ujaen.dae.ujapack.servicios;
 import es.ujaen.dae.ujapack.entidades.puntocontrol.CentroLogistico;
 import es.ujaen.dae.ujapack.entidades.Cliente;
 import es.ujaen.dae.ujapack.entidades.Envio;
+import es.ujaen.dae.ujapack.entidades.Envio.Estado;
 import es.ujaen.dae.ujapack.entidades.PasoPuntoControl;
 import es.ujaen.dae.ujapack.entidades.puntocontrol.Oficina;
 import es.ujaen.dae.ujapack.entidades.puntocontrol.PuntoControl;
+import es.ujaen.dae.ujapack.excepciones.ClienteYaRegistrado;
+import es.ujaen.dae.ujapack.excepciones.EnvioNoEncontrado;
 import es.ujaen.dae.ujapack.excepciones.ProvinciaDestinatarioNoValida;
 import es.ujaen.dae.ujapack.excepciones.ProvinciaRemitenteNoValida;
 import es.ujaen.dae.ujapack.objetosvalor.Paquete;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.TreeMap;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * Clase con los servicios de la clase UjaPack
  * @author Jose Carlos Mena
  */
 @Service
+@Validated
 public class ServicioUjaPack {
     /** Mapa con la lista de envios ordenada por codigo localizador */
-    Map<Integer, Envio> envios;
+    private Map<Integer, Envio> envios;
+    /** Mapa con la lista de clientes ordenada por DNI */
+    private Map<String, Cliente> clientes;
     /** Mapa con la lista de centros logisticos ordenada por codigo id del centro */
-    Map<String, CentroLogistico> centrosLogisticos;
+    private Map<Integer, CentroLogistico> centrosLogisticos;
+    
+    private ServicioJSon servicioJSon;
     
     /**
      * Constructor del servicio UjaPack
      */
     public ServicioUjaPack(){
-        envios = new TreeMap<>();
-        centrosLogisticos = new TreeMap<>();
+        this.envios = new TreeMap<>();
+        this.clientes = new TreeMap<>();
+        this.centrosLogisticos = new TreeMap<>();
+        this.servicioJSon = new ServicioJSon();
     }
-    
-    public Map<Integer, Envio> getEnvios(){
-        return this.envios;
+
+    /**
+     * @return the envios
+     */
+    public Map<Integer, Envio> getEnvios() {
+        return envios;
+    }
+
+    /**
+     * @return the centrosLogisticos
+     */
+    public Map<Integer, CentroLogistico> getCentrosLogisticos() {
+        return centrosLogisticos;
+    }
+
+    /**
+     * @param centrosLogisticos the centrosLogisticos to set
+     */
+    public void setCentrosLogisticos(Map<Integer, CentroLogistico> centrosLogisticos) {
+        this.centrosLogisticos = centrosLogisticos;
     }
     
     /**
-     * Comprobar que el proyecto ha sido configurado correctamente
+     * Carga datos del fichero json haciendo uso del servicio ServicioJSon
+     * @param url Ruta al fichero json a cargar
      */
-    public void helloUja(){
-        System.out.println("Hello Uja");
+    public void cargaDatosJSon(String url){
+        servicioJSon.cargaJSon(url);
+        servicioJSon.cargaConexiones(url);
+        this.centrosLogisticos = servicioJSon.getCentrosLogisticos();
     }
     
     /**
-     * Carga archivo JSon que contiene los centros logisticos, oficinas y conexiones
-     * @param url url donde esta guardado el fichero JSon
+     * Crear un nuevo cliente en el sistema
+     * @param cliente Cliente a añadir al sistema
      */
-    public void cargaJSon(String url){
-        try{
-            // Carga y almacena en un string el archivo json
-            File file = new File(url);
-            String data;
-            try (Scanner sc = new Scanner(new FileInputStream(file), "UTF-8")) {
-                data = new String();
-                while(sc.hasNextLine()){
-                    data += sc.nextLine();
-                }
-            }
-//            System.out.println(data);
-            
-            JSONObject obj = new JSONObject(data);
-            JSONObject elem;
-            JSONArray arr;
-            
-            String id;
-            String nombre;
-            String localizacion;
-            String provincia;
-            int conexion;
-            List<String> provincias = new ArrayList<>();
-            
-            // Cargamos datos de cada identificador del Json "1", "2", ... "10"
-            for(int i = 1; i <= 10; i++){
-                id = Integer.toString(i);
-                elem = obj.getJSONObject(id);
-                
-                nombre = elem.getString("nombre");
-//                System.out.println(nombre);
-                
-                localizacion = elem.getString("localización");
-//                System.out.println(localizacion);
-                
-                // Oficinas correspondientes a este centro logistico
-                List<Oficina> oficinas = new ArrayList<>();
-                // Cargamos las provincias correspondientes al identificador actual i
-                arr = elem.getJSONArray("provincias");
-                for(int j = 0; j < arr.length(); j++){
-                    provincia = arr.getString(j);
-//                    System.out.println(arr.getString(j));
-                    // Añadir a array de provincias y crear Oficina (provincia) si no esta creada
-                    if(!provincias.contains(arr.getString(j))){
-                        provincias.add(provincia);
-                        oficinas.add(new Oficina(provincia));
-                    }
-                }
-                
-                // Conexiones correspondientes a este centro logistico
-                List<Integer> conexiones = new ArrayList<>();
-                // Cargamos las conexiones correspondientes al identificador actual i
-                arr = elem.getJSONArray("conexiones");
-                for(int j = 0; j < arr.length(); j++){
-                    conexion = arr.getInt(j);
-                    if(!conexiones.contains(conexion)){
-                        conexiones.add(arr.getInt(j));
-                    }
-//                    System.out.println(arr.getInt(j));
-                }
-                
-                // Creamos nuestro centro logistico y lo añadir a la lista de centros logisticos del sistema
-                CentroLogistico centroLogistico = new CentroLogistico(Integer.parseInt(id), nombre, localizacion, oficinas, conexiones);
-                centrosLogisticos.put(id, centroLogistico);
-            }
-           
-        } catch (FileNotFoundException e){
-            System.out.println(e.getMessage());
+    public void altaCliente(Cliente cliente){
+        if (clientes.containsKey(cliente.getDni())) {
+            throw new ClienteYaRegistrado();
         }
         
-    }
-    
-    /**
-     * Lista los centros logisticos de nuestra aplicacion
-     */
-    public void listarCentrosLogisticos(){
-        Iterator it = centrosLogisticos.entrySet().iterator();
-        
-        Map.Entry e;
-        CentroLogistico cl;
-        List<Oficina> of;
-        
-        while(it.hasNext()){
-            e = (Map.Entry<String, CentroLogistico>)it.next();
-            cl = centrosLogisticos.get(e.getKey());
-            System.out.println(e.getKey() + " " + cl.getNombre() + " " + cl.getConexiones());
-            System.out.println("Oficinas:");
-            System.out.println("----------------------------:");
-            of = cl.getOficinas();
-            for(int i = 0; i < of.size(); i++){
-                System.out.println(of.get(i).getNombreProvincia());
-            }
-            System.out.println("----------------------------:");
-        }
+        clientes.put(cliente.getDni(), cliente);
     }
     
     /**
@@ -170,7 +106,7 @@ public class ServicioUjaPack {
         envio.setRuta(calculaRuta(remitente.getProvincia(), destinatario.getProvincia()));
         envio.calculaImporte();
         
-        envios.put(localizador, envio);
+        getEnvios().put(localizador, envio);
     }
     
     /**
@@ -183,13 +119,9 @@ public class ServicioUjaPack {
         Long max = 9999999999L;
         do {
             localizador = (int)Math.floor(Math.random()*(max-min+1)+min);
-        } while(envios.containsKey(localizador));
+        } while(getEnvios().containsKey(localizador));
         
-        /*if(envios.containsKey(localizador)){
-            throw new LocalizadorYaRegistrado();
-        }*/
-        
-        System.out.println(localizador);
+//        System.out.println(localizador);
         return localizador;
     }
     
@@ -199,15 +131,15 @@ public class ServicioUjaPack {
      * @param pDestinatario provincia del destinatario
      * @return ruta que debe seguir el paquete para llegar a su destino
      */
-    private List<PasoPuntoControl> calculaRuta(String pRemitente, String pDestinatario){
+    public List<PasoPuntoControl> calculaRuta(String pRemitente, String pDestinatario){
         // Comprueba si las provincias introducidas son validas
         provinciasValidas(pRemitente, pDestinatario);
-        
+        /** Lista de pasos por punto de control que indicara la ruta de nuestro envio */
         List<PasoPuntoControl> ruta = new ArrayList<>();
         
         // Tipo de envio 1
         if(pRemitente.equals(pDestinatario)){
-            System.out.println("Envio tipo 1");
+//            System.out.println("Envio tipo 1");
             
             PasoPuntoControl ppc = new PasoPuntoControl(buscaProvincia(pRemitente));
             ruta.add(ppc);
@@ -215,7 +147,7 @@ public class ServicioUjaPack {
         
         // Tipo de envio 2
         if(!pRemitente.equals(pDestinatario) && mismoCentroLogistico(pRemitente, pDestinatario)){
-            System.out.println("Envio tipo 2");
+//            System.out.println("Envio tipo 2");
             PasoPuntoControl paso = new PasoPuntoControl(buscaProvincia(pRemitente));
             ruta.add(paso);
             
@@ -229,14 +161,26 @@ public class ServicioUjaPack {
         
         // Tipo de envio 3
         if(!pRemitente.equals(pDestinatario) && !mismoCentroLogistico(pRemitente, pDestinatario)){
-            System.out.println("Envio tipo 3");
+//            System.out.println("Envio tipo 3");
             PasoPuntoControl paso = new PasoPuntoControl(buscaProvincia(pRemitente));
             ruta.add(paso);
             
-            PasoPuntoControl pasoClR = new PasoPuntoControl(buscaCentroLogistico(pRemitente));
-            ruta.add(pasoClR);
-            PasoPuntoControl pasoClD = new PasoPuntoControl(buscaCentroLogistico(pRemitente));
-            ruta.add(pasoClD);
+//            PasoPuntoControl pasoClR = new PasoPuntoControl(buscaCentroLogistico(pRemitente));
+//            ruta.add(pasoClR);
+            
+//            Nodo nodoInicial = new Nodo(buscaCentroLogistico(pRemitente));
+//            Nodo nodoFinal = new Nodo(buscaCentroLogistico(pDestinatario));
+//            Profundidad busquedaProfundidad = new Profundidad();
+//            for(Nodo nodo : this.conexionesNodos.profundidad(buscaCentroLogistico(pRemitente), buscaCentroLogistico(pDestinatario))){
+//                ruta.add(new PasoPuntoControl(nodo.getCentroLogistico()));
+//            }
+
+//            for(Nodo nodo : this.conexionesNodos.profundidad(buscaCentroLogistico(pRemitente), buscaCentroLogistico(pDestinatario))){
+//                ruta.add(new PasoPuntoControl(nodo.getCentroLogistico()));
+//            }
+            
+//            PasoPuntoControl pasoClD = new PasoPuntoControl(buscaCentroLogistico(pRemitente));
+//            ruta.add(pasoClD);
             
             PasoPuntoControl pasoDestino = new PasoPuntoControl(buscaProvincia(pDestinatario));
             ruta.add(pasoDestino);
@@ -252,7 +196,7 @@ public class ServicioUjaPack {
      * @return true en caso de que pertenezcan al mismo centro logistico y false en caso contrario
      */
     private boolean mismoCentroLogistico(String pRemitente, String pDestinatario){
-        return (buscaCentroLogistico(pRemitente).getIdCentro() == buscaCentroLogistico(pDestinatario).getIdCentro());
+        return (buscaCentroLogistico(pRemitente).equals(buscaCentroLogistico(pDestinatario)));
     }
     
     /**
@@ -262,24 +206,23 @@ public class ServicioUjaPack {
      * @return id del centro logistico al que pertenece la provincia
      */
     private CentroLogistico buscaCentroLogistico(String provincia){
-        Iterator it = centrosLogisticos.entrySet().iterator();
-        
-        Map.Entry e;
-        CentroLogistico cl;
-        List<Oficina> of;
-        
-        while(it.hasNext()){
-            e = (Map.Entry<String, CentroLogistico>)it.next();
-            cl = centrosLogisticos.get(e.getKey());
-            of = cl.getOficinas();
-            for(int i = 0; i < of.size(); i++){
-                if(provincia.equals(of.get(i).getNombreProvincia())){
-                    System.out.println("Centro logistico encontrado");
-                    System.out.println("Provincia: " + provincia);
-                    System.out.println("ID Centro logistico: " + cl.getIdCentro());
-                    return centrosLogisticos.get(e.getKey());
-                }
+        for(CentroLogistico centro: getCentrosLogisticos().values()){
+            Oficina oficina = centro.buscarOficinaDependiente(provincia);
+            if(oficina != null){
+                return centro;
             }
+        }
+        return null;
+    }
+    
+    /**
+     * Buscar Provincia
+     * @param provincia provincia a buscar
+     * @return el objeto provincia encontrado
+     */
+    private Oficina buscaProvincia(String provincia){
+        for (CentroLogistico centro: getCentrosLogisticos().values()) {
+            return centro.buscarOficinaDependiente(provincia);
         }
         
         return null;
@@ -301,26 +244,80 @@ public class ServicioUjaPack {
     }
     
     /**
-     * Buscar Provincia
-     * @param provincia provincia a buscar
-     * @return el objeto provincia encontrado
+     * Obtener la situacion y estado actual del envio
+     * @param localizador numero identificador del paquete
+     * @return estado actual del envio
      */
-    private Oficina buscaProvincia(String provincia){
-        Iterator it = centrosLogisticos.entrySet().iterator();
-        
-        Map.Entry e;
-        List<Oficina> of;
-        
-        while(it.hasNext()){
-            e = (Map.Entry<String, CentroLogistico>)it.next();
-            of = centrosLogisticos.get(e.getKey()).getOficinas();
-            for(int i = 0; i < of.size(); i++){
-                if(provincia.equals(of.get(i).getNombreProvincia())){
-                    return of.get(i);
-                }
-            }
+    public Estado consultarEstadoEnvio(int localizador){
+        if(!envios.containsKey(localizador)){
+            throw new EnvioNoEncontrado();
         }
         
-        return null;
+        return this.getEnvios().get(localizador).getEstado();
     }
+    
+    public List<PasoPuntoControl> listarPuntosDeControlEnvio(int localizador){
+        return envios.get(localizador).getRuta();
+    }
+    
+    /**
+     * Lista los centros logisticos de nuestra aplicacion para comprobar que el json ha sido cargado correctamente
+     */
+    public void listarCentrosLogisticos(){
+        for(CentroLogistico cl : this.getCentrosLogisticos().values()){
+            System.out.print(cl.getIdCentro() + " " + cl.getNombre() + " ");
+            for(CentroLogistico conexion : cl.getConexiones()){
+                System.out.print(conexion.getIdCentro() + ", ");
+            }
+            System.out.println("\n----------------------------");
+            for(Oficina oficina : cl.getOficinas()){
+                System.out.println(oficina.getNombreProvincia());
+            }
+            System.out.println("----------------------------");
+        }
+    }
+    
+    /***
+     * Busqueda en profundidad para calcular ruta
+     * 
+     */
+//    public void DPSRuta (String pRemitente, String pDestino){
+//        int contador = 0;
+//        for(int i = 0; i < this.centrosLogisticos.size(); i++){
+//            for(int j = 0; j < centrosLogisticos.get(visitadas.get(i)).getProvincia().size(); j++){
+//                 if (pDestino == centrosLogisticos.get(visitadas.get(i)).getProvincias().get(j)) {
+//                    ruta.add(centrosLogisticos.get(visitadas.get(i)).getLocalizacion());
+//                    ruta.add(pDestino);
+//                }
+//            }
+//            ruta.add(centrosLogisticos.get(visitadas.get(i)).getLocalizacion());
+//            DPSRuta(centrosLogisticos.get(visitadas.get(i)).getConexiones());
+//        }
+//    }
+    
+    
+    /**
+     * Calcular ruta (CentrosLogisticos) de la regiones intermedias hasta destino
+     * @param pRemitente provincia del remitente
+     * @param pDestinatario provincia del destinatario
+     * @return 
+     */
+    private void calculaRutaCL (String pRemitente, String pDestinatario){
+        ArrayList<Oficina> conexiones = new ArrayList<>();
+        
+    }
+    
+    
+    /**
+     * Listado de los Puntos de Control por los que pasa un envio
+     * @param localizador número entero aleatorio de 10 cifras
+     * @return listado
+     */
+    private List<PuntoControl> listaPuntosControl(int localizador){
+        
+        return null;
+    
+    }
+    
+    
 }

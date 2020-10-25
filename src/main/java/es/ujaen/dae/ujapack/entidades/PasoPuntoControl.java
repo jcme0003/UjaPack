@@ -9,6 +9,7 @@ import es.ujaen.dae.ujapack.entidades.puntocontrol.CentroLogistico;
 import es.ujaen.dae.ujapack.entidades.puntocontrol.Oficina;
 import es.ujaen.dae.ujapack.entidades.puntocontrol.PuntoControl;
 import java.time.LocalDate;
+import javax.validation.constraints.NotBlank;
 
 /**
  * Puntos de control que componen la ruta del envio
@@ -20,6 +21,7 @@ public class PasoPuntoControl {
     /** Fecha de salida del punto de control */
     private LocalDate fechaSalida;
     /** Punto de control */
+    @NotBlank
     private PuntoControl puntoDeControl;
     
     /**

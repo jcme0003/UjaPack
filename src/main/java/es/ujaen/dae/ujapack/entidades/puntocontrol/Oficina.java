@@ -5,49 +5,26 @@
  */
 package es.ujaen.dae.ujapack.entidades.puntocontrol;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * Oficina correspondiente a centro logístico
  * @author Jose Carlos Mena
  */
 public class Oficina extends PuntoControl {
     /** Nombre de provincia a la que corresponde esta oficina */
+    @NotBlank
     private String nombreProvincia;
-    private String idOficina;
-    
-    /**
-     * Constructor de oficina
-     * @param idOficina identificador de la oficina
-     * @param nombreProvincia nombre de provincia a la que pertenece la oficina
-     */
-    public Oficina(String idOficina, String nombreProvincia){
-        this.idOficina = idOficina;
-        this.nombreProvincia = nombreProvincia;
-    }
     
     /**
      * Constructor de oficina
      * @param nombreProvincia nombre de provincia a la que pertenece la oficina
      */
     public Oficina(String nombreProvincia){
-//        super(nombreProvincia);
-        super();
+        super(nombreProvincia);
         this.nombreProvincia = nombreProvincia;
     }
-
-    /**
-     * @return el identificador de la oficina
-     */
-//    public String getIdOficina() {
-//        return idOficina;
-//    }
-
-    /**
-     * @param idOficina el identificador de la oficina a insertar
-     */
-//    public void setIdOficina(String idOficina) {
-//        this.idOficina = idOficina;
-//    }
-
+ 
     /**
      * @return el nombre de la provincia
      */

@@ -5,6 +5,7 @@
  */
 package es.ujaen.dae.ujapack.entidades;
 
+import es.ujaen.dae.ujapack.util.ExprReg;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -15,6 +16,7 @@ import javax.validation.constraints.Pattern;
  */
 public class Cliente {
     /** DNI del cliente */
+    @Pattern(regexp=ExprReg.DNI)
     private String dni;
     
     /** Nombre del cliente */
@@ -34,6 +36,7 @@ public class Cliente {
     private String provincia;
     
     /** Telefono del cliente */
+    @Pattern(regexp=ExprReg.TLF)
     private String telefono;
     
     /** Email del cliente */
