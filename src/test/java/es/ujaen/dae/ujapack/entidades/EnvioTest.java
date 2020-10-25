@@ -62,7 +62,7 @@ public class EnvioTest {
         // Envio tipo 2
         List<PasoPuntoControl> listPPC = new ArrayList<>();
         listPPC.add(new PasoPuntoControl(new Oficina("Jaén")));
-        listPPC.add(new PasoPuntoControl(new CentroLogistico(3345, "CL Andalucía-Extremadura", "Sevilla", of, centro1)));
+        listPPC.add(new PasoPuntoControl(new CentroLogistico(1, "CL Andalucía-Extremadura", "Sevilla", of, centro1)));
         listPPC.add(new PasoPuntoControl(new Oficina("Sevilla")));
         envio.setRuta(listPPC);
         envio.calculaImporte();
@@ -95,9 +95,9 @@ public class EnvioTest {
         // Envio tipo 3
         List<PasoPuntoControl> listPPC = new ArrayList<>();
         listPPC.add(new PasoPuntoControl(new Oficina("Jaén")));
-        listPPC.add(new PasoPuntoControl(new CentroLogistico(3345, "CL Andalucía-Extremadura", "Sevilla", of, centro)));
-        listPPC.add(new PasoPuntoControl(new CentroLogistico(3345, "CL Castilla La Mancha", "Toledo", of1, centro1)));
-        listPPC.add(new PasoPuntoControl(new CentroLogistico(3345, "CL Madrid", "Madrid", of2, centro2)));
+        listPPC.add(new PasoPuntoControl(new CentroLogistico(1, "CL Andalucía-Extremadura", "Sevilla", of, centro)));
+        listPPC.add(new PasoPuntoControl(new CentroLogistico(2, "CL Castilla La Mancha", "Toledo", of1, centro1)));
+        listPPC.add(new PasoPuntoControl(new CentroLogistico(9, "CL Madrid", "Madrid", of2, centro2)));
         listPPC.add(new PasoPuntoControl(new Oficina("Madrid")));
         envio.setRuta(listPPC);
         envio.calculaImporte();
