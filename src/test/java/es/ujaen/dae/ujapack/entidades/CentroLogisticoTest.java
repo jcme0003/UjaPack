@@ -40,11 +40,11 @@ public class CentroLogisticoTest {
         List<CentroLogistico> centro = new ArrayList<CentroLogistico>();
         List<CentroLogistico> centro1 = new ArrayList<CentroLogistico>();
         List<CentroLogistico> centro2 = new ArrayList<CentroLogistico>();
-        CentroLogistico pru2 = new CentroLogistico(8745, "CL Canarias", "Santa Cruz de Tenerife", of2, centro);
+        CentroLogistico pru2 = new CentroLogistico(10, "CL Canarias", "Santa Cruz de Tenerife", of2, centro);
         centro2.add(pru2);
-        CentroLogistico pru1 = new CentroLogistico(4245, "CL Madrid", "Madrid", of1, centro2);
+        CentroLogistico pru1 = new CentroLogistico(9, "CL Madrid", "Madrid", of1, centro2);
         centro1.add(pru1);
-        CentroLogistico pru = new CentroLogistico(3345, "CL Andalucía-Extremadura", "Sevilla", of, centro1);
+        CentroLogistico pru = new CentroLogistico(1, "CL Andalucía-Extremadura", "Sevilla", of, centro1);
         centro.add(pru);
  
         pru2.setConexion(pru);
