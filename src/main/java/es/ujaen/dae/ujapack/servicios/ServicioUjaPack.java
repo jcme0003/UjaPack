@@ -100,6 +100,8 @@ public class ServicioUjaPack {
                 System.out.println(of.get(i).getNombreProvincia());
             }
             System.out.println("----------------------------:");
+            //Private final static Logger LOGGER = Logger.getLogger("");
+            //LOGGER.log(level.INFO,"");
         }
     }
     
@@ -145,7 +147,7 @@ public class ServicioUjaPack {
      * @param pDestinatario provincia del destinatario
      * @return ruta que debe seguir el paquete para llegar a su destino
      */
-    private List<PasoPuntoControl> calculaRuta(String pRemitente, String pDestinatario){
+    public List<PasoPuntoControl> calculaRuta(String pRemitente, String pDestinatario){
         // Comprueba si las provincias introducidas son validas
         provinciasValidas(pRemitente, pDestinatario);
         /** Lista de pasos por punto de control que indicara la ruta de nuestro envio */
