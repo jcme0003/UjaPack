@@ -189,9 +189,9 @@ public class ServicioUjaPack {
 //                ruta.add(new PasoPuntoControl(nodo.getCentroLogistico()));
 //            }
 
-            for(Nodo nodo : this.conexionesNodos.profundidad(buscaCentroLogistico(pRemitente), buscaCentroLogistico(pDestinatario))){
-                ruta.add(new PasoPuntoControl(nodo.getCentroLogistico()));
-            }
+//            for(Nodo nodo : this.conexionesNodos.profundidad(buscaCentroLogistico(pRemitente), buscaCentroLogistico(pDestinatario))){
+//                ruta.add(new PasoPuntoControl(nodo.getCentroLogistico()));
+//            }
             
 //            PasoPuntoControl pasoClD = new PasoPuntoControl(buscaCentroLogistico(pRemitente));
 //            ruta.add(pasoClD);
