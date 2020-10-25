@@ -116,6 +116,11 @@ public class CentroLogistico extends PuntoControl {
         this.conexiones.add(conexion);
     }
     
+    /***
+     * Determinar si un centro atiende a una provincia dada
+     * @param provincia . Provincia a comprobar
+     * @return la oficina correspondiente
+     */
     public Oficina buscarOficinaDependiente(String provincia){
         for(Oficina oficina : this.oficinas){
             if(oficina.getNombreProvincia().equals(provincia)){
@@ -125,6 +130,5 @@ public class CentroLogistico extends PuntoControl {
         
         return null;
     }
-    
-    
+   
 }
