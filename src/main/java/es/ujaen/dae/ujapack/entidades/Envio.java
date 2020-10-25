@@ -201,19 +201,17 @@ public class Envio {
     
     /**
      * Calcula importe del envio
+     * Formula: importe = peso(kg) * dim(cm2) * (num_puntos_control + 1) / 1000
      */
     public void calculaImporte(){
-        // Formula: importe = peso(kg) * dim(cm2) * (num_puntos_control + 1) / 1000
-        Paquete paquete;
         float dim = 0.0f;
         
-        for(int i = 0; i < paquetes.size(); i++){
-            paquete = paquetes.get(i);
+        for(Paquete paquete : paquetes){
             dim = paquete.getAltura() * paquete.getAnchura() * paquete.getProfundidad();
             this.importe += ((paquete.getPeso() * dim * (ruta.size() + 1)) / 1000);
         }
         
-        System.out.println(importe + "€");
+//        System.out.println(this.importe + "€");
     }
     
     /**
@@ -225,26 +223,18 @@ public class Envio {
             throw new PedidoEntregado();
         }
         
-        PasoPuntoControl ppc;
-        for(int i = 0; i < ruta.size(); i++){
-            ppc = ruta.get(i);
-            
-            // Si ha llegado 
-            
+        int i = 0;
+        for(PasoPuntoControl ppc : ruta){
+            i++;
             // Si el estado es pendiente y sabemos que ya ha salido de la oficina origen cambiamos estado a transito
             if(ppc.getFechaSalida() != LocalDate.MIN && this.estado == Estado.PENDIENTE){
                 this.estado = Estado.TRANSITO;
             }
             
             // Si sabemos que ya ha salido de la oficina de entrega lo actualizamos a reparto
-            if(ppc.getFechaSalida() != LocalDate.MIN && i == ruta.size()-1){
+            if(ppc.getFechaSalida() != LocalDate.MIN && i == ruta.size()){
                 this.estado = Estado.REPARTO;
             }
-            
-            // Si ha salido del ultimo punto de control consideramos que ha sido entregado
-//            if(ppc.getFechaSalida() != LocalDate.MIN && i == ruta.size()-1){
-//                this.estado = Estado.ENTREGADO;
-//            }
         }
     }
     

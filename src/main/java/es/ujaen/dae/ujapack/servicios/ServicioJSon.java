@@ -7,8 +7,7 @@ package es.ujaen.dae.ujapack.servicios;
 
 import es.ujaen.dae.ujapack.entidades.puntocontrol.CentroLogistico;
 import es.ujaen.dae.ujapack.entidades.puntocontrol.Oficina;
-import es.ujaen.dae.ujapack.util.profundidad.Nodo;
-import es.ujaen.dae.ujapack.util.profundidad.Profundidad;
+import es.ujaen.dae.ujapack.excepciones.JSonNoEncontrado;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -23,13 +22,11 @@ import org.json.JSONObject;
 
 /**
  *
- * @author Root
+ * @author Jose Carlos Mena
  */
 public class ServicioJSon {
     /** Centros logisticos */
     private final Map<Integer, CentroLogistico> centrosLogisticos = new TreeMap<>();
-    
-//    Profundidad profundidad = new Profundidad();
     
     /**
      * Constructor por defecto de ServicioJson
@@ -85,15 +82,13 @@ public class ServicioJSon {
             // Creamos nuestro centro logistico y lo añadir a la lista de centros logisticos del sistema
             CentroLogistico centroLogistico = new CentroLogistico(Integer.parseInt(id), nombre, localizacion, oficinas, new ArrayList<>());
             this.getCentrosLogisticos().put(parseInt(id), centroLogistico);
-            
-//            this.profundidad.setCentroLogistico(centroLogistico);
         }
         
     }
     
     /**
-     * 
-     * @param url 
+     * Una vez cargados los centros logisticos le asigna las conexiones a cada uno de ellos
+     * @param url url donde esta guardado el fichero JSon
      */
     public void cargaConexiones(String url){
         String data = JSonToString(url);
@@ -121,8 +116,8 @@ public class ServicioJSon {
     
     /**
      * Convierte archivo JSon en String
-     * @param url
-     * @return 
+     * @param url url donde esta guardado el fichero JSon
+     * @return JSon convertido a String
      */
     public String JSonToString(String url){
         String data = null;
@@ -138,7 +133,7 @@ public class ServicioJSon {
                 }
             }
         } catch (FileNotFoundException e){
-            System.out.println(e.getMessage());
+            throw new JSonNoEncontrado();
         }
         
         return data;

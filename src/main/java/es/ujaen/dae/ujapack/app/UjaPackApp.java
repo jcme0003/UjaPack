@@ -11,7 +11,6 @@ import es.ujaen.dae.ujapack.entidades.PasoPuntoControl;
 import es.ujaen.dae.ujapack.objetosvalor.Paquete;
 import es.ujaen.dae.ujapack.servicios.ServicioJSon;
 import es.ujaen.dae.ujapack.servicios.ServicioUjaPack;
-import es.ujaen.dae.ujapack.util.profundidad.Profundidad;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -32,15 +31,16 @@ public class UjaPackApp {
         SpringApplication servidor = new SpringApplication(UjaPackApp.class);
         ApplicationContext context = servidor.run(args);
         
-        ServicioJSon servicioJSon = new ServicioJSon();
-        servicioJSon.cargaJSon("redujapack.json");
-        servicioJSon.cargaConexiones("redujapack.json");
+//        ServicioJSon servicioJSon = new ServicioJSon();
+//        servicioJSon.cargaJSon("redujapack.json");
+//        servicioJSon.cargaConexiones("redujapack.json");
         
 //        Profundidad profundidad = new Profundidad();
 //        profundidad.generaNodos(servicioJSon.getCentrosLogisticos());
         
         ServicioUjaPack servicio = context.getBean(ServicioUjaPack.class);
-        servicio.setCentrosLogisticos(servicioJSon.getCentrosLogisticos());
+//        servicio.setCentrosLogisticos(servicioJSon.getCentrosLogisticos());
+        servicio.cargaDatosJSon("redujapack.json");
         
         
 //        servicio.cargaJSon("redujapack.json");
@@ -50,7 +50,7 @@ public class UjaPackApp {
 //        servicio.generaLocalizador();
 
         Cliente cl1 = new Cliente("12345678A", "Paco", "Perez", "Calle falsa", "Jaén", "999000111", "email@email.com");
-        Cliente cl2 = new Cliente("87654321B", "Maria", "Muñoz", "Calle verdadera", "Burgos", "555666777", "gmail@gmail.com");
+        Cliente cl2 = new Cliente("87654321B", "Maria", "Muñoz", "Calle verdadera", "Sevilla", "555666777", "gmail@gmail.com");
         
         List<Paquete> paquetes = new ArrayList<>();
         paquetes.add(new Paquete(1.5f, 50.0f, 10.0f, 15.0f));
