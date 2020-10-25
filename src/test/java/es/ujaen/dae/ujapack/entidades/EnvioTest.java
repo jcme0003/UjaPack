@@ -10,6 +10,10 @@ import es.ujaen.dae.ujapack.entidades.puntocontrol.Oficina;
 import es.ujaen.dae.ujapack.objetosvalor.Paquete;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
@@ -24,6 +28,23 @@ public class EnvioTest {
     }
     
     @Test
+    public void testValidacionEnvio() {
+ 
+        Cliente cl1 = new Cliente("12345678A", "Paco", "Perez", "Calle falsa", "Jaén", "999000111", "email@email.com");
+        Cliente cl2 = new Cliente("87654321B", "Maria", "Muñoz", "Calle verdadera", "Jaén", "555666777", "gmail@gmail.com");
+        
+        List<Paquete> paquetes = new ArrayList<>();
+        paquetes.add(new Paquete(1.5f, 50.0f, 10.0f, 15.0f));
+        
+        Envio envio = new Envio(1234567890, cl1, cl2, paquetes);
+        
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        Set<ConstraintViolation<Envio>> violations = validator.validate(envio);
+                
+        Assertions.assertThat(violations).isEmpty();
+    }
+    
+    @Test
     public void testCalculaImporteTipo1(){
         
         Cliente cl1 = new Cliente("12345678A", "Paco", "Perez", "Calle falsa", "Jaén", "999000111", "email@email.com");
@@ -33,18 +54,14 @@ public class EnvioTest {
         paquetes.add(new Paquete(1.5f, 50.0f, 10.0f, 15.0f));
         
         Envio envio = new Envio(1234567890, cl1, cl2, paquetes);
-        // Envio tipo 1
+        
         List<PasoPuntoControl> listPPC = new ArrayList<>();
         listPPC.add(new PasoPuntoControl(new Oficina("Jaén")));
         envio.setRuta(listPPC);
         envio.calculaImporte();
-        
-        float importe = envio.getImporte();
         float result = 22.5f;
-        // Formula: importe = peso(kg) * dim(cm2) * (num_puntos_control + 1) / 1000
-        //assertEquals(importe, result);
-        Assertions.assertThat(importe).isEqualTo(result);
         
+        Assertions.assertThat(envio.getImporte()).isEqualTo(result);
     }
     
     @Test
@@ -57,22 +74,26 @@ public class EnvioTest {
         paquetes.add(new Paquete(1.5f, 50.0f, 10.0f, 15.0f));
         
         Envio envio = new Envio(1234567890, cl1, cl2, paquetes);
-        List<CentroLogistico> centro1 = new ArrayList<CentroLogistico>();
-        List<Oficina> of = new ArrayList<Oficina>();
-        // Envio tipo 2
+        
+        List<CentroLogistico> centro1 = new ArrayList<>();
+        List<Oficina> of = new ArrayList<>();
+        
+        Oficina ofJaen = new Oficina("Jaén");
+        Oficina ofSevilla = new Oficina("Sevilla");
+        of.add(ofJaen);
+        of.add(ofSevilla);
+        CentroLogistico clAndalucia = new CentroLogistico(1, "CL Andalucía-Extremadura", "Sevilla", of, centro1);
+        
         List<PasoPuntoControl> listPPC = new ArrayList<>();
-        listPPC.add(new PasoPuntoControl(new Oficina("Jaén")));
-        listPPC.add(new PasoPuntoControl(new CentroLogistico(1, "CL Andalucía-Extremadura", "Sevilla", of, centro1)));
-        listPPC.add(new PasoPuntoControl(new Oficina("Sevilla")));
+        listPPC.add(new PasoPuntoControl(ofJaen));
+        listPPC.add(new PasoPuntoControl(clAndalucia));
+        listPPC.add(new PasoPuntoControl(ofSevilla));
         envio.setRuta(listPPC);
+        
         envio.calculaImporte();
-        
-        float importe = envio.getImporte();
         float result = 45.0f;
-        // Formula: importe = peso(kg) * dim(cm2) * (num_puntos_control + 1) / 1000
-        //assertEquals(importe, result);
-        Assertions.assertThat(importe).isEqualTo(result);
         
+        Assertions.assertThat(envio.getImporte()).isEqualTo(result);
     }
     
     @Test
@@ -85,29 +106,39 @@ public class EnvioTest {
         paquetes.add(new Paquete(1.5f, 50.0f, 10.0f, 15.0f));
         
         Envio envio = new Envio(1234567890, cl1, cl2, paquetes);
-        List<Oficina> of = new ArrayList<Oficina>();
-        List<Oficina> of1 = new ArrayList<Oficina>();
-        List<Oficina> of2 = new ArrayList<Oficina>();
-        List<CentroLogistico> centro = new ArrayList<CentroLogistico>();
-        List<CentroLogistico> centro1 = new ArrayList<CentroLogistico>();
-        List<CentroLogistico> centro2 = new ArrayList<CentroLogistico>();
         
-        // Envio tipo 3
+        List<CentroLogistico> centros = new ArrayList<>();
+        List<Oficina> of = new ArrayList<>();
+        Oficina ofJaen = new Oficina("Jaén");
+        of.add(ofJaen);
+        CentroLogistico clAndalucia = new CentroLogistico(1, "CL Andalucía-Extremadura", "Sevilla", of, centros);
+        
+        
+        List<Oficina> of1 = new ArrayList<>();
+        Oficina ofMadrid = new Oficina("Madrid");
+        of1.add(ofMadrid);
+        CentroLogistico clMadrid = new CentroLogistico(9, "CL Madrid", "Madrid", of1, centros);
+        
+        
+        List<Oficina> of2 = new ArrayList<>();
+        Oficina ofToledo = new Oficina("Toledo");
+        of2.add(ofToledo);
+        CentroLogistico clCastillaMancha = new CentroLogistico(2, "CL Castilla La Mancha", "Toledo", of2, centros);
+        
+        
         List<PasoPuntoControl> listPPC = new ArrayList<>();
-        listPPC.add(new PasoPuntoControl(new Oficina("Jaén")));
-        listPPC.add(new PasoPuntoControl(new CentroLogistico(1, "CL Andalucía-Extremadura", "Sevilla", of, centro)));
-        listPPC.add(new PasoPuntoControl(new CentroLogistico(2, "CL Castilla La Mancha", "Toledo", of1, centro1)));
-        listPPC.add(new PasoPuntoControl(new CentroLogistico(9, "CL Madrid", "Madrid", of2, centro2)));
-        listPPC.add(new PasoPuntoControl(new Oficina("Madrid")));
+        listPPC.add(new PasoPuntoControl(ofJaen));
+        listPPC.add(new PasoPuntoControl(clAndalucia));
+        listPPC.add(new PasoPuntoControl(clCastillaMancha));
+        listPPC.add(new PasoPuntoControl(clMadrid));
+        listPPC.add(new PasoPuntoControl(ofMadrid));
+        
         envio.setRuta(listPPC);
         envio.calculaImporte();
         
-        float importe = envio.getImporte();
         float result = 67.5f;
-        // Formula: importe = peso(kg) * dim(cm2) * (num_puntos_control + 1) / 1000
-        //assertEquals(importe, result);
-        Assertions.assertThat(importe).isEqualTo(result);
         
+        Assertions.assertThat(envio.getImporte()).isEqualTo(result);
     }
     
 }

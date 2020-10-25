@@ -5,6 +5,7 @@
  */
 package es.ujaen.dae.ujapack.util.profundidad;
 
+import es.ujaen.dae.ujapack.util.profundidad.Nodo;
 import es.ujaen.dae.ujapack.entidades.puntocontrol.CentroLogistico;
 import java.util.ArrayList;
 import java.util.List;

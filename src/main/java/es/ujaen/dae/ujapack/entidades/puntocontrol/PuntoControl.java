@@ -5,6 +5,8 @@
  */
 package es.ujaen.dae.ujapack.entidades.puntocontrol;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * Clase que representa un punto de control
  * @author Jose Carlos Mena
@@ -13,6 +15,7 @@ public abstract class PuntoControl {
     /** Centro logistico del punto de control */
     private final int idCentro;
     /** Provincia en la que se encuentra el punto de control */
+    @NotBlank
     private final String oficinaEntrega;
     
     
@@ -27,6 +30,7 @@ public abstract class PuntoControl {
     
     /**
      * Constructor de punto de control
+     * @param idCentro identificador del centro logistico
      * @param oficinaEntrega nombre de la provincia
      */
     public PuntoControl(int idCentro, String oficinaEntrega){

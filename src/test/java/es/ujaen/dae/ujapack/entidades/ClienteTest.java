@@ -40,5 +40,24 @@ public class ClienteTest {
                 
         Assertions.assertThat(violations).isEmpty();
     }
+    
+    @Test
+    void testNoValidacionCliente() {
+ 
+        Cliente cliente = new Cliente(
+                "45789632M", 
+                "Jose",
+                "Bermudez Carvajal", 
+                "Calle La Luna",
+                "Jaén",
+                "953010203",
+                "jbc.com");
+               
+        
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        Set<ConstraintViolation<Cliente>> violations = validator.validate(cliente);
+                
+        Assertions.assertThat(violations).isNotEmpty();
+    }
 
 }

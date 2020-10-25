@@ -27,36 +27,18 @@ public class CentroLogisticoTest {
     @Test
     void testValidacionCentroLogistico() {
  
-        List<Oficina> of = new ArrayList<Oficina>();
-        of.add(new Oficina("Jaén"));
+        List<Oficina> oficinas = new ArrayList<>();
+        oficinas.add(new Oficina("Jaén"));
         
-        List<Oficina> of1 = new ArrayList<Oficina>();
-        of.add(new Oficina("Madrid"));
+        CentroLogistico clCastillaMancha = new CentroLogistico(2, "CL Castilla La Mancha", "Toledo", new ArrayList<>(), new ArrayList<>());
+        List<CentroLogistico> conexiones = new ArrayList<>();
+        conexiones.add(clCastillaMancha);
         
-        List<Oficina> of2 = new ArrayList<Oficina>();
-        of.add(new Oficina("Santa Cruz de Tenerife"));
-        
-       
-        List<CentroLogistico> centro = new ArrayList<CentroLogistico>();
-        List<CentroLogistico> centro1 = new ArrayList<CentroLogistico>();
-        List<CentroLogistico> centro2 = new ArrayList<CentroLogistico>();
-        CentroLogistico pru2 = new CentroLogistico(10, "CL Canarias", "Santa Cruz de Tenerife", of2, centro);
-        centro2.add(pru2);
-        CentroLogistico pru1 = new CentroLogistico(9, "CL Madrid", "Madrid", of1, centro2);
-        centro1.add(pru1);
-        CentroLogistico pru = new CentroLogistico(1, "CL Andalucía-Extremadura", "Sevilla", of, centro1);
-        centro.add(pru);
- 
-        pru2.setConexion(pru);
-       
+        CentroLogistico cl = new CentroLogistico(10, "CL Canarias", "Santa Cruz de Tenerife", oficinas, conexiones);
         
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-        Set<ConstraintViolation<CentroLogistico>> violations = validator.validate(pru);
-        Set<ConstraintViolation<CentroLogistico>> violations1 = validator.validate(pru1);
-        Set<ConstraintViolation<CentroLogistico>> violations2 = validator.validate(pru2);        
+        Set<ConstraintViolation<CentroLogistico>> violations = validator.validate(cl);
         
         Assertions.assertThat(violations).isEmpty();
-        Assertions.assertThat(violations1).isEmpty();
-        Assertions.assertThat(violations2).isEmpty();
     }
 }

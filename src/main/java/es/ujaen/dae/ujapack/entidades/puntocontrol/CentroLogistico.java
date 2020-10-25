@@ -6,6 +6,7 @@
 package es.ujaen.dae.ujapack.entidades.puntocontrol;
 
 import java.util.List;
+import javax.validation.constraints.NotBlank;
 
 /**
  * Centro logistico gestionado por ujapack
@@ -106,12 +107,17 @@ public class CentroLogistico extends PuntoControl {
     }
 
     /**
+     * Agrega lista de conexiones
      * @param conexiones las conexiones a insertar
      */
     public void setConexiones(List<CentroLogistico> conexiones) {
         this.conexiones = conexiones;
     }
     
+    /**
+     * Agrega una nueva conexion
+     * @param conexion conexion a añadir
+     */
     public void setConexion(CentroLogistico conexion){
         this.conexiones.add(conexion);
     }
@@ -122,7 +128,7 @@ public class CentroLogistico extends PuntoControl {
      * @return la oficina correspondiente
      */
     public Oficina buscarOficinaDependiente(String provincia){
-        for(Oficina oficina : this.oficinas){
+        for(Oficina oficina : oficinas){
             if(oficina.getNombreProvincia().equals(provincia)){
                 return oficina;
             }
