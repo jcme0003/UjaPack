@@ -6,7 +6,6 @@
 package es.ujaen.dae.ujapack.entidades.puntocontrol;
 
 import java.util.List;
-import javax.validation.constraints.NotBlank;
 
 /**
  * Centro logistico gestionado por ujapack
