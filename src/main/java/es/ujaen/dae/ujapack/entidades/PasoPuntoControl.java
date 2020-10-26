@@ -18,8 +18,10 @@ import javax.validation.constraints.NotBlank;
 public class PasoPuntoControl {
     /** Fecha de llegada al paso por punto de control */
     private LocalDate fechaLlegada;
+    
     /** Fecha de salida del punto de control */
     private LocalDate fechaSalida;
+    
     /** Punto de control */
     @NotBlank
     private PuntoControl puntoDeControl;
