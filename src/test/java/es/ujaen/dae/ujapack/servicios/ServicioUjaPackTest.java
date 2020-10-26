@@ -124,15 +124,9 @@ public class ServicioUjaPackTest {
                 "gmail@gmail.com");
         
         servicioUjaPack.cargaDatosJSon("redujapack.json");
-        servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario);
+        Envio envio = servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario);
         
-        Estado estado = Estado.ENTREGADO;
-        
-        for(Envio envio : servicioUjaPack.getEnvios().values()){
-            estado = servicioUjaPack.consultarEstadoEnvio(envio.getLocalizador());
-        }
-        
-        Assertions.assertThat(estado.equals(Estado.PENDIENTE));
+        Assertions.assertThat(servicioUjaPack.consultarEstadoEnvio(envio.getLocalizador()).equals(Estado.PENDIENTE));
     }
     
     @Test
@@ -164,11 +158,9 @@ public class ServicioUjaPackTest {
                 "gmail@gmail.com");
         
         servicioUjaPack.cargaDatosJSon("redujapack.json");
-        servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario);
+        Envio envio = servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario);
         
-        for(Envio envio : servicioUjaPack.getEnvios().values()){
-            Assertions.assertThat(envio.getRuta().size() == 1);
-        }
+        Assertions.assertThat(envio.getRuta().get(0).getPuntoDeControl().getProvincia().equals("Jaén"));
     }
     
     @Test
@@ -200,11 +192,11 @@ public class ServicioUjaPackTest {
                 "gmail@gmail.com");
         
         servicioUjaPack.cargaDatosJSon("redujapack.json");
-        servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario);
+        Envio envio = servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario);
         
-        for(Envio envio : servicioUjaPack.getEnvios().values()){
-            Assertions.assertThat(envio.getRuta().size() == 3);
-        }
+        Assertions.assertThat(envio.getRuta().get(0).getPuntoDeControl().getProvincia().equals("Jaén"));
+        Assertions.assertThat(envio.getRuta().get(1).getPuntoDeControl().getProvincia().equals("Sevilla"));
+        Assertions.assertThat(envio.getRuta().get(2).getPuntoDeControl().getProvincia().equals("Sevilla"));
     }
     
     @Test
@@ -236,13 +228,9 @@ public class ServicioUjaPackTest {
                 "gmail@gmail.com");
         
         servicioUjaPack.cargaDatosJSon("redujapack.json");
-        servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario);
+        Envio envio = servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario);
         
-        List<PasoPuntoControl> listado = new ArrayList<>();
-        
-        for(Envio envio : servicioUjaPack.getEnvios().values()){
-            listado = servicioUjaPack.listarPuntosDeControlEnvio(envio.getLocalizador());
-        }
+        List<PasoPuntoControl> listado = servicioUjaPack.listarPuntosDeControlEnvio(envio.getLocalizador());
         
         Assertions.assertThat(!listado.isEmpty());
     }
