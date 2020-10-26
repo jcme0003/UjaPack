@@ -136,6 +136,78 @@ public class ServicioUjaPackTest {
     }
     
     @Test
+    public void testCalculaRutaTipo1(){
+        Paquete paquete = new Paquete(
+                1.5f,
+                50.0f,
+                10.0f,
+                15.0f);
+        List<Paquete> paquetes = new ArrayList<>();
+        paquetes.add(paquete);
+        
+        Cliente clRemitente = new Cliente(
+                "12345678A",
+                "Paco",
+                "Perez",
+                "Calle falsa",
+                "Jaén",
+                "999000111",
+                "email@email.com");
+        
+        Cliente clDestinatario = new Cliente(
+                "87654321B",
+                "Maria",
+                "Muñoz",
+                "Calle verdadera",
+                "Jaén",
+                "555666777",
+                "gmail@gmail.com");
+        
+        servicioUjaPack.cargaDatosJSon("redujapack.json");
+        servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario);
+        
+        for(Envio envio : servicioUjaPack.getEnvios().values()){
+            Assertions.assertThat(envio.getRuta().size() == 1);
+        }
+    }
+    
+    @Test
+    public void testCalculaRutaTipo2(){
+        Paquete paquete = new Paquete(
+                1.5f,
+                50.0f,
+                10.0f,
+                15.0f);
+        List<Paquete> paquetes = new ArrayList<>();
+        paquetes.add(paquete);
+        
+        Cliente clRemitente = new Cliente(
+                "12345678A",
+                "Paco",
+                "Perez",
+                "Calle falsa",
+                "Jaén",
+                "999000111",
+                "email@email.com");
+        
+        Cliente clDestinatario = new Cliente(
+                "87654321B",
+                "Maria",
+                "Muñoz",
+                "Calle verdadera",
+                "Sevilla",
+                "555666777",
+                "gmail@gmail.com");
+        
+        servicioUjaPack.cargaDatosJSon("redujapack.json");
+        servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario);
+        
+        for(Envio envio : servicioUjaPack.getEnvios().values()){
+            Assertions.assertThat(envio.getRuta().size() == 3);
+        }
+    }
+    
+    @Test
     public void testListarPuntosDeControlEnvio(){
         Paquete paquete = new Paquete(
                 1.5f,
