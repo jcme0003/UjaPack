@@ -5,21 +5,27 @@
  */
 package es.ujaen.dae.ujapack.objetosvalor;
 
+import javax.validation.constraints.Positive;
+
 /**
  * Clase que contiene las caracteristicas necesarias de un paquete
  * @author joseo
  */
 public class Paquete {
     /** Peso del paquete */
+    @Positive
     private float peso;
     
     /** Anchura del paquete */
+    @Positive
     private float anchura;
     
     /** Altura del paquete */
+    @Positive
     private float altura;
     
     /** Profundidad del paquete */
+    @Positive
     private float profundidad;
     
     public Paquete(float peso, float anchura, float altura, float profundidad){

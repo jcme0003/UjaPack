@@ -5,12 +5,15 @@
  */
 package es.ujaen.dae.ujapack.entidades.puntocontrol;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * Oficina correspondiente a centro logístico
  * @author Jose Carlos Mena
  */
 public class Oficina extends PuntoControl {
     /** Nombre de provincia a la que corresponde esta oficina */
+    @NotBlank
     private String nombreProvincia;
     
     /**
