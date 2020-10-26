@@ -21,8 +21,5 @@ public class UjaPackApp {
         SpringApplication servidor = new SpringApplication(UjaPackApp.class);
         ApplicationContext context = servidor.run(args);
         
-        ServicioUjaPack servicio = context.getBean(ServicioUjaPack.class);
-        servicio.cargaDatosJSon("redujapack.json");
-        
     }
 }
