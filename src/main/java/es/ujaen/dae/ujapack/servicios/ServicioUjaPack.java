@@ -97,8 +97,9 @@ public class ServicioUjaPack {
      * @param paquetes paquetes que componen el envio
      * @param remitente cliente que realiza el envio
      * @param destinatario cliente que recibira el/los paquete/s
+     * @return envio creado
      */
-    public void nuevoEnvio(List<Paquete> paquetes, Cliente remitente, Cliente destinatario){
+    public Envio nuevoEnvio(List<Paquete> paquetes, Cliente remitente, Cliente destinatario){
         int localizador = generaLocalizador();
         
         Envio envio = new Envio(localizador, remitente, destinatario, paquetes);
@@ -106,6 +107,8 @@ public class ServicioUjaPack {
         envio.calculaImporte();
         
         getEnvios().put(localizador, envio);
+        
+        return envio;
     }
     
     /**
