@@ -210,8 +210,7 @@ public class Envio {
             dim = paquete.getAltura() * paquete.getAnchura() * paquete.getProfundidad();
             this.importe += ((paquete.getPeso() * dim * (ruta.size() + 1)) / 1000);
         }
-        
-//        System.out.println(this.importe + "€");
+
     }
     
     /**

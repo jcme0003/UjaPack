@@ -14,13 +14,16 @@ import java.util.List;
 public class CentroLogistico extends PuntoControl {
     /** Identificador del centro logistico */
     private int idCentro;
+    
     /** Nombre del centro logistico */
     private String nombre;
+    
     /** Ciudad donde se encuentra localizado el centro logistico */
     private String localizacion;
     
     /** Oficinas asociadas al centro logistico */
     private List<Oficina> oficinas;
+    
     /** Centros logisticos con los que esta conectado este centro logistico */
     private List<CentroLogistico> conexiones;
     

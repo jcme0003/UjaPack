@@ -14,6 +14,7 @@ import javax.validation.constraints.NotBlank;
 public abstract class PuntoControl {
     /** Centro logistico del punto de control */
     private final int idCentro;
+    
     /** Provincia en la que se encuentra el punto de control */
     @NotBlank
     private final String oficinaEntrega;
