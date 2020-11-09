@@ -9,8 +9,8 @@ package es.ujaen.dae.ujapack.excepciones;
  *
  * @author Root
  */
-public class ProvinciaDestinatarioNoValida extends RuntimeException {
-    public ProvinciaDestinatarioNoValida(){
+public class ProvinciaNoValida extends RuntimeException {
+    public ProvinciaNoValida(){
         
     }
 }
