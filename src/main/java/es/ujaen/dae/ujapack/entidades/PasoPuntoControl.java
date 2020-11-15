@@ -39,7 +39,7 @@ public class PasoPuntoControl implements Serializable {
     private LocalDate fechaSalida;
     
     /** Punto de control */
-    @NotBlank
+//    @NotBlank
 //    @OneToOne
 //    @JoinColumn(name = "idPuntoDeControl")
     @Transient

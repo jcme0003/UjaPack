@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -52,27 +53,23 @@ public class Envio implements Serializable {
     private float importe;
     
     /** Paquetes asociadas al envio */
-//    @OneToMany(fetch=FetchType.LAZY)
-//    @JoinColumn(name = "envioPaquetes")
-    @Transient
+    @OneToMany(fetch=FetchType.LAZY)
+    @JoinColumn(name = "envioPaquetes")
     private List<Paquete> paquetes;
     
     /** Cuentas asociadas al cliente */
     @OneToMany(fetch=FetchType.LAZY)
     @JoinColumn(name = "envioLocalizador")
-//    @Transient
     private List<PasoPuntoControl> ruta;
     
     /** Cliente asociado a remitente */
-//    @OneToOne
-//    @JoinColumn(name = "remitenteDni")
-    @Transient
+    @OneToOne
+    @JoinColumn(name = "remitenteDni")
     private Cliente remitente;
     
     /** Cliente asociado a destinatario */
-//    @OneToOne
-//    @JoinColumn(name = "destinatarioDni")
-    @Transient
+    @OneToOne
+    @JoinColumn(name = "destinatarioDni")
     private Cliente destinatario;
 
     public Envio() {
