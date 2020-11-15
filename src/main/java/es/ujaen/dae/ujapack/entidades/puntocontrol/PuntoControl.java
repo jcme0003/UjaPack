@@ -5,21 +5,31 @@
  */
 package es.ujaen.dae.ujapack.entidades.puntocontrol;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.validation.constraints.NotBlank;
 
 /**
  * Clase que representa un punto de control
  * @author Jose Carlos Mena
  */
+
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class PuntoControl {
     /** Centro logistico del punto de control */
-    private final int idCentro;
+    @Id
+    private int idCentro = 0;
     
     /** Provincia en la que se encuentra el punto de control */
     @NotBlank
-    private final String oficinaEntrega;
+    private String oficinaEntrega = "";
     
-    
+    public PuntoControl(){
+        
+    }
     /**
      * Constructor de punto de control
      * @param oficinaEntrega nombre de la provincia

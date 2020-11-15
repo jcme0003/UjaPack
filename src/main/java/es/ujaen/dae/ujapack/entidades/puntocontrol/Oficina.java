@@ -5,16 +5,26 @@
  */
 package es.ujaen.dae.ujapack.entidades.puntocontrol;
 
+import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 
 /**
  * Oficina correspondiente a centro logístico
  * @author Jose Carlos Mena
  */
-public class Oficina extends PuntoControl {
+
+@Entity
+public class Oficina extends PuntoControl{
     /** Nombre de provincia a la que corresponde esta oficina */
+    
     @NotBlank
     private String nombreProvincia;
+
+    public Oficina() {
+    }
+    
     
     /**
      * Constructor de oficina
