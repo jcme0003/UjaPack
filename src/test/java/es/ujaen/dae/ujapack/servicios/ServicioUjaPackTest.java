@@ -18,6 +18,8 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.MethodMode;
 
 /**
  *
@@ -35,6 +37,7 @@ public class ServicioUjaPackTest {
     }
     
     @Test
+    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     public void testAltaClienteDuplicado() {
         Cliente cliente = new Cliente(
                             "1234S5678A",
@@ -52,12 +55,14 @@ public class ServicioUjaPackTest {
     }
     
     @Test
+    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     public void testCargaDatosJSon(){
         servicioUjaPack.cargaDatosJSon();
         Assertions.assertThat(servicioUjaPack.getCentrosLogisticos().size() == 10);
     }
     
     @Test
+    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     public void testGeneraLocalizador(){
         Paquete paquete = new Paquete(
                 1.5f,
@@ -92,6 +97,7 @@ public class ServicioUjaPackTest {
     }
     
     @Test
+    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     public void testNuevoEnvio(){
         Paquete paquete = new Paquete(
                 1.5f,
@@ -125,6 +131,7 @@ public class ServicioUjaPackTest {
     }
     
     @Test
+    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     public void testConsultarEstadoEnvio(){
         Paquete paquete = new Paquete(
                 1.5f,
@@ -159,6 +166,7 @@ public class ServicioUjaPackTest {
     }
     
     @Test
+    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     public void testCalculaRutaTipo1(){
         Paquete paquete = new Paquete(
                 1.5f,
@@ -193,6 +201,7 @@ public class ServicioUjaPackTest {
     }
     
     @Test
+    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     public void testCalculaRutaTipo2(){
         Paquete paquete = new Paquete(
                 1.5f,
@@ -229,6 +238,7 @@ public class ServicioUjaPackTest {
     }
     
     @Test
+    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     public void testListarPuntosDeControlEnvio(){
         Paquete paquete = new Paquete(
                 1.5f,
@@ -265,6 +275,7 @@ public class ServicioUjaPackTest {
     }
     
     @Test
+    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     public void testProvinciasValida(){
         Paquete paquete = new Paquete(
                 1.5f,
@@ -299,6 +310,7 @@ public class ServicioUjaPackTest {
     }
     
     @Test
+    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     public void testProvinciasNoValidas(){
         Paquete paquete = new Paquete(
                 1.5f,

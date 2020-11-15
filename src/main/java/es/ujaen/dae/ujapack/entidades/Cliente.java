@@ -6,16 +6,23 @@
 package es.ujaen.dae.ujapack.entidades;
 
 import es.ujaen.dae.ujapack.util.ExprReg;
+import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 /**
  * Clientes de UjaPack
  * @author Jose Carlos Mena
  */
-public class Cliente {
+@Entity
+public class Cliente implements Serializable {
     /** DNI del cliente */
+    @Id
+    @Size(min=9, max=9)
     @Pattern(regexp=ExprReg.DNI)
     private String dni;
     
@@ -36,12 +43,16 @@ public class Cliente {
     private String provincia;
     
     /** Telefono del cliente */
+    @Size(min=9, max=13)
     @Pattern(regexp=ExprReg.TLF)
     private String telefono;
     
     /** Email del cliente */
     @Email
     private String email;
+
+    public Cliente() {
+    }
     
     /**
      * Constructor de cliente
