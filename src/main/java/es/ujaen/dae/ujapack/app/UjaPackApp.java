@@ -15,7 +15,7 @@ import org.springframework.context.ApplicationContext;
  * @author Root
  */
 @SpringBootApplication(scanBasePackages="es.ujaen.dae.ujapack.servicios")
-@EntityScan(basePackages="es.ujaen.dae.ujapack.entidades")
+@EntityScan(basePackages={"es.ujaen.dae.ujapack.entidades", "es.ujaen.dae.ujapack.objetosvalor"})
 public class UjaPackApp {
     public static void main(String[] args) throws Exception {
         // Creación de servidor

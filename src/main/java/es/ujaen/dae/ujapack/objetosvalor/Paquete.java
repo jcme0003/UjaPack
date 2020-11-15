@@ -5,13 +5,25 @@
  */
 package es.ujaen.dae.ujapack.objetosvalor;
 
+import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.constraints.Positive;
 
 /**
  * Clase que contiene las caracteristicas necesarias de un paquete
  * @author joseo
  */
-public class Paquete {
+@Entity
+public class Paquete implements Serializable {
+    
+    /** Identificador tabla */
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private int id;
+    
     /** Peso del paquete */
     @Positive
     private float peso;
@@ -27,6 +39,9 @@ public class Paquete {
     /** Profundidad del paquete */
     @Positive
     private float profundidad;
+
+    public Paquete() {
+    }
     
     public Paquete(float peso, float anchura, float altura, float profundidad){
         this.peso = peso;
