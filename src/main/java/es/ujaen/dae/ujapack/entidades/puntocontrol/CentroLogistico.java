@@ -7,7 +7,6 @@ package es.ujaen.dae.ujapack.entidades.puntocontrol;
 
 import java.util.List;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 
 /**

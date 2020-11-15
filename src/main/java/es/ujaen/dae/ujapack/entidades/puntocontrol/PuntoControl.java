@@ -5,6 +5,7 @@
  */
 package es.ujaen.dae.ujapack.entidades.puntocontrol;
 
+import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
@@ -18,7 +19,7 @@ import javax.validation.constraints.NotBlank;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public abstract class PuntoControl {
+public abstract class PuntoControl implements Serializable{
     /** Centro logistico del punto de control */
     @Id
     private int idCentro = 0;
