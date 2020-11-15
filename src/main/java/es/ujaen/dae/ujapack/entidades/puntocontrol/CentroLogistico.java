@@ -6,13 +6,20 @@
 package es.ujaen.dae.ujapack.entidades.puntocontrol;
 
 import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
 
 /**
  * Centro logistico gestionado por ujapack
  * @author Jose Carlos Mena
  */
+
+@Entity
 public class CentroLogistico extends PuntoControl {
     /** Identificador del centro logistico */
+    
+    @NotBlank
     private int idCentro;
     
     /** Nombre del centro logistico */
@@ -26,6 +33,12 @@ public class CentroLogistico extends PuntoControl {
     
     /** Centros logisticos con los que esta conectado este centro logistico */
     private List<CentroLogistico> conexiones;
+    
+    public CentroLogistico(){
+        
+    }
+    
+    
     
     /**
      * Constructor CentroLogistico
