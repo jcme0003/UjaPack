@@ -162,11 +162,17 @@ public class ServicioUjaPack {
         }
         
         // Tipo de envio 3
-//        if(!pRemitente.equals(pDestinatario) && !mismoCentroLogistico(pRemitente, pDestinatario)){
-            
-//        }
+        if(!pRemitente.equals(pDestinatario) && !mismoCentroLogistico(pRemitente, pDestinatario)){
+            calculaRutaTipo3(buscaCentroLogistico(pRemitente), buscaCentroLogistico(pDestinatario));
+        }
         
         return ruta;
+    }
+    
+    private void calculaRutaTipo3(CentroLogistico remitente, CentroLogistico destinatario){
+        
+        
+        
     }
     
     /**
