@@ -7,15 +7,24 @@ package es.ujaen.dae.ujapack.entidades;
 
 import es.ujaen.dae.ujapack.excepciones.PedidoEntregado;
 import es.ujaen.dae.ujapack.objetosvalor.Paquete;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 
 /**
  * Envio de UjaPack
  * @author Jose Carlos Mena
  */
-public class Envio {
+@Entity
+public class Envio implements Serializable {
     /** Enum que indicara el estado del envio */
     public enum Estado{
         PENDIENTE,  //aun no se ha enviado
@@ -25,6 +34,7 @@ public class Envio {
     }
     
     /** Localizador del envio */
+    @Id
     private int localizador;
     
     /** Estado del pedido */
@@ -40,16 +50,27 @@ public class Envio {
     private float importe;
     
     /** Paquetes asociadas al envio */
+    @OneToMany(fetch=FetchType.LAZY)
+    @JoinColumn(name = "envioPaquetes")
     private List<Paquete> paquetes;
     
     /** Cuentas asociadas al cliente */
+    @OneToMany(fetch=FetchType.LAZY)
+    @JoinColumn(name = "envioLocalizador")
     private List<PasoPuntoControl> ruta;
     
     /** Cliente asociado a remitente */
+    @OneToOne
+    @JoinColumn(name = "remitenteDni")
     private Cliente remitente;
     
     /** Cliente asociado a destinatario */
+    @OneToOne
+    @JoinColumn(name = "destinatarioDni")
     private Cliente destinatario;
+
+    public Envio() {
+    }
     
     /**
      * Constructor de envio
