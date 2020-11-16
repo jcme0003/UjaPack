@@ -18,19 +18,21 @@ import javax.validation.constraints.NotBlank;
  */
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public abstract class PuntoControl implements Serializable{
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public abstract class PuntoControl implements Serializable {
     /** Centro logistico del punto de control */
     @Id
-    private int idCentro = 0;
+    private final int idCentro;   
     
     /** Provincia en la que se encuentra el punto de control */
     @NotBlank
-    private String oficinaEntrega = "";
-    
-    public PuntoControl(){
-        
+    private final String oficinaEntrega;
+
+    public PuntoControl() {
+        this.idCentro = -1;
+        this.oficinaEntrega = null;
     }
+    
     /**
      * Constructor de punto de control
      * @param oficinaEntrega nombre de la provincia

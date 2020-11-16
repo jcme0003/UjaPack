@@ -16,7 +16,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -29,7 +28,6 @@ public class PasoPuntoControl implements Serializable {
     /** Identificador tabla */
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    
     private int id;
     
     /** Fecha de llegada al paso por punto de control */
@@ -39,10 +37,9 @@ public class PasoPuntoControl implements Serializable {
     private LocalDate fechaSalida;
     
     /** Punto de control */
-//    @NotBlank
-//    @OneToOne
-//    @JoinColumn(name = "idPuntoDeControl")
-    @Transient
+    @NotBlank
+    @OneToOne
+    @JoinColumn(name = "puntoDeControlId")
     private PuntoControl puntoDeControl;
 
     public PasoPuntoControl() {

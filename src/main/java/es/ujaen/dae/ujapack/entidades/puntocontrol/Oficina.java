@@ -24,7 +24,6 @@ public class Oficina extends PuntoControl{
     public Oficina() {
     }
     
-    
     /**
      * Constructor de oficina
      * @param nombreProvincia nombre de provincia a la que pertenece la oficina
