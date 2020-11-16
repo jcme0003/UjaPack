@@ -9,6 +9,7 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
@@ -34,7 +35,8 @@ public class CentroLogistico extends PuntoControl {
     private List<Oficina> oficinas;
     
     /** Centros logisticos con los que esta conectado este centro logistico */
-    @Transient
+//    @Transient
+    @ManyToMany
     private List<CentroLogistico> conexiones;
 
     public CentroLogistico() {
