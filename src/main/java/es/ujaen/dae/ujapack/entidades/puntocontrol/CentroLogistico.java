@@ -6,11 +6,17 @@
 package es.ujaen.dae.ujapack.entidades.puntocontrol;
 
 import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 /**
  * Centro logistico gestionado por ujapack
  * @author Jose Carlos Mena
  */
+@Entity
 public class CentroLogistico extends PuntoControl {
     /** Identificador del centro logistico */
     private int idCentro;
@@ -22,10 +28,17 @@ public class CentroLogistico extends PuntoControl {
     private String localizacion;
     
     /** Oficinas asociadas al centro logistico */
+//    @Transient
+    @OneToMany(fetch=FetchType.EAGER)
+    @JoinColumn(name = "oficinaNombreProvincia")
     private List<Oficina> oficinas;
     
     /** Centros logisticos con los que esta conectado este centro logistico */
+    @Transient
     private List<CentroLogistico> conexiones;
+
+    public CentroLogistico() {
+    }
     
     /**
      * Constructor CentroLogistico
