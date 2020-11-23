@@ -15,11 +15,14 @@ import es.ujaen.dae.ujapack.excepciones.ClienteYaRegistrado;
 import es.ujaen.dae.ujapack.excepciones.EnvioNoEncontrado;
 import es.ujaen.dae.ujapack.excepciones.ProvinciaNoValida;
 import es.ujaen.dae.ujapack.objetosvalor.Paquete;
+import es.ujaen.dae.ujapack.repositorios.RepositorioCentrosLogisticos;
+import es.ujaen.dae.ujapack.repositorios.RepositorioEnvios;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import javax.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -38,6 +41,12 @@ public class ServicioUjaPack {
     
     /** Mapa con la lista de centros logisticos ordenada por codigo id del centro */
     private Map<Integer, CentroLogistico> centrosLogisticos;
+    
+    @Autowired
+    RepositorioEnvios repositorioEnvios;
+    
+    @Autowired
+    RepositorioCentrosLogisticos repositorioCentrosLogisticos;
     
     /**
      * Constructor del servicio UjaPack
@@ -86,11 +95,16 @@ public class ServicioUjaPack {
      * @param cliente Cliente a añadir al sistema
      */
     public void altaCliente(Cliente cliente){
+//        if(repositorioEnvios.buscarCliente(cliente.getDni()).isPresent()){
+//            throw new ClienteYaRegistrado();
+//        }
+//        repositorioEnvios.guardarCliente(cliente);
         if (clientes.containsKey(cliente.getDni())) {
             throw new ClienteYaRegistrado();
         }
         
         clientes.put(cliente.getDni(), cliente);
+        
     }
     
     /**
