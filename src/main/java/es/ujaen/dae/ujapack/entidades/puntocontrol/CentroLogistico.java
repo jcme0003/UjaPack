@@ -41,7 +41,7 @@ public class CentroLogistico extends PuntoControl {
 
     public CentroLogistico() {
     }
-    
+   
     /**
      * Constructor CentroLogistico
      * @param idCentro identificador del centro logistico
