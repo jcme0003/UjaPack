@@ -26,24 +26,24 @@ public class ServicioLimpiadoBaseDeDatos {
     /** 
     * Lista de entidades a borrar.
     */
-//    final String[] entidades = {
-//        "PuntoControl", 
-//        "Envio",
-//        "PasoPuntoControl",
-//        "CentroLogistico",
-//        "Oficina",
-//        "Cliente"            
-//    };
+    final String[] entidades = {
+        "Paquete", 
+        "PasoPuntoControl",
+        "Oficina",
+        "CentroLogistico",
+        "Envio",
+        "Cliente"            
+    };
     
-//    final String deleteFrom = "delete from ";
-//    
-//    /** Realizar borrado */
-//    void limpiar() {
-//        transactionTemplate.executeWithoutResult(transactionStatus -> {
-//            for (String tabla : entidades) {
-//                em.createQuery(deleteFrom + tabla).executeUpdate();
-//            }
-//        });
-//    }
+    final String deleteFrom = "delete from ";
+    
+    /** Realizar borrado */
+    void limpiar() {
+        transactionTemplate.executeWithoutResult(transactionStatus -> {
+            for (String tabla : entidades) {
+                em.createQuery(deleteFrom + tabla).executeUpdate();
+            }
+        });
+    }
 
 }
