@@ -16,8 +16,8 @@ import javax.validation.constraints.NotBlank;
 
 @Entity
 public class Oficina extends PuntoControl{
-    /** Nombre de provincia a la que corresponde esta oficina */
     
+    /** Nombre de provincia a la que corresponde esta oficina */
     @NotBlank
     private String nombreProvincia;
 
@@ -30,6 +30,16 @@ public class Oficina extends PuntoControl{
      */
     public Oficina(String nombreProvincia){
         super(nombreProvincia);
+        this.nombreProvincia = nombreProvincia;
+    }
+    
+    /**
+     * Constructor de oficina con identificador del centro logistico
+     * @param idCentro identificador del centro logistico al que pertence
+     * @param nombreProvincia nombre de provincia a la que pertenece la oficina
+     */
+    public Oficina(int idCentro, String nombreProvincia){
+        super(idCentro, nombreProvincia);
         this.nombreProvincia = nombreProvincia;
     }
  

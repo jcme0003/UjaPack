@@ -24,7 +24,7 @@ public class RepositorioEnvios {
     @PersistenceContext
     EntityManager em;
     
-    public Optional<Envio> buscar (int localizador){
+    public Optional<Envio> buscar(int localizador){
         return Optional.ofNullable(em.find(Envio.class, localizador));
     }
     
@@ -32,7 +32,7 @@ public class RepositorioEnvios {
         em.persist(envio);
     }
     
-    public Optional<Cliente> buscarCliente (String dni){
+    public Optional<Cliente> buscarCliente(String dni){
         return Optional.ofNullable(em.find(Cliente.class, dni));
     }
     
@@ -40,7 +40,7 @@ public class RepositorioEnvios {
         em.persist(cliente);
     }
     
-    public void actualizar (Envio envio){ 
+    public void actualizar(Envio envio){ 
         em.merge(envio);
     }
     
