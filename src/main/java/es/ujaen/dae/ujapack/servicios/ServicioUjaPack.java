@@ -24,6 +24,7 @@ import java.util.TreeMap;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 /**
@@ -86,8 +87,45 @@ public class ServicioUjaPack {
         String url = "redujapack.json";
         ServicioJSon servicioJSon = new ServicioJSon();
         servicioJSon.cargaJSon(url);
+        insertaOficinasBD(servicioJSon.getOficinas());
+        this.centrosLogisticos = servicioJSon.getCentrosLogisticos();
+        insertaCentrosBD(servicioJSon.getCentrosLogisticos());
         servicioJSon.cargaConexiones(url);
         this.centrosLogisticos = servicioJSon.getCentrosLogisticos();
+        actualizarCentrosBD(servicioJSon.getCentrosLogisticos());
+    }
+    
+    /**
+     * Añadimos oficinas a la BD
+     * @param oficinas a insertar en la BD cargadas del json
+     */
+    @Transactional
+    private void insertaOficinasBD(List<Oficina> oficinas){
+        for(Oficina of : oficinas){
+            repositorioCentrosLogisticos.guardarOf(of);
+        }
+    }
+    
+    /**
+     * Añadimos centros logisticos a la base de datos (sin conexiones)
+     * @param centrosLogisticos centros logisticos cargados del json
+     */
+    @Transactional
+    public void insertaCentrosBD(Map<Integer, CentroLogistico> centrosLogisticos){
+        for(Map.Entry<Integer, CentroLogistico> cl : centrosLogisticos.entrySet()){
+            repositorioCentrosLogisticos.guardarCL(cl.getValue());
+        }
+    }
+    
+    /**
+     * Añadimos centros logisticos a la base de datos
+     * @param centrosLogisticos centros logisticos cargados del json
+     */
+    @Transactional
+    public void actualizarCentrosBD(Map<Integer, CentroLogistico> centrosLogisticos){
+        for(Map.Entry<Integer, CentroLogistico> cl : centrosLogisticos.entrySet()){
+            repositorioCentrosLogisticos.actualizarCL(cl.getValue());
+        }
     }
     
     /**
