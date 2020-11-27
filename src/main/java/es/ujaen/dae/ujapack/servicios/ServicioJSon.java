@@ -27,6 +27,8 @@ import org.json.JSONObject;
 public class ServicioJSon {
     /** Centros logisticos */
     private final Map<Integer, CentroLogistico> centrosLogisticos = new TreeMap<>();
+    /** Oficinas */
+    private final List<Oficina> oficinas = new ArrayList<>();
     
     /**
      * Constructor por defecto de ServicioJson
@@ -40,6 +42,10 @@ public class ServicioJSon {
      */
     public Map<Integer, CentroLogistico> getCentrosLogisticos() {
         return centrosLogisticos;
+    }
+    
+    public List<Oficina> getOficinas(){
+        return oficinas;
     }
     
     /**
@@ -67,7 +73,7 @@ public class ServicioJSon {
             nombre = elem.getString("nombre");
             localizacion = elem.getString("localización");
             // Oficinas correspondientes a este centro logistico
-            List<Oficina> oficinas = new ArrayList<>();
+            List<Oficina> oficinasCl = new ArrayList<>();
             // Cargamos las provincias correspondientes al identificador actual i
             arr = elem.getJSONArray("provincias");
             for(int j = 0; j < arr.length(); j++){
@@ -75,12 +81,14 @@ public class ServicioJSon {
                 // Añadir a array de provincias y crear Oficina (provincia) si no esta creada
                 if(!provincias.contains(arr.getString(j))){
                     provincias.add(provincia);
-                    oficinas.add(new Oficina(provincia));
+                    Oficina of = new Oficina(i, provincia);
+                    oficinasCl.add(of);
+                    oficinas.add(of);
                 }
             }
 
             // Creamos nuestro centro logistico y lo añadir a la lista de centros logisticos del sistema
-            CentroLogistico centroLogistico = new CentroLogistico(Integer.parseInt(id), nombre, localizacion, oficinas, new ArrayList<>());
+            CentroLogistico centroLogistico = new CentroLogistico(Integer.parseInt(id), nombre, localizacion, oficinasCl, new ArrayList<>());
             this.getCentrosLogisticos().put(parseInt(id), centroLogistico);
         }
         
