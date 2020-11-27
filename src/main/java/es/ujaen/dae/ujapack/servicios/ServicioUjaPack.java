@@ -11,6 +11,7 @@ import es.ujaen.dae.ujapack.entidades.Envio;
 import es.ujaen.dae.ujapack.entidades.Envio.Estado;
 import es.ujaen.dae.ujapack.entidades.PasoPuntoControl;
 import es.ujaen.dae.ujapack.entidades.puntocontrol.Oficina;
+import es.ujaen.dae.ujapack.excepciones.CentroLogisticoNoValido;
 import es.ujaen.dae.ujapack.excepciones.ClienteYaRegistrado;
 import es.ujaen.dae.ujapack.excepciones.EnvioNoEncontrado;
 import es.ujaen.dae.ujapack.excepciones.ProvinciaNoValida;
@@ -20,6 +21,7 @@ import es.ujaen.dae.ujapack.repositorios.RepositorioEnvios;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,18 +83,22 @@ public class ServicioUjaPack {
     
     /**
      * Carga datos del fichero json haciendo uso del servicio ServicioJSon
+     * @return 
      */
     @PostConstruct
-    public void cargaDatosJSon(){
+    public Map<Integer, CentroLogistico> cargaDatosJSon(){
         String url = "redujapack.json";
         ServicioJSon servicioJSon = new ServicioJSon();
         servicioJSon.cargaJSon(url);
         insertaOficinasBD(servicioJSon.getOficinas());
+//        eliminar
         this.centrosLogisticos = servicioJSon.getCentrosLogisticos();
         insertaCentrosBD(servicioJSon.getCentrosLogisticos());
         servicioJSon.cargaConexiones(url);
+//        eliminar
         this.centrosLogisticos = servicioJSon.getCentrosLogisticos();
         actualizarCentrosBD(servicioJSon.getCentrosLogisticos());
+        return servicioJSon.getCentrosLogisticos();
     }
     
     /**
@@ -244,13 +250,18 @@ public class ServicioUjaPack {
      * @return id del centro logistico al que pertenece la provincia
      */
     private CentroLogistico buscaCentroLogistico(String provincia){
-        for(CentroLogistico centro: getCentrosLogisticos().values()){
-            Oficina oficina = centro.buscarOficinaDependiente(provincia);
-            if(oficina != null){
-                return centro;
-            }
-        }
-        return null;
+//        for(CentroLogistico centro: getCentrosLogisticos().values()){
+//            Oficina oficina = centro.buscarOficinaDependiente(provincia);
+//            if(oficina != null){
+//                return centro;
+//            }
+//        }
+        
+        CentroLogistico centroLogistico = repositorioCentrosLogisticos.buscarCL(buscaProvincia(provincia).getIdCentro())
+                .orElseThrow(CentroLogisticoNoValido::new);
+        
+        
+        return centroLogistico;
     }
     
     /**
@@ -259,11 +270,14 @@ public class ServicioUjaPack {
      * @return el objeto provincia encontrado
      */
     private Oficina buscaProvincia(String provincia){
-        for (CentroLogistico centro: getCentrosLogisticos().values()) {
-            return centro.buscarOficinaDependiente(provincia);
-        }
+//        for (CentroLogistico centro: getCentrosLogisticos().values()) {
+//            return centro.buscarOficinaDependiente(provincia);
+//        }
+
+        Oficina oficina = repositorioCentrosLogisticos.buscarOf(provincia)
+                .orElseThrow(ProvinciaNoValida::new);
         
-        return null;
+        return oficina;
     }
     
     /**
