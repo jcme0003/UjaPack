@@ -39,6 +39,7 @@ public class RepositorioCentrosLogisticos {
         em.merge(cl);
     }
     
+    @Transactional(propagation=Propagation.SUPPORTS, readOnly = true)
     public Optional<Oficina> buscarOf(String nombreProvincia){
         return Optional.ofNullable(em.find(Oficina.class, nombreProvincia));
     }

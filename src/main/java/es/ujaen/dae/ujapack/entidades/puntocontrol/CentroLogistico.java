@@ -140,14 +140,14 @@ public class CentroLogistico extends PuntoControl {
      * @param provincia . Provincia a comprobar
      * @return la oficina correspondiente
      */
-    public Oficina buscarOficinaDependiente(String provincia){
-        for(Oficina oficina : oficinas){
-            if(oficina.getNombreProvincia().equals(provincia)){
-                return oficina;
-            }
-        }
-        
-        return null;
-    }
+//    public Oficina buscarOficinaDependiente(String provincia){
+//        for(Oficina oficina : oficinas){
+//            if(oficina.getNombreProvincia().equals(provincia)){
+//                return oficina;
+//            }
+//        }
+//        
+//        return null;
+//    }
    
 }
