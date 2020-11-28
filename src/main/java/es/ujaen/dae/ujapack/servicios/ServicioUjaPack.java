@@ -68,6 +68,13 @@ public class ServicioUjaPack {
     }
 
     /**
+     * @return the clientes
+     */
+    public Map<String, Cliente> getClientes() {
+        return clientes;
+    }
+
+    /**
      * @return the centrosLogisticos
      */
     public Map<Integer, CentroLogistico> getCentrosLogisticos() {
@@ -83,7 +90,8 @@ public class ServicioUjaPack {
     
     /**
      * Carga datos del fichero json haciendo uso del servicio ServicioJSon
-     * @return 
+     * COMENTAR UNA VEZ SE HA CARGADO EL JSON
+     * @return Mapa de centros logisticos cargados
      */
     @PostConstruct
     public Map<Integer, CentroLogistico> cargaDatosJSon(){
@@ -105,7 +113,6 @@ public class ServicioUjaPack {
      * Añadimos oficinas a la BD
      * @param oficinas a insertar en la BD cargadas del json
      */
-    @Transactional
     private void insertaOficinasBD(List<Oficina> oficinas){
         for(Oficina of : oficinas){
             repositorioCentrosLogisticos.guardarOf(of);
@@ -116,7 +123,6 @@ public class ServicioUjaPack {
      * Añadimos centros logisticos a la base de datos (sin conexiones)
      * @param centrosLogisticos centros logisticos cargados del json
      */
-    @Transactional
     public void insertaCentrosBD(Map<Integer, CentroLogistico> centrosLogisticos){
         for(Map.Entry<Integer, CentroLogistico> cl : centrosLogisticos.entrySet()){
             repositorioCentrosLogisticos.guardarCL(cl.getValue());
@@ -127,7 +133,6 @@ public class ServicioUjaPack {
      * Añadimos centros logisticos a la base de datos
      * @param centrosLogisticos centros logisticos cargados del json
      */
-    @Transactional
     public void actualizarCentrosBD(Map<Integer, CentroLogistico> centrosLogisticos){
         for(Map.Entry<Integer, CentroLogistico> cl : centrosLogisticos.entrySet()){
             repositorioCentrosLogisticos.actualizarCL(cl.getValue());
@@ -139,16 +144,17 @@ public class ServicioUjaPack {
      * @param cliente Cliente a añadir al sistema
      */
     public void altaCliente(Cliente cliente){
-//        if(repositorioEnvios.buscarCliente(cliente.getDni()).isPresent()){
+//        if (clientes.containsKey(cliente.getDni())) {
 //            throw new ClienteYaRegistrado();
 //        }
-//        repositorioEnvios.guardarCliente(cliente);
-        if (clientes.containsKey(cliente.getDni())) {
+//        
+//        clientes.put(cliente.getDni(), cliente);
+        
+        if(repositorioEnvios.buscarCliente(cliente.getDni()).isPresent()){
             throw new ClienteYaRegistrado();
         }
         
-        clientes.put(cliente.getDni(), cliente);
-        
+        repositorioEnvios.guardarCliente(cliente);
     }
     
     /**
@@ -165,7 +171,11 @@ public class ServicioUjaPack {
         envio.setRuta(calculaRuta(remitente.getProvincia(), destinatario.getProvincia()));
         envio.calculaImporte();
         
+//        altaCliente(remitente);
+//        altaCliente(destinatario);
+        
         getEnvios().put(localizador, envio);
+        repositorioEnvios.guardarEnvio(envio);
         
         return envio;
     }
@@ -301,6 +311,7 @@ public class ServicioUjaPack {
         
         return this.getEnvios().get(localizador).getEstado();
     }
+    
     
     public List<PasoPuntoControl> listarPuntosDeControlEnvio(int localizador){
         if(!envios.containsKey(localizador)){

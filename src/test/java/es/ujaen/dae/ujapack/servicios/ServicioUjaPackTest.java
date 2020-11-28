@@ -12,8 +12,10 @@ import es.ujaen.dae.ujapack.entidades.PasoPuntoControl;
 import es.ujaen.dae.ujapack.excepciones.ClienteYaRegistrado;
 import es.ujaen.dae.ujapack.excepciones.ProvinciaNoValida;
 import es.ujaen.dae.ujapack.objetosvalor.Paquete;
+import es.ujaen.dae.ujapack.repositorios.RepositorioEnvios;
 import java.util.ArrayList;
 import java.util.List;
+import javax.transaction.Transactional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,13 +43,13 @@ public class ServicioUjaPackTest {
     @Test
     public void testAltaClienteDuplicado() {
         Cliente cliente = new Cliente(
-                            "1234S5678A",
-                            "Paco",
-                            "Perez",
-                            "Calle falsa",
-                            "Jaén",
-                            "9990001ASD11",
-                            "email@email.com");
+                            "87654321B",
+                            "Maria",
+                            "Muñoz",
+                            "Calle verdadera",
+                            "Sevilla",
+                            "555666777",
+                            "gmail@gmail.com");
         
         servicioUjaPack.altaCliente(cliente);
         Assertions.assertThatThrownBy(() -> {
