@@ -39,7 +39,6 @@ public class ServicioUjaPackTest {
     }
     
     @Test
-    //@DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     public void testAltaClienteDuplicado() {
         Cliente cliente = new Cliente(
                             "1234S5678A",
@@ -57,10 +56,8 @@ public class ServicioUjaPackTest {
     }
     
     @Test
-    //@DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     public void testCargaDatosJSon(){
-        servicioUjaPack.cargaDatosJSon();
-        Assertions.assertThat(servicioUjaPack.getCentrosLogisticos().size() == 10);
+        Assertions.assertThat(servicioUjaPack.cargaDatosJSon().size() == 10);
     }
     
     @Test
