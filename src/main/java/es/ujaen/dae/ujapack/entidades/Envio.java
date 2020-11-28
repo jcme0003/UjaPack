@@ -82,8 +82,8 @@ public class Envio implements Serializable {
     public Envio(int localizador, Cliente remitente, Cliente destinatario, List<Paquete> paquetes){
         this.localizador = localizador;
         this.estado = Estado.PENDIENTE;
-        this.fechaLlegada = LocalDate.MIN;
-        this.horaLlegada = LocalDate.MIN;
+        this.fechaLlegada = null;
+        this.horaLlegada = null;
         
         this.paquetes = paquetes;
         

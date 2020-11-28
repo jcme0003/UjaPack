@@ -157,6 +157,18 @@ public class ServicioUjaPack {
         repositorioEnvios.guardarCliente(cliente);
     }
     
+    public void altaPaquetes(List<Paquete> paquetes){
+        for(Paquete paquete : paquetes){
+            repositorioEnvios.guardarPaquete(paquete);
+        }
+    }
+    
+    public void altaRuta(List<PasoPuntoControl> ruta){
+        for(PasoPuntoControl pasoPuntoControl : ruta){
+            repositorioEnvios.guardarPuntoControl(pasoPuntoControl);
+        }
+    }
+    
     /**
      * Crear un nuevo envio en el sistema y calcular su ruta
      * @param paquetes paquetes que componen el envio
@@ -167,14 +179,22 @@ public class ServicioUjaPack {
     public Envio nuevoEnvio(List<Paquete> paquetes, Cliente remitente, Cliente destinatario){
         int localizador = generaLocalizador();
         
+        altaPaquetes(paquetes);
+        altaCliente(remitente);
+        altaCliente(destinatario);
+        
         Envio envio = new Envio(localizador, remitente, destinatario, paquetes);
-        envio.setRuta(calculaRuta(remitente.getProvincia(), destinatario.getProvincia()));
+//        List<PasoPuntoControl> ruta = calculaRuta(remitente.getProvincia(), destinatario.getProvincia());
+        
+//        altaRuta(ruta);
+        
+//        envio.setRuta(ruta);
         envio.calculaImporte();
-        
-//        altaCliente(remitente);
-//        altaCliente(destinatario);
-        
-        getEnvios().put(localizador, envio);
+//        
+////        altaCliente(remitente);
+////        altaCliente(destinatario);
+//        
+//        getEnvios().put(localizador, envio);
         repositorioEnvios.guardarEnvio(envio);
         
         return envio;
@@ -188,9 +208,13 @@ public class ServicioUjaPack {
         int localizador;
         Long min = 1000000000L;
         Long max = 9999999999L;
+//        do {
+//            localizador = (int)Math.floor(Math.random()*(max-min+1)+min);
+//        } while(getEnvios().containsKey(localizador));
+
         do {
             localizador = (int)Math.floor(Math.random()*(max-min+1)+min);
-        } while(getEnvios().containsKey(localizador));
+        } while(repositorioEnvios.buscarEnvio(localizador).isPresent());
         
         return localizador;
     }
@@ -266,10 +290,10 @@ public class ServicioUjaPack {
 //                return centro;
 //            }
 //        }
-        
-        CentroLogistico centroLogistico = repositorioCentrosLogisticos.buscarCL(buscaProvincia(provincia).getIdCentro())
+        Oficina oficina = repositorioCentrosLogisticos.buscarOf(provincia)
+                .orElseThrow(ProvinciaNoValida::new);
+        CentroLogistico centroLogistico = repositorioCentrosLogisticos.buscarCL(oficina.getIdCentro())
                 .orElseThrow(CentroLogisticoNoValido::new);
-        
         
         return centroLogistico;
     }
