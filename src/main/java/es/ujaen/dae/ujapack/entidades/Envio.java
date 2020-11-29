@@ -83,12 +83,9 @@ public class Envio implements Serializable {
         this.estado = Estado.PENDIENTE;
         this.fechaLlegada = null;
         this.horaLlegada = null;
-        
         this.paquetes = paquetes;
-        
         this.remitente = remitente;
         this.destinatario = destinatario;
-        
         this.ruta = new ArrayList<>();
         this.importe = 0;
     }
