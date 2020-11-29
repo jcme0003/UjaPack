@@ -15,19 +15,15 @@ import es.ujaen.dae.ujapack.excepciones.CentroLogisticoNoValido;
 import es.ujaen.dae.ujapack.excepciones.ClienteYaRegistrado;
 import es.ujaen.dae.ujapack.excepciones.EnvioNoEncontrado;
 import es.ujaen.dae.ujapack.excepciones.ProvinciaNoValida;
-import es.ujaen.dae.ujapack.excepciones.RutaNoEncontrada;
 import es.ujaen.dae.ujapack.objetosvalor.Paquete;
 import es.ujaen.dae.ujapack.repositorios.RepositorioCentrosLogisticos;
 import es.ujaen.dae.ujapack.repositorios.RepositorioEnvios;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 /**
@@ -37,14 +33,10 @@ import org.springframework.validation.annotation.Validated;
 @Service
 @Validated
 public class ServicioUjaPack {
-    /** Mapa con la lista de envios ordenada por codigo localizador */
-    private Map<Integer, Envio> envios;
-    
-    /** Mapa con la lista de clientes ordenada por DNI */
-    private Map<String, Cliente> clientes;
-    
-    /** Mapa con la lista de centros logisticos ordenada por codigo id del centro */
-    private Map<Integer, CentroLogistico> centrosLogisticos;
+    public enum TipoNotificacion{
+        SALIDA,
+        LLEGADA;
+    }
     
     @Autowired
     RepositorioEnvios repositorioEnvios;
@@ -56,37 +48,6 @@ public class ServicioUjaPack {
      * Constructor del servicio UjaPack
      */
     public ServicioUjaPack(){
-        this.envios = new TreeMap<>();
-        this.clientes = new TreeMap<>();
-        this.centrosLogisticos = new TreeMap<>();
-    }
-
-    /**
-     * @return the envios
-     */
-    public Map<Integer, Envio> getEnvios() {
-        return envios;
-    }
-
-    /**
-     * @return the clientes
-     */
-    public Map<String, Cliente> getClientes() {
-        return clientes;
-    }
-
-    /**
-     * @return the centrosLogisticos
-     */
-    public Map<Integer, CentroLogistico> getCentrosLogisticos() {
-        return centrosLogisticos;
-    }
-
-    /**
-     * @param centrosLogisticos the centrosLogisticos to set
-     */
-    public void setCentrosLogisticos(Map<Integer, CentroLogistico> centrosLogisticos) {
-        this.centrosLogisticos = centrosLogisticos;
     }
     
     /**
@@ -99,12 +60,8 @@ public class ServicioUjaPack {
         ServicioJSon servicioJSon = new ServicioJSon();
         servicioJSon.cargaJSon(url);
         insertaOficinasBD(servicioJSon.getOficinas());
-//        eliminar
-        this.centrosLogisticos = servicioJSon.getCentrosLogisticos();
         insertaCentrosBD(servicioJSon.getCentrosLogisticos());
         servicioJSon.cargaConexiones(url);
-//        eliminar
-        this.centrosLogisticos = servicioJSon.getCentrosLogisticos();
         actualizarCentrosBD(servicioJSon.getCentrosLogisticos());
         return servicioJSon.getCentrosLogisticos();
     }
@@ -144,12 +101,6 @@ public class ServicioUjaPack {
      * @param cliente Cliente a añadir al sistema
      */
     public void altaCliente(Cliente cliente){
-//        if (clientes.containsKey(cliente.getDni())) {
-//            throw new ClienteYaRegistrado();
-//        }
-//        
-//        clientes.put(cliente.getDni(), cliente);
-        
         if(repositorioEnvios.buscarCliente(cliente.getDni()).isPresent()){
             throw new ClienteYaRegistrado();
         }
@@ -157,12 +108,20 @@ public class ServicioUjaPack {
         repositorioEnvios.guardarCliente(cliente);
     }
     
+    /**
+     * Insertar paquetes de un envio en la BD
+     * @param paquetes paquetes a insertar
+     */
     private void altaPaquetes(List<Paquete> paquetes){
         for(Paquete paquete : paquetes){
             repositorioEnvios.guardarPaquete(paquete);
         }
     }
     
+    /**
+     * Guardar ruta del envio en la BD
+     * @param ruta ruta a insertar
+     */
     private void altaRuta(List<PasoPuntoControl> ruta){
         for(PasoPuntoControl pasoPuntoControl : ruta){
             repositorioEnvios.guardarPuntoControl(pasoPuntoControl);
@@ -190,11 +149,6 @@ public class ServicioUjaPack {
         
         envio.setRuta(ruta);
         envio.calculaImporte();
-//        
-////        altaCliente(remitente);
-////        altaCliente(destinatario);
-//        
-//        getEnvios().put(localizador, envio);
         repositorioEnvios.guardarEnvio(envio);
         
         return envio;
@@ -208,9 +162,6 @@ public class ServicioUjaPack {
         int localizador;
         Long min = 1000000000L;
         Long max = 9999999999L;
-//        do {
-//            localizador = (int)Math.floor(Math.random()*(max-min+1)+min);
-//        } while(getEnvios().containsKey(localizador));
 
         do {
             localizador = (int)Math.floor(Math.random()*(max-min+1)+min);
@@ -286,12 +237,6 @@ public class ServicioUjaPack {
      * @return id del centro logistico al que pertenece la provincia
      */
     private CentroLogistico buscaCentroLogistico(String provincia){
-//        for(CentroLogistico centro: getCentrosLogisticos().values()){
-//            Oficina oficina = centro.buscarOficinaDependiente(provincia);
-//            if(oficina != null){
-//                return centro;
-//            }
-//        }
         Oficina oficina = repositorioCentrosLogisticos.buscarOf(provincia).orElseThrow(ProvinciaNoValida::new);
         CentroLogistico centroLogistico = repositorioCentrosLogisticos.buscarCLIdCentro(oficina.getIdCentro()).orElseThrow(CentroLogisticoNoValido::new);
         
@@ -304,10 +249,6 @@ public class ServicioUjaPack {
      * @return el objeto provincia encontrado
      */
     private Oficina buscaProvincia(String provincia){
-//        for (CentroLogistico centro: getCentrosLogisticos().values()) {
-//            return centro.buscarOficinaDependiente(provincia);
-//        }
-
         Oficina oficina = repositorioCentrosLogisticos.buscarOf(provincia).orElseThrow(ProvinciaNoValida::new);
         
         return oficina;
@@ -330,11 +271,6 @@ public class ServicioUjaPack {
     public Estado consultarEstadoEnvio(int localizador){
         Envio envio = repositorioEnvios.buscarEnvio(localizador).orElseThrow(EnvioNoEncontrado::new);
         return envio.getEstado();
-//        if(!envios.containsKey(localizador)){
-//            throw new EnvioNoEncontrado();
-//        }
-//        
-//        return this.getEnvios().get(localizador).getEstado();
     }
     
     /**
@@ -345,15 +281,5 @@ public class ServicioUjaPack {
     public List<PasoPuntoControl> listarPuntosDeControlEnvio(int localizador){
         Envio envio = repositorioEnvios.buscarEnvio(localizador).orElseThrow(EnvioNoEncontrado::new);
         return envio.getRuta();
-//        List<PasoPuntoControl> ruta;
-//        ruta = repositorioEnvios.buscarRuta(localizador).orElseThrow(RutaNoEncontrada::new);
-//        return ruta;
-
-
-//        if(!envios.containsKey(localizador)){
-//            throw new EnvioNoEncontrado();
-//        }
-//        
-//        return envios.get(localizador).getRuta();
     }  
 }
