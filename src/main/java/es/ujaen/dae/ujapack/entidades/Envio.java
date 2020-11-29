@@ -17,7 +17,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Transient;
 
 /**
  * Envio de UjaPack
@@ -55,7 +54,7 @@ public class Envio implements Serializable {
     private List<Paquete> paquetes;
     
     /** Cuentas asociadas al cliente */
-    @OneToMany(fetch=FetchType.LAZY)
+    @OneToMany(fetch=FetchType.EAGER)
     @JoinColumn(name = "envioLocalizador")
     private List<PasoPuntoControl> ruta;
     
@@ -82,8 +81,8 @@ public class Envio implements Serializable {
     public Envio(int localizador, Cliente remitente, Cliente destinatario, List<Paquete> paquetes){
         this.localizador = localizador;
         this.estado = Estado.PENDIENTE;
-        this.fechaLlegada = LocalDate.MIN;
-        this.horaLlegada = LocalDate.MIN;
+        this.fechaLlegada = null;
+        this.horaLlegada = null;
         
         this.paquetes = paquetes;
         

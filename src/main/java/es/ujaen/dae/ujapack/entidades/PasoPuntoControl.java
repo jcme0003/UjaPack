@@ -16,7 +16,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.validation.constraints.NotBlank;
 
 /**
  * Puntos de control que componen la ruta del envio
@@ -37,12 +36,14 @@ public class PasoPuntoControl implements Serializable {
     private LocalDate fechaSalida;
     
     /** Punto de control */
-    @NotBlank
     @OneToOne
     @JoinColumn(name = "puntoDeControlId")
     private PuntoControl puntoDeControl;
 
     public PasoPuntoControl() {
+        this.fechaLlegada = null;
+        this.fechaSalida = null;
+        this.puntoDeControl = null;
     }
     
     /**
@@ -50,8 +51,8 @@ public class PasoPuntoControl implements Serializable {
      * @param oficina Oficina de origen o destino
      */
     public PasoPuntoControl(Oficina oficina){
-        this.fechaLlegada = LocalDate.MIN;
-        this.fechaSalida = LocalDate.MIN;
+        this.fechaLlegada = null;
+        this.fechaSalida = null;
         this.puntoDeControl = oficina;
     }
     
@@ -60,8 +61,8 @@ public class PasoPuntoControl implements Serializable {
      * @param centroLogistico Centro logistico de origen, destino o intermediario/s
      */
     public PasoPuntoControl(CentroLogistico centroLogistico){
-        this.fechaLlegada = LocalDate.MIN;
-        this.fechaSalida = LocalDate.MIN;
+        this.fechaLlegada = null;
+        this.fechaSalida = null;
         this.puntoDeControl = centroLogistico;
     }
 

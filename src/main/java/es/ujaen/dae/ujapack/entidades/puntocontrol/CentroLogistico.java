@@ -19,8 +19,6 @@ import javax.persistence.Transient;
  */
 @Entity
 public class CentroLogistico extends PuntoControl {
-    /** Identificador del centro logistico */
-    private int idCentro;
     
     /** Nombre del centro logistico */
     private String nombre;
@@ -41,7 +39,7 @@ public class CentroLogistico extends PuntoControl {
 
     public CentroLogistico() {
     }
-    
+   
     /**
      * Constructor CentroLogistico
      * @param idCentro identificador del centro logistico
@@ -52,8 +50,6 @@ public class CentroLogistico extends PuntoControl {
      */
     public CentroLogistico(int idCentro, String nombre, String localizacion, List<Oficina> oficinas, List<CentroLogistico> conexiones){
         super(idCentro, localizacion);
-        
-        this.idCentro = idCentro;
         this.nombre = nombre;
         this.localizacion = localizacion;
         this.oficinas = oficinas;
@@ -64,15 +60,15 @@ public class CentroLogistico extends PuntoControl {
      * @return el identificado del centro logistico
      */
     public int getIdCentro() {
-        return idCentro;
+        return super.getIdCentro();
     }
-
-    /**
-     * @param idCentro el identificado del centro logistico a insertar
-     */
-    public void setIdCentro(int idCentro) {
-        this.idCentro = idCentro;
-    }
+//
+//    /**
+//     * @param idCentro el identificado del centro logistico a insertar
+//     */
+//    public void setIdCentro(int idCentro) {
+//        this.idCentro = idCentro;
+//    }
 
     /**
      * @return el nombre
@@ -144,14 +140,14 @@ public class CentroLogistico extends PuntoControl {
      * @param provincia . Provincia a comprobar
      * @return la oficina correspondiente
      */
-    public Oficina buscarOficinaDependiente(String provincia){
-        for(Oficina oficina : oficinas){
-            if(oficina.getNombreProvincia().equals(provincia)){
-                return oficina;
-            }
-        }
-        
-        return null;
-    }
+//    public Oficina buscarOficinaDependiente(String provincia){
+//        for(Oficina oficina : oficinas){
+//            if(oficina.getNombreProvincia().equals(provincia)){
+//                return oficina;
+//            }
+//        }
+//        
+//        return null;
+//    }
    
 }
