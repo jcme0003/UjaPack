@@ -41,9 +41,6 @@ public class PasoPuntoControl implements Serializable {
     private PuntoControl puntoDeControl;
 
     public PasoPuntoControl() {
-        this.fechaLlegada = null;
-        this.fechaSalida = null;
-        this.puntoDeControl = null;
     }
     
     /**
