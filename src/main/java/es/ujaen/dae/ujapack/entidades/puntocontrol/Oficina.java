@@ -57,12 +57,4 @@ public class Oficina extends PuntoControl{
         this.nombreProvincia = nombreProvincia;
     }
     
-    /**
-     * Obtener id del centro logistico al que pertenece esta provincia
-     * @return id del centro logisitco
-     */
-    public int getIdCentroPadre(){
-        return super.getIdCentro();
-    }
-    
 }
