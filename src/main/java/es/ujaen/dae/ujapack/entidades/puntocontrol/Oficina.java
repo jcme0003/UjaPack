@@ -5,7 +5,6 @@
  */
 package es.ujaen.dae.ujapack.entidades.puntocontrol;
 
-
 import javax.persistence.Entity;
 import javax.validation.constraints.NotBlank;
 
@@ -55,14 +54,6 @@ public class Oficina extends PuntoControl{
      */
     public void setNombreProvincia(String nombreProvincia) {
         this.nombreProvincia = nombreProvincia;
-    }
-    
-    /**
-     * Obtener id del centro logistico al que pertenece esta provincia
-     * @return id del centro logisitco
-     */
-    public int getIdCentroPadre(){
-        return super.getIdCentro();
     }
     
 }

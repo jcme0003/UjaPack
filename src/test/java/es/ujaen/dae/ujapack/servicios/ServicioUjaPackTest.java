@@ -12,10 +12,8 @@ import es.ujaen.dae.ujapack.entidades.PasoPuntoControl;
 import es.ujaen.dae.ujapack.excepciones.ClienteYaRegistrado;
 import es.ujaen.dae.ujapack.excepciones.ProvinciaNoValida;
 import es.ujaen.dae.ujapack.objetosvalor.Paquete;
-import es.ujaen.dae.ujapack.repositorios.RepositorioEnvios;
 import java.util.ArrayList;
 import java.util.List;
-import javax.transaction.Transactional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -63,7 +61,6 @@ public class ServicioUjaPackTest {
     }
     
     @Test
-    //@DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     public void testGeneraLocalizador(){
         Paquete paquete = new Paquete(
                 1.5f,
@@ -98,7 +95,6 @@ public class ServicioUjaPackTest {
     }
     
     @Test
-    //@DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     public void testNuevoEnvio(){
         Paquete paquete = new Paquete(
                 1.5f,
@@ -127,12 +123,11 @@ public class ServicioUjaPackTest {
                 "gmail@gmail.com");
         
         servicioUjaPack.cargaDatosJSon();
-        servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario);
-        Assertions.assertThat(servicioUjaPack.getEnvios().size() == 1);
+        Envio envio = servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario);
+        Assertions.assertThat(servicioUjaPack.consultarEstadoEnvio(envio.getLocalizador()) == Estado.PENDIENTE);
     }
     
     @Test
-    //@DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     public void testConsultarEstadoEnvio(){
         Paquete paquete = new Paquete(
                 1.5f,
@@ -167,7 +162,6 @@ public class ServicioUjaPackTest {
     }
     
     @Test
-    //@DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     public void testCalculaRutaTipo1(){
         Paquete paquete = new Paquete(
                 1.5f,
@@ -202,7 +196,6 @@ public class ServicioUjaPackTest {
     }
     
     @Test
-    //@DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     public void testCalculaRutaTipo2(){
         Paquete paquete = new Paquete(
                 1.5f,
@@ -239,7 +232,6 @@ public class ServicioUjaPackTest {
     }
     
     @Test
-    //@DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     public void testListarPuntosDeControlEnvio(){
         Paquete paquete = new Paquete(
                 1.5f,
@@ -276,7 +268,6 @@ public class ServicioUjaPackTest {
     }
     
     @Test
-    //@DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     public void testProvinciasValida(){
         Paquete paquete = new Paquete(
                 1.5f,
@@ -311,7 +302,6 @@ public class ServicioUjaPackTest {
     }
     
     @Test
-    //@DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     public void testProvinciasNoValidas(){
         Paquete paquete = new Paquete(
                 1.5f,
