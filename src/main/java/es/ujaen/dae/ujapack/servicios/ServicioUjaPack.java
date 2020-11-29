@@ -68,6 +68,13 @@ public class ServicioUjaPack {
     }
 
     /**
+     * @return the clientes
+     */
+    public Map<String, Cliente> getClientes() {
+        return clientes;
+    }
+
+    /**
      * @return the centrosLogisticos
      */
     public Map<Integer, CentroLogistico> getCentrosLogisticos() {
@@ -83,7 +90,8 @@ public class ServicioUjaPack {
     
     /**
      * Carga datos del fichero json haciendo uso del servicio ServicioJSon
-     * @return 
+     * COMENTAR UNA VEZ SE HA CARGADO EL JSON
+     * @return Mapa de centros logisticos cargados
      */
     @PostConstruct
     public Map<Integer, CentroLogistico> cargaDatosJSon(){
@@ -105,7 +113,6 @@ public class ServicioUjaPack {
      * Añadimos oficinas a la BD
      * @param oficinas a insertar en la BD cargadas del json
      */
-    @Transactional
     private void insertaOficinasBD(List<Oficina> oficinas){
         for(Oficina of : oficinas){
             repositorioCentrosLogisticos.guardarOf(of);
@@ -116,7 +123,6 @@ public class ServicioUjaPack {
      * Añadimos centros logisticos a la base de datos (sin conexiones)
      * @param centrosLogisticos centros logisticos cargados del json
      */
-    @Transactional
     public void insertaCentrosBD(Map<Integer, CentroLogistico> centrosLogisticos){
         for(Map.Entry<Integer, CentroLogistico> cl : centrosLogisticos.entrySet()){
             repositorioCentrosLogisticos.guardarCL(cl.getValue());
@@ -127,7 +133,6 @@ public class ServicioUjaPack {
      * Añadimos centros logisticos a la base de datos
      * @param centrosLogisticos centros logisticos cargados del json
      */
-    @Transactional
     public void actualizarCentrosBD(Map<Integer, CentroLogistico> centrosLogisticos){
         for(Map.Entry<Integer, CentroLogistico> cl : centrosLogisticos.entrySet()){
             repositorioCentrosLogisticos.actualizarCL(cl.getValue());
@@ -139,16 +144,29 @@ public class ServicioUjaPack {
      * @param cliente Cliente a añadir al sistema
      */
     public void altaCliente(Cliente cliente){
-//        if(repositorioEnvios.buscarCliente(cliente.getDni()).isPresent()){
+//        if (clientes.containsKey(cliente.getDni())) {
 //            throw new ClienteYaRegistrado();
 //        }
-//        repositorioEnvios.guardarCliente(cliente);
-        if (clientes.containsKey(cliente.getDni())) {
+//        
+//        clientes.put(cliente.getDni(), cliente);
+        
+        if(repositorioEnvios.buscarCliente(cliente.getDni()).isPresent()){
             throw new ClienteYaRegistrado();
         }
         
-        clientes.put(cliente.getDni(), cliente);
-        
+        repositorioEnvios.guardarCliente(cliente);
+    }
+    
+    public void altaPaquetes(List<Paquete> paquetes){
+        for(Paquete paquete : paquetes){
+            repositorioEnvios.guardarPaquete(paquete);
+        }
+    }
+    
+    public void altaRuta(List<PasoPuntoControl> ruta){
+        for(PasoPuntoControl pasoPuntoControl : ruta){
+            repositorioEnvios.guardarPuntoControl(pasoPuntoControl);
+        }
     }
     
     /**
@@ -161,11 +179,23 @@ public class ServicioUjaPack {
     public Envio nuevoEnvio(List<Paquete> paquetes, Cliente remitente, Cliente destinatario){
         int localizador = generaLocalizador();
         
-        Envio envio = new Envio(localizador, remitente, destinatario, paquetes);
-        envio.setRuta(calculaRuta(remitente.getProvincia(), destinatario.getProvincia()));
-        envio.calculaImporte();
+        altaPaquetes(paquetes);
+        altaCliente(remitente);
+        altaCliente(destinatario);
         
-        getEnvios().put(localizador, envio);
+        Envio envio = new Envio(localizador, remitente, destinatario, paquetes);
+//        List<PasoPuntoControl> ruta = calculaRuta(remitente.getProvincia(), destinatario.getProvincia());
+        
+//        altaRuta(ruta);
+        
+//        envio.setRuta(ruta);
+        envio.calculaImporte();
+//        
+////        altaCliente(remitente);
+////        altaCliente(destinatario);
+//        
+//        getEnvios().put(localizador, envio);
+        repositorioEnvios.guardarEnvio(envio);
         
         return envio;
     }
@@ -178,9 +208,13 @@ public class ServicioUjaPack {
         int localizador;
         Long min = 1000000000L;
         Long max = 9999999999L;
+//        do {
+//            localizador = (int)Math.floor(Math.random()*(max-min+1)+min);
+//        } while(getEnvios().containsKey(localizador));
+
         do {
             localizador = (int)Math.floor(Math.random()*(max-min+1)+min);
-        } while(getEnvios().containsKey(localizador));
+        } while(repositorioEnvios.buscarEnvio(localizador).isPresent());
         
         return localizador;
     }
@@ -256,10 +290,10 @@ public class ServicioUjaPack {
 //                return centro;
 //            }
 //        }
-        
-        CentroLogistico centroLogistico = repositorioCentrosLogisticos.buscarCL(buscaProvincia(provincia).getIdCentro())
+        Oficina oficina = repositorioCentrosLogisticos.buscarOf(provincia)
+                .orElseThrow(ProvinciaNoValida::new);
+        CentroLogistico centroLogistico = repositorioCentrosLogisticos.buscarCL(oficina.getIdCentro())
                 .orElseThrow(CentroLogisticoNoValido::new);
-        
         
         return centroLogistico;
     }
@@ -295,19 +329,23 @@ public class ServicioUjaPack {
      * @return estado actual del envio
      */
     public Estado consultarEstadoEnvio(int localizador){
-        if(!envios.containsKey(localizador)){
-            throw new EnvioNoEncontrado();
-        }
-        
-        return this.getEnvios().get(localizador).getEstado();
+        Envio envio = repositorioEnvios.buscarEnvio(localizador).orElseThrow(EnvioNoEncontrado::new);
+        return envio.getEstado();
+//        if(!envios.containsKey(localizador)){
+//            throw new EnvioNoEncontrado();
+//        }
+//        
+//        return this.getEnvios().get(localizador).getEstado();
     }
     
+    
     public List<PasoPuntoControl> listarPuntosDeControlEnvio(int localizador){
+//        Envio envio = repositorioEnvios.buscarEnvio(localizador).orElseThrow(EnvioNoEncontrado::new);
+//        return envio.getRuta();
         if(!envios.containsKey(localizador)){
             throw new EnvioNoEncontrado();
         }
         
         return envios.get(localizador).getRuta();
-    }
-    
+    }  
 }

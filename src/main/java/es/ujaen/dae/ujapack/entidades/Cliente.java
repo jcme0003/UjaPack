@@ -23,7 +23,7 @@ public class Cliente implements Serializable {
     /** DNI del cliente */
     @Id
     @Size(min=9, max=9)
-    @Pattern(regexp=ExprReg.DNI)
+//    @Pattern(regexp=ExprReg.DNI)
     private String dni;
     
     /** Nombre del cliente */
@@ -44,7 +44,7 @@ public class Cliente implements Serializable {
     
     /** Telefono del cliente */
     @Size(min=9, max=13)
-    @Pattern(regexp=ExprReg.TLF)
+//    @Pattern(regexp=ExprReg.TLF)
     private String telefono;
     
     /** Email del cliente */

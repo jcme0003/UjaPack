@@ -12,7 +12,7 @@ import org.springframework.context.ApplicationContext;
 
 /**
  *
- * @author Root
+ * @author Jose Carlos Mena
  */
 @SpringBootApplication(scanBasePackages={"es.ujaen.dae.ujapack.servicios", "es.ujaen.dae.ujapack.repositorios"})
 @EntityScan(basePackages={"es.ujaen.dae.ujapack.entidades", "es.ujaen.dae.ujapack.objetosvalor"})
@@ -21,6 +21,5 @@ public class UjaPackApp {
         // Creación de servidor
         SpringApplication servidor = new SpringApplication(UjaPackApp.class);
         ApplicationContext context = servidor.run(args);
-        
     }
 }
