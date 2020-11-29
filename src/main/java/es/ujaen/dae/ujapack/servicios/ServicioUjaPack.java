@@ -329,20 +329,23 @@ public class ServicioUjaPack {
      * @return estado actual del envio
      */
     public Estado consultarEstadoEnvio(int localizador){
-        if(!envios.containsKey(localizador)){
-            throw new EnvioNoEncontrado();
-        }
-        
-        return this.getEnvios().get(localizador).getEstado();
+        Envio envio = repositorioEnvios.buscarEnvio(localizador).orElseThrow(EnvioNoEncontrado::new);
+        return envio.getEstado();
+//        if(!envios.containsKey(localizador)){
+//            throw new EnvioNoEncontrado();
+//        }
+//        
+//        return this.getEnvios().get(localizador).getEstado();
     }
     
     
     public List<PasoPuntoControl> listarPuntosDeControlEnvio(int localizador){
+//        Envio envio = repositorioEnvios.buscarEnvio(localizador).orElseThrow(EnvioNoEncontrado::new);
+//        return envio.getRuta();
         if(!envios.containsKey(localizador)){
             throw new EnvioNoEncontrado();
         }
         
         return envios.get(localizador).getRuta();
-    }
-    
+    }  
 }
