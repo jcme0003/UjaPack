@@ -238,7 +238,7 @@ public class ServicioUjaPack {
             PasoPuntoControl ppc = new PasoPuntoControl(buscaProvincia(pRemitente));
             ruta.add(ppc);
         }
-        
+     
         // Tipo de envio 2
         if(!pRemitente.equals(pDestinatario) && mismoCentroLogistico(pRemitente, pDestinatario)){
             
