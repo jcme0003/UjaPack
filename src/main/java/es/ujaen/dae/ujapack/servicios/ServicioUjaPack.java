@@ -15,6 +15,7 @@ import es.ujaen.dae.ujapack.excepciones.CentroLogisticoNoValido;
 import es.ujaen.dae.ujapack.excepciones.ClienteYaRegistrado;
 import es.ujaen.dae.ujapack.excepciones.EnvioNoEncontrado;
 import es.ujaen.dae.ujapack.excepciones.ProvinciaNoValida;
+import es.ujaen.dae.ujapack.excepciones.RutaNoEncontrada;
 import es.ujaen.dae.ujapack.objetosvalor.Paquete;
 import es.ujaen.dae.ujapack.repositorios.RepositorioCentrosLogisticos;
 import es.ujaen.dae.ujapack.repositorios.RepositorioEnvios;
@@ -90,7 +91,6 @@ public class ServicioUjaPack {
     
     /**
      * Carga datos del fichero json haciendo uso del servicio ServicioJSon
-     * COMENTAR UNA VEZ SE HA CARGADO EL JSON
      * @return Mapa de centros logisticos cargados
      */
     @PostConstruct
@@ -123,7 +123,7 @@ public class ServicioUjaPack {
      * Añadimos centros logisticos a la base de datos (sin conexiones)
      * @param centrosLogisticos centros logisticos cargados del json
      */
-    public void insertaCentrosBD(Map<Integer, CentroLogistico> centrosLogisticos){
+    private void insertaCentrosBD(Map<Integer, CentroLogistico> centrosLogisticos){
         for(Map.Entry<Integer, CentroLogistico> cl : centrosLogisticos.entrySet()){
             repositorioCentrosLogisticos.guardarCL(cl.getValue());
         }
@@ -133,7 +133,7 @@ public class ServicioUjaPack {
      * Añadimos centros logisticos a la base de datos
      * @param centrosLogisticos centros logisticos cargados del json
      */
-    public void actualizarCentrosBD(Map<Integer, CentroLogistico> centrosLogisticos){
+    private void actualizarCentrosBD(Map<Integer, CentroLogistico> centrosLogisticos){
         for(Map.Entry<Integer, CentroLogistico> cl : centrosLogisticos.entrySet()){
             repositorioCentrosLogisticos.actualizarCL(cl.getValue());
         }
@@ -157,13 +157,13 @@ public class ServicioUjaPack {
         repositorioEnvios.guardarCliente(cliente);
     }
     
-    public void altaPaquetes(List<Paquete> paquetes){
+    private void altaPaquetes(List<Paquete> paquetes){
         for(Paquete paquete : paquetes){
             repositorioEnvios.guardarPaquete(paquete);
         }
     }
     
-    public void altaRuta(List<PasoPuntoControl> ruta){
+    private void altaRuta(List<PasoPuntoControl> ruta){
         for(PasoPuntoControl pasoPuntoControl : ruta){
             repositorioEnvios.guardarPuntoControl(pasoPuntoControl);
         }
@@ -184,11 +184,11 @@ public class ServicioUjaPack {
         altaCliente(destinatario);
         
         Envio envio = new Envio(localizador, remitente, destinatario, paquetes);
-//        List<PasoPuntoControl> ruta = calculaRuta(remitente.getProvincia(), destinatario.getProvincia());
+        List<PasoPuntoControl> ruta = calculaRuta(remitente.getProvincia(), destinatario.getProvincia());
         
-//        altaRuta(ruta);
+        altaRuta(ruta);
         
-//        envio.setRuta(ruta);
+        envio.setRuta(ruta);
         envio.calculaImporte();
 //        
 ////        altaCliente(remitente);
@@ -239,6 +239,8 @@ public class ServicioUjaPack {
             ruta.add(ppc);
         }
         
+        boolean b = mismoCentroLogistico(pRemitente, pDestinatario);
+        
         // Tipo de envio 2
         if(!pRemitente.equals(pDestinatario) && mismoCentroLogistico(pRemitente, pDestinatario)){
             
@@ -254,9 +256,9 @@ public class ServicioUjaPack {
         }
         
         // Tipo de envio 3
-        if(!pRemitente.equals(pDestinatario) && !mismoCentroLogistico(pRemitente, pDestinatario)){
-            calculaRutaTipo3(buscaCentroLogistico(pRemitente), buscaCentroLogistico(pDestinatario));
-        }
+//        if(!pRemitente.equals(pDestinatario) && !mismoCentroLogistico(pRemitente, pDestinatario)){
+//            calculaRutaTipo3(buscaCentroLogistico(pRemitente), buscaCentroLogistico(pDestinatario));
+//        }
         
         return ruta;
     }
@@ -274,7 +276,7 @@ public class ServicioUjaPack {
      * @return true en caso de que pertenezcan al mismo centro logistico y false en caso contrario
      */
     private boolean mismoCentroLogistico(String pRemitente, String pDestinatario){
-        return (buscaCentroLogistico(pRemitente).equals(buscaCentroLogistico(pDestinatario)));
+        return (buscaCentroLogistico(pRemitente).getIdCentro() == (buscaCentroLogistico(pDestinatario).getIdCentro()));
     }
     
     /**
@@ -290,10 +292,8 @@ public class ServicioUjaPack {
 //                return centro;
 //            }
 //        }
-        Oficina oficina = repositorioCentrosLogisticos.buscarOf(provincia)
-                .orElseThrow(ProvinciaNoValida::new);
-        CentroLogistico centroLogistico = repositorioCentrosLogisticos.buscarCL(oficina.getIdCentro())
-                .orElseThrow(CentroLogisticoNoValido::new);
+        Oficina oficina = repositorioCentrosLogisticos.buscarOf(provincia).orElseThrow(ProvinciaNoValida::new);
+        CentroLogistico centroLogistico = repositorioCentrosLogisticos.buscarCLIdCentro(oficina.getIdCentro()).orElseThrow(CentroLogisticoNoValido::new);
         
         return centroLogistico;
     }
@@ -308,8 +308,7 @@ public class ServicioUjaPack {
 //            return centro.buscarOficinaDependiente(provincia);
 //        }
 
-        Oficina oficina = repositorioCentrosLogisticos.buscarOf(provincia)
-                .orElseThrow(ProvinciaNoValida::new);
+        Oficina oficina = repositorioCentrosLogisticos.buscarOf(provincia).orElseThrow(ProvinciaNoValida::new);
         
         return oficina;
     }
@@ -338,14 +337,23 @@ public class ServicioUjaPack {
 //        return this.getEnvios().get(localizador).getEstado();
     }
     
-    
+    /**
+     * Obtener ruta de un envio
+     * @param localizador localizador del envio
+     * @return ruta del envio
+     */
     public List<PasoPuntoControl> listarPuntosDeControlEnvio(int localizador){
-//        Envio envio = repositorioEnvios.buscarEnvio(localizador).orElseThrow(EnvioNoEncontrado::new);
-//        return envio.getRuta();
-        if(!envios.containsKey(localizador)){
-            throw new EnvioNoEncontrado();
-        }
-        
-        return envios.get(localizador).getRuta();
+        Envio envio = repositorioEnvios.buscarEnvio(localizador).orElseThrow(EnvioNoEncontrado::new);
+        return envio.getRuta();
+//        List<PasoPuntoControl> ruta;
+//        ruta = repositorioEnvios.buscarRuta(localizador).orElseThrow(RutaNoEncontrada::new);
+//        return ruta;
+
+
+//        if(!envios.containsKey(localizador)){
+//            throw new EnvioNoEncontrado();
+//        }
+//        
+//        return envios.get(localizador).getRuta();
     }  
 }
