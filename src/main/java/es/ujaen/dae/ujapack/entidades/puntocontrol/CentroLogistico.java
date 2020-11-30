@@ -11,7 +11,6 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.persistence.Transient;
 
 /**
  * Centro logistico gestionado por ujapack
@@ -27,13 +26,11 @@ public class CentroLogistico extends PuntoControl {
     private String localizacion;
     
     /** Oficinas asociadas al centro logistico */
-//    @Transient
     @OneToMany(fetch=FetchType.EAGER)
     @JoinColumn(name = "oficinaNombreProvincia")
     private List<Oficina> oficinas;
     
     /** Centros logisticos con los que esta conectado este centro logistico */
-//    @Transient
     @ManyToMany
     private List<CentroLogistico> conexiones;
 
@@ -55,20 +52,6 @@ public class CentroLogistico extends PuntoControl {
         this.oficinas = oficinas;
         this.conexiones = conexiones;
     }
-
-    /**
-     * @return el identificado del centro logistico
-     */
-    public int getIdCentro() {
-        return super.getIdCentro();
-    }
-//
-//    /**
-//     * @param idCentro el identificado del centro logistico a insertar
-//     */
-//    public void setIdCentro(int idCentro) {
-//        this.idCentro = idCentro;
-//    }
 
     /**
      * @return el nombre
@@ -134,20 +117,5 @@ public class CentroLogistico extends PuntoControl {
     public void setConexion(CentroLogistico conexion){
         this.conexiones.add(conexion);
     }
-    
-    /***
-     * Determinar si un centro atiende a una provincia dada
-     * @param provincia . Provincia a comprobar
-     * @return la oficina correspondiente
-     */
-//    public Oficina buscarOficinaDependiente(String provincia){
-//        for(Oficina oficina : oficinas){
-//            if(oficina.getNombreProvincia().equals(provincia)){
-//                return oficina;
-//            }
-//        }
-//        
-//        return null;
-//    }
    
 }

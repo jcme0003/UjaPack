@@ -60,6 +60,13 @@ public abstract class PuntoControl implements Serializable {
     }
 
     /**
+     * @return the id
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
      * @return el identificador del centro logistico
      */
     public int getIdCentro() {
