@@ -44,7 +44,7 @@ public class ServicioUjaPack {
     RepositorioEnvios repositorioEnvios;
     
     @Autowired
-    RepositorioPuntosControl repositorioCentrosLogisticos;
+    RepositorioPuntosControl repositorioPuntoControl;
     
     /**
      * Constructor del servicio UjaPack
@@ -74,7 +74,7 @@ public class ServicioUjaPack {
      */
     private void insertaOficinasBD(List<Oficina> oficinas){
         for(Oficina of : oficinas){
-            repositorioCentrosLogisticos.guardarOf(of);
+            repositorioPuntoControl.guardarOf(of);
         }
     }
     
@@ -84,7 +84,7 @@ public class ServicioUjaPack {
      */
     private void insertaCentrosBD(Map<Integer, CentroLogistico> centrosLogisticos){
         for(Map.Entry<Integer, CentroLogistico> cl : centrosLogisticos.entrySet()){
-            repositorioCentrosLogisticos.guardarCL(cl.getValue());
+            repositorioPuntoControl.guardarCL(cl.getValue());
         }
     }
     
@@ -94,7 +94,7 @@ public class ServicioUjaPack {
      */
     private void actualizarCentrosBD(Map<Integer, CentroLogistico> centrosLogisticos){
         for(Map.Entry<Integer, CentroLogistico> cl : centrosLogisticos.entrySet()){
-            repositorioCentrosLogisticos.actualizarCL(cl.getValue());
+            repositorioPuntoControl.actualizarCL(cl.getValue());
         }
     }
     
@@ -146,8 +146,6 @@ public class ServicioUjaPack {
         
         Envio envio = new Envio(localizador, remitente, destinatario, paquetes);
         List<PasoPuntoControl> ruta = calculaRuta(envio.getLocalizador(), remitente.getProvincia(), destinatario.getProvincia());
-        
-        altaRuta(ruta);
         
         envio.setRuta(ruta);
         envio.calculaImporte();
@@ -239,8 +237,8 @@ public class ServicioUjaPack {
      * @return id del centro logistico al que pertenece la provincia
      */
     private CentroLogistico buscaCentroLogistico(String provincia){
-        Oficina oficina = repositorioCentrosLogisticos.buscarOf(provincia).orElseThrow(ProvinciaNoValida::new);
-        CentroLogistico centroLogistico = repositorioCentrosLogisticos.buscarCLIdCentro(oficina.getIdCentro()).orElseThrow(CentroLogisticoNoValido::new);
+        Oficina oficina = repositorioPuntoControl.buscarOf(provincia).orElseThrow(ProvinciaNoValida::new);
+        CentroLogistico centroLogistico = repositorioPuntoControl.buscarCLIdCentro(oficina.getIdCentro()).orElseThrow(CentroLogisticoNoValido::new);
         
         return centroLogistico;
     }
@@ -251,7 +249,7 @@ public class ServicioUjaPack {
      * @return el objeto provincia encontrado
      */
     private Oficina buscaProvincia(String provincia){
-        Oficina oficina = repositorioCentrosLogisticos.buscarOf(provincia).orElseThrow(ProvinciaNoValida::new);
+        Oficina oficina = repositorioPuntoControl.buscarOf(provincia).orElseThrow(ProvinciaNoValida::new);
         
         return oficina;
     }
@@ -290,31 +288,31 @@ public class ServicioUjaPack {
      * @param tipoNotificacion llegada o salida
      * @param oficina oficina a modificar
      * @param localizador localizador del envio
+     * @return 
      */
-    public void notificarOficina(TipoNotificacion tipoNotificacion, String oficina, int localizador){
-        //ERROR - Carga datos antiguos de oficinas...
-        Oficina of = repositorioCentrosLogisticos.buscarOf(oficina).orElseThrow(ProvinciaNoValida::new);
-        List<PasoPuntoControl> ruta = repositorioEnvios.buscarRutaEnvio(localizador, of.getId()).orElseThrow(PasoPuntoControlNoEncontrado::new);
-        System.out.println(of.getId());
-        System.out.println(of.getIdCentro());
+    public List<PasoPuntoControl> notificarOficina(TipoNotificacion tipoNotificacion, String oficina, int localizador){
+        Envio envio = repositorioEnvios.buscarEnvio(localizador).orElseThrow(EnvioNoEncontrado::new);
+        List<PasoPuntoControl> ruta = envio.getRuta();
         
         if(tipoNotificacion == TipoNotificacion.SALIDA){
             for(PasoPuntoControl ppc : ruta){
-                if(ppc.getFechaSalida().isEqual(null)){
+                if(ppc.getPuntoDeControl().getProvincia().equals(oficina) && ppc.getFechaSalida() == null){
                     ppc.setFechaSalida(LocalDateTime.now());
-                    repositorioEnvios.actualizarPasoPuntoControl(ppc);
                 }
             }
         }
         
         if(tipoNotificacion == TipoNotificacion.LLEGADA){
             for(PasoPuntoControl ppc : ruta){
-                if(ppc.getFechaSalida().isEqual(null)){
+                if(ppc.getPuntoDeControl().getProvincia().equals(oficina) && ppc.getFechaSalida() == null){
                     ppc.setFechaLlegada(LocalDateTime.now());
-                    repositorioEnvios.actualizarPasoPuntoControl(ppc);
                 }
             }
         }
+        
+        repositorioEnvios.actualizarEnvio(envio);
+        
+        return envio.getRuta();
     }
     
     /**
@@ -325,28 +323,26 @@ public class ServicioUjaPack {
      * @return 
      */
     public List<PasoPuntoControl> notificarCentroLogistico(TipoNotificacion tipoNotificacion, int idCentro, int localizador){
-        //ERROR - Carga datos antiguos de centroslogisticos...
-        CentroLogistico cl = repositorioCentrosLogisticos.buscarCLIdCentro(idCentro).orElseThrow(CentroLogisticoNoValido::new);
-        List<PasoPuntoControl> ruta = repositorioEnvios.buscarRutaEnvio(localizador, cl.getId()).orElseThrow(PasoPuntoControlNoEncontrado::new);
-        System.out.println(cl.getId());
+        Envio envio = repositorioEnvios.buscarEnvio(localizador).orElseThrow(EnvioNoEncontrado::new);
+        List<PasoPuntoControl> ruta = envio.getRuta();
         
         if(tipoNotificacion == TipoNotificacion.SALIDA){
             for(PasoPuntoControl ppc : ruta){
-                if(ppc.getFechaSalida().isEqual(null)){
+                if(ppc.getPuntoDeControl().getIdCentro() == idCentro && ppc.getFechaSalida() == null){
                     ppc.setFechaSalida(LocalDateTime.now());
-                    repositorioEnvios.actualizarPasoPuntoControl(ppc);
                 }
             }
         }
         
         if(tipoNotificacion == TipoNotificacion.LLEGADA){
             for(PasoPuntoControl ppc : ruta){
-                if(ppc.getFechaSalida().isEqual(null)){
+                if(ppc.getPuntoDeControl().getIdCentro() == idCentro && ppc.getFechaSalida() == null){
                     ppc.setFechaLlegada(LocalDateTime.now());
-                    repositorioEnvios.actualizarPasoPuntoControl(ppc);
                 }
             }
         }
+        
+        repositorioEnvios.actualizarEnvio(envio);
         
         return ruta;
     }

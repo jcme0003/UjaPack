@@ -65,17 +65,6 @@ public class RepositorioEnvios {
         em.merge(pasoPuntoControl);
     }
     
-    @Transactional
-    public Optional<List<PasoPuntoControl>> buscarRutaEnvio(int localizador, int idPuntoControl){
-        List<PasoPuntoControl> ruta;
-        ruta = em.createQuery(
-                "SELECT ppc FROM PasoPuntoControl ppc WHERE ppc.localizador = '" + localizador + "' and ppc.puntoDeControl = '" + idPuntoControl + "'",
-                PasoPuntoControl.class
-        ).getResultList();
-
-        return ruta.isEmpty() ? Optional.empty() : Optional.of(ruta);
-    }
-    
     public void actualizarPasoPuntoControl(PasoPuntoControl ppc){ 
         em.merge(ppc);
     }
