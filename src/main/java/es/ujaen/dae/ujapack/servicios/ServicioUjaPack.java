@@ -73,16 +73,6 @@ public class ServicioUjaPack {
     }
     
     /**
-     * Guardar ruta del envio en la BD
-     * @param ruta ruta a insertar
-     */
-    private void altaRuta(List<PasoPuntoControl> ruta){
-        for(PasoPuntoControl pasoPuntoControl : ruta){
-            repositorioEnvios.guardarPuntoControl(pasoPuntoControl);
-        }
-    }
-    
-    /**
      * Crear un nuevo envio en el sistema y calcular su ruta
      * @param paquetes paquetes que componen el envio
      * @param remitente cliente que realiza el envio
@@ -158,18 +148,7 @@ public class ServicioUjaPack {
             
         }
         
-        // Tipo de envio 3
-//        if(!pRemitente.equals(pDestinatario) && !mismoCentroLogistico(pRemitente, pDestinatario)){
-//            calculaRutaTipo3(buscaCentroLogistico(pRemitente), buscaCentroLogistico(pDestinatario));
-//        }
-        
         return ruta;
-    }
-    
-    private void calculaRutaTipo3(CentroLogistico remitente, CentroLogistico destinatario){
-        
-        
-        
     }
     
     /**
@@ -326,8 +305,6 @@ public class ServicioUjaPack {
             if(ppc.getFechaLlegada() == null){
                 ppc.setFechaLlegada(LocalDateTime.now());
             }
-            
-            repositorioEnvios.actualizarPuntoControl(ppc);
         }
         
         repositorioEnvios.actualizarEnvio(envio);

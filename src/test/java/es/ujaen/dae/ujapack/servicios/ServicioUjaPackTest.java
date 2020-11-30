@@ -13,7 +13,6 @@ import es.ujaen.dae.ujapack.excepciones.ClienteYaRegistrado;
 import es.ujaen.dae.ujapack.excepciones.ProvinciaNoValida;
 import es.ujaen.dae.ujapack.objetosvalor.Paquete;
 import es.ujaen.dae.ujapack.servicios.ServicioUjaPack.TipoNotificacion;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -450,7 +449,7 @@ public class ServicioUjaPackTest {
         List<PasoPuntoControl> ruta = servicioUjaPack.notificarCentroLogistico(TipoNotificacion.LLEGADA, 1, envio.getLocalizador());
         
         Assertions.assertThat(!ruta.isEmpty());
-        Assertions.assertThat(ruta.get(0).getFechaLlegada()!= null);
+        Assertions.assertThat(ruta.get(0).getFechaLlegada() != null);
         Assertions.assertThat(ruta.get(0).getFechaLlegada().isAfter(LocalDateTime.MIN));
         Assertions.assertThat(ruta.get(0).getFechaLlegada().isBefore(LocalDateTime.now()));
     }
