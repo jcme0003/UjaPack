@@ -15,6 +15,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -59,12 +60,12 @@ public class Envio implements Serializable {
     private List<PasoPuntoControl> ruta;
     
     /** Cliente asociado a remitente */
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "remitenteDni")
     private Cliente remitente;
     
     /** Cliente asociado a destinatario */
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "destinatarioDni")
     private Cliente destinatario;
 
@@ -233,25 +234,25 @@ public class Envio implements Serializable {
     /**
      * Actualiza el estado del envio
      */
-    public void actualizaEstadoEnvio(){
-        // Si el pedido esta entregado no se puede actualizar
-        if(this.estado == Estado.ENTREGADO){
-            throw new PedidoEntregado();
-        }
-        
-        int i = 0;
-        for(PasoPuntoControl ppc : ruta){
-            i++;
-            // Si el estado es pendiente y sabemos que ya ha salido de la oficina origen cambiamos estado a transito
-            if(ppc.getFechaSalida() != LocalDate.MIN && this.estado == Estado.PENDIENTE){
-                this.estado = Estado.TRANSITO;
-            }
-            
-            // Si sabemos que ya ha salido de la oficina de entrega lo actualizamos a reparto
-            if(ppc.getFechaSalida() != LocalDate.MIN && i == ruta.size()){
-                this.estado = Estado.REPARTO;
-            }
-        }
-    }
+//    public void actualizaEstadoEnvio(){
+//        // Si el pedido esta entregado no se puede actualizar
+//        if(this.estado == Estado.ENTREGADO){
+//            throw new PedidoEntregado();
+//        }
+//        
+//        int i = 0;
+//        for(PasoPuntoControl ppc : ruta){
+//            i++;
+//            // Si el estado es pendiente y sabemos que ya ha salido de la oficina origen cambiamos estado a transito
+//            if(ppc.getFechaSalida() != LocalDate.MIN && this.estado == Estado.PENDIENTE){
+//                this.estado = Estado.TRANSITO;
+//            }
+//            
+//            // Si sabemos que ya ha salido de la oficina de entrega lo actualizamos a reparto
+//            if(ppc.getFechaSalida() != LocalDate.MIN && i == ruta.size()){
+//                this.estado = Estado.REPARTO;
+//            }
+//        }
+//    }
     
 }
