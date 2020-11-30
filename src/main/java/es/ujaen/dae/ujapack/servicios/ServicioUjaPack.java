@@ -14,7 +14,6 @@ import es.ujaen.dae.ujapack.entidades.puntocontrol.Oficina;
 import es.ujaen.dae.ujapack.excepciones.CentroLogisticoNoValido;
 import es.ujaen.dae.ujapack.excepciones.ClienteYaRegistrado;
 import es.ujaen.dae.ujapack.excepciones.EnvioNoEncontrado;
-import es.ujaen.dae.ujapack.excepciones.PasoPuntoControlNoEncontrado;
 import es.ujaen.dae.ujapack.excepciones.ProvinciaNoValida;
 import es.ujaen.dae.ujapack.objetosvalor.Paquete;
 import es.ujaen.dae.ujapack.repositorios.RepositorioPuntosControl;
@@ -22,8 +21,6 @@ import es.ujaen.dae.ujapack.repositorios.RepositorioEnvios;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -52,51 +49,6 @@ public class ServicioUjaPack {
     public ServicioUjaPack(){
     }
     
-    /**
-     * Carga datos del fichero json haciendo uso del servicio ServicioJSon
-     * @return Mapa de centros logisticos cargados
-     */
-    @PostConstruct
-    public Map<Integer, CentroLogistico> cargaDatosJSon(){
-        String url = "redujapack.json";
-        ServicioJSon servicioJSon = new ServicioJSon();
-        servicioJSon.cargaJSon(url);
-        insertaOficinasBD(servicioJSon.getOficinas());
-        insertaCentrosBD(servicioJSon.getCentrosLogisticos());
-        servicioJSon.cargaConexiones(url);
-        actualizarCentrosBD(servicioJSon.getCentrosLogisticos());
-        return servicioJSon.getCentrosLogisticos();
-    }
-    
-    /**
-     * Añadimos oficinas a la BD
-     * @param oficinas a insertar en la BD cargadas del json
-     */
-    private void insertaOficinasBD(List<Oficina> oficinas){
-        for(Oficina of : oficinas){
-            repositorioPuntoControl.guardarOf(of);
-        }
-    }
-    
-    /**
-     * Añadimos centros logisticos a la base de datos (sin conexiones)
-     * @param centrosLogisticos centros logisticos cargados del json
-     */
-    private void insertaCentrosBD(Map<Integer, CentroLogistico> centrosLogisticos){
-        for(Map.Entry<Integer, CentroLogistico> cl : centrosLogisticos.entrySet()){
-            repositorioPuntoControl.guardarCL(cl.getValue());
-        }
-    }
-    
-    /**
-     * Añadimos centros logisticos a la base de datos
-     * @param centrosLogisticos centros logisticos cargados del json
-     */
-    private void actualizarCentrosBD(Map<Integer, CentroLogistico> centrosLogisticos){
-        for(Map.Entry<Integer, CentroLogistico> cl : centrosLogisticos.entrySet()){
-            repositorioPuntoControl.actualizarCL(cl.getValue());
-        }
-    }
     
     /**
      * Crear un nuevo cliente en el sistema
@@ -117,16 +69,6 @@ public class ServicioUjaPack {
     private void altaPaquetes(List<Paquete> paquetes){
         for(Paquete paquete : paquetes){
             repositorioEnvios.guardarPaquete(paquete);
-        }
-    }
-    
-    /**
-     * Guardar ruta del envio en la BD
-     * @param ruta ruta a insertar
-     */
-    private void altaRuta(List<PasoPuntoControl> ruta){
-        for(PasoPuntoControl pasoPuntoControl : ruta){
-            repositorioEnvios.guardarPuntoControl(pasoPuntoControl);
         }
     }
     
@@ -206,18 +148,7 @@ public class ServicioUjaPack {
             
         }
         
-        // Tipo de envio 3
-//        if(!pRemitente.equals(pDestinatario) && !mismoCentroLogistico(pRemitente, pDestinatario)){
-//            calculaRutaTipo3(buscaCentroLogistico(pRemitente), buscaCentroLogistico(pDestinatario));
-//        }
-        
         return ruta;
-    }
-    
-    private void calculaRutaTipo3(CentroLogistico remitente, CentroLogistico destinatario){
-        
-        
-        
     }
     
     /**
@@ -374,8 +305,6 @@ public class ServicioUjaPack {
             if(ppc.getFechaLlegada() == null){
                 ppc.setFechaLlegada(LocalDateTime.now());
             }
-            
-            repositorioEnvios.actualizarPuntoControl(ppc);
         }
         
         repositorioEnvios.actualizarEnvio(envio);
