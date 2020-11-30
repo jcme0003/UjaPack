@@ -10,8 +10,6 @@ import es.ujaen.dae.ujapack.entidades.Envio;
 import es.ujaen.dae.ujapack.entidades.PasoPuntoControl;
 import es.ujaen.dae.ujapack.objetosvalor.Paquete;
 import es.ujaen.dae.ujapack.servicios.ServicioUjaPack;
-import java.util.ArrayList;
-import java.util.List;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
