@@ -18,14 +18,13 @@ import javax.validation.constraints.NotBlank;
  * Clase que representa un punto de control
  * @author Jose Carlos Mena
  */
-
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class PuntoControl implements Serializable {
     
     /** Identificador tabla */
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.SEQUENCE)
     private int id;
     
     /** Centro logistico del punto de control */

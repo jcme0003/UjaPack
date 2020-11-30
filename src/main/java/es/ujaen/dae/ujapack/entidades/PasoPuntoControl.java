@@ -9,7 +9,6 @@ import es.ujaen.dae.ujapack.entidades.puntocontrol.CentroLogistico;
 import es.ujaen.dae.ujapack.entidades.puntocontrol.Oficina;
 import es.ujaen.dae.ujapack.entidades.puntocontrol.PuntoControl;
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -54,8 +53,8 @@ public class PasoPuntoControl implements Serializable {
      */
     public PasoPuntoControl(int localizador, Oficina oficina){
         this.localizador = localizador;
-        this.fechaLlegada = null;
-        this.fechaSalida = null;
+        this.fechaLlegada = LocalDateTime.now();
+        this.fechaSalida = LocalDateTime.now();
         this.puntoDeControl = oficina;
     }
     
@@ -66,8 +65,8 @@ public class PasoPuntoControl implements Serializable {
      */
     public PasoPuntoControl(int localizador, CentroLogistico centroLogistico){
         this.localizador = localizador;
-        this.fechaLlegada = null;
-        this.fechaSalida = null;
+        this.fechaLlegada = LocalDateTime.now();
+        this.fechaSalida = LocalDateTime.now();
         this.puntoDeControl = centroLogistico;
     }
 
