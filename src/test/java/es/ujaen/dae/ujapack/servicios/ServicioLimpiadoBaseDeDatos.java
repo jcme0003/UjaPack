@@ -29,8 +29,6 @@ public class ServicioLimpiadoBaseDeDatos {
     final String[] entidades = {
         "Paquete", 
         "PasoPuntoControl",
-        "Oficina",
-        "CentroLogistico",
         "Envio",
         "Cliente"            
     };
