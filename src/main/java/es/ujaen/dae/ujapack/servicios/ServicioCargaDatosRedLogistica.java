@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- *
+ * Servicio para cargar datos de la red logistica desde el fichero json
  * @author Ana
  */
 @Service

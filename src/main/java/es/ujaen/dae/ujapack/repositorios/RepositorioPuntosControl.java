@@ -7,7 +7,6 @@ package es.ujaen.dae.ujapack.repositorios;
 
 import es.ujaen.dae.ujapack.entidades.puntocontrol.CentroLogistico;
 import es.ujaen.dae.ujapack.entidades.puntocontrol.Oficina;
-import es.ujaen.dae.ujapack.entidades.puntocontrol.PuntoControl;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
@@ -17,7 +16,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- *
+ * Repositorio de entidades CentroLogistico, Oficina, PuntoControl, PasoPuntoControl
  * @author Ana
  */
 @Repository
@@ -68,14 +67,6 @@ public class RepositorioPuntosControl {
     
     public void guardarOf(Oficina oficina){
         em.persist(oficina);
-    }
-    
-    public Optional<PuntoControl> buscarPC(int idCentro){
-        return Optional.ofNullable(em.find(PuntoControl.class, idCentro));
-    }
-    
-    public void guardarPC(PuntoControl pc){
-        em.persist(pc);
     }
     
 }

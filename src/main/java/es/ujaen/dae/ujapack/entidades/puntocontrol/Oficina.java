@@ -12,7 +12,6 @@ import javax.validation.constraints.NotBlank;
  * Oficina correspondiente a centro logístico
  * @author Jose Carlos Mena
  */
-
 @Entity
 public class Oficina extends PuntoControl{
     
