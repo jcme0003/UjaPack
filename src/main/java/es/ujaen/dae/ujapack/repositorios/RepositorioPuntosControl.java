@@ -8,8 +8,6 @@ package es.ujaen.dae.ujapack.repositorios;
 import es.ujaen.dae.ujapack.entidades.puntocontrol.CentroLogistico;
 import es.ujaen.dae.ujapack.entidades.puntocontrol.Oficina;
 import es.ujaen.dae.ujapack.entidades.puntocontrol.PuntoControl;
-import es.ujaen.dae.ujapack.excepciones.CentroLogisticoNoValido;
-import es.ujaen.dae.ujapack.excepciones.ProvinciaNoValida;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
@@ -24,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
-public class RepositorioCentrosLogisticos {
+public class RepositorioPuntosControl {
     @PersistenceContext
     EntityManager em;
     
@@ -35,17 +33,13 @@ public class RepositorioCentrosLogisticos {
     
     @Transactional(propagation=Propagation.SUPPORTS, readOnly = true)
     public Optional<CentroLogistico> buscarCLIdCentro(int idCentro){
-        try {
-            List<CentroLogistico> centrosLogisticos;
-            centrosLogisticos = em.createQuery(
-                    "SELECT cl FROM CentroLogistico cl WHERE cl.idCentro = '" + idCentro + "'",
-                    CentroLogistico.class
-            ).getResultList();
-        
-            return Optional.ofNullable(centrosLogisticos.get(0));
-        } catch(IndexOutOfBoundsException e){
-            throw new CentroLogisticoNoValido();
-        }
+        List<CentroLogistico> centrosLogisticos;
+        centrosLogisticos = em.createQuery(
+                "SELECT cl FROM CentroLogistico cl WHERE cl.idCentro = '" + idCentro + "'",
+                CentroLogistico.class
+        ).getResultList();
+
+        return centrosLogisticos.isEmpty() ? Optional.empty() : Optional.of(centrosLogisticos.get(0));
     }
     
     public void guardarCL(CentroLogistico cl){
@@ -56,19 +50,15 @@ public class RepositorioCentrosLogisticos {
         em.merge(cl);
     }
     
-    @Transactional(propagation=Propagation.SUPPORTS, readOnly = true, rollbackFor = ProvinciaNoValida.class)
+    @Transactional(propagation=Propagation.SUPPORTS, readOnly = true)
     public Optional<Oficina> buscarOf(String provincia){
-        try{
-            List<Oficina> oficinas;
-            oficinas = em.createQuery(
-                    "SELECT o FROM Oficina o WHERE o.nombreProvincia = '" + provincia + "'",
-                    Oficina.class
-            ).getResultList();
-            
-            return Optional.ofNullable(oficinas.get(0));
-        } catch(IndexOutOfBoundsException e){
-            throw new ProvinciaNoValida();
-        }
+        List<Oficina> oficinas;
+        oficinas = em.createQuery(
+                "SELECT o FROM Oficina o WHERE o.nombreProvincia = '" + provincia + "'",
+                Oficina.class
+        ).getResultList();
+
+        return oficinas.isEmpty() ? Optional.empty() : Optional.of(oficinas.get(0));
     }
     
     @Transactional(propagation=Propagation.SUPPORTS, readOnly = true)
