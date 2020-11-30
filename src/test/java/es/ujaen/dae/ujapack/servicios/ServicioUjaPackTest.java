@@ -12,6 +12,9 @@ import es.ujaen.dae.ujapack.entidades.PasoPuntoControl;
 import es.ujaen.dae.ujapack.excepciones.ClienteYaRegistrado;
 import es.ujaen.dae.ujapack.excepciones.ProvinciaNoValida;
 import es.ujaen.dae.ujapack.objetosvalor.Paquete;
+import es.ujaen.dae.ujapack.servicios.ServicioUjaPack.TipoNotificacion;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.assertj.core.api.Assertions;
@@ -159,6 +162,41 @@ public class ServicioUjaPackTest {
         Envio envio = servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario);
         
         Assertions.assertThat(servicioUjaPack.consultarEstadoEnvio(envio.getLocalizador()).equals(Estado.PENDIENTE));
+    }
+    
+    @Test
+    public void testConsultarEstadoEnvioEntregado(){
+        Paquete paquete = new Paquete(
+                1.5f,
+                50.0f,
+                10.0f,
+                15.0f);
+        List<Paquete> paquetes = new ArrayList<>();
+        paquetes.add(paquete);
+        
+        Cliente clRemitente = new Cliente(
+                "12345678A",
+                "Paco",
+                "Perez",
+                "Calle falsa",
+                "Jaén",
+                "999000111",
+                "email@email.com");
+        
+        Cliente clDestinatario = new Cliente(
+                "87654321B",
+                "Maria",
+                "Muñoz",
+                "Calle verdadera",
+                "Sevilla",
+                "555666777",
+                "gmail@gmail.com");
+        
+        servicioUjaPack.cargaDatosJSon();
+        Envio envio = servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario);
+        servicioUjaPack.actualizaEstadoEnvio(envio, Estado.ENTREGADO);
+        
+        Assertions.assertThat(servicioUjaPack.consultarEstadoEnvio(envio.getLocalizador()) == Estado.ENTREGADO);
     }
     
     @Test
@@ -334,6 +372,82 @@ public class ServicioUjaPackTest {
         Assertions.assertThatThrownBy(() -> {
             servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario); })
                 .isInstanceOf(ProvinciaNoValida.class);
+    }
+    
+    @Test
+    public void testActualizarPasoPuntoControlOficina(){
+        Paquete paquete = new Paquete(
+                1.5f,
+                50.0f,
+                10.0f,
+                15.0f);
+        List<Paquete> paquetes = new ArrayList<>();
+        paquetes.add(paquete);
+        
+        Cliente clRemitente = new Cliente(
+                "12345678A",
+                "Paco",
+                "Perez",
+                "Calle falsa",
+                "Jaén",
+                "999000111",
+                "email@email.com");
+        
+        Cliente clDestinatario = new Cliente(
+                "87654321B",
+                "Maria",
+                "Muñoz",
+                "Calle verdadera",
+                "Jaén",
+                "555666777",
+                "gmail@gmail.com");
+        
+        servicioUjaPack.cargaDatosJSon();
+        Envio envio = servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario);
+        
+        servicioUjaPack.notificarOficina(TipoNotificacion.SALIDA, "Jaén", envio.getLocalizador());
+        
+        
+//        Assertions.assertThat(aux.isEmpty());
+//        Assertions.assertThat(!aux.get(0).getFechaSalida().isEqual(null));
+//        Assertions.assertThat(aux.size() > 0);
+    }
+    
+    @Test
+    public void testActualizarPasoPuntoControlCentroLogistico(){
+        Paquete paquete = new Paquete(
+                1.5f,
+                50.0f,
+                10.0f,
+                15.0f);
+        List<Paquete> paquetes = new ArrayList<>();
+        paquetes.add(paquete);
+        
+        Cliente clRemitente = new Cliente(
+                "12345678A",
+                "Paco",
+                "Perez",
+                "Calle falsa",
+                "Jaén",
+                "999000111",
+                "email@email.com");
+        
+        Cliente clDestinatario = new Cliente(
+                "87654321B",
+                "Maria",
+                "Muñoz",
+                "Calle verdadera",
+                "Sevilla",
+                "555666777",
+                "gmail@gmail.com");
+        
+        servicioUjaPack.cargaDatosJSon();
+        Envio envio = servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario);
+        
+        List<PasoPuntoControl> listado = servicioUjaPack.listarPuntosDeControlEnvio(envio.getLocalizador());
+        List<PasoPuntoControl> aux = servicioUjaPack.notificarCentroLogistico(ServicioUjaPack.TipoNotificacion.LLEGADA, 1, envio.getLocalizador());
+        
+        Assertions.assertThat(!aux.get(0).getFechaSalida().isEqual(null));
     }
     
     @BeforeEach
