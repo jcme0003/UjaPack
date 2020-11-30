@@ -34,6 +34,9 @@ public class ServicioUjaPackTest {
     ServicioUjaPack servicioUjaPack;
     
     @Autowired
+    ServicioCargaDatosRedLogistica servicioCargarDatos;
+    
+    @Autowired
     ServicioLimpiadoBaseDeDatos limpiadorBaseDatos;
     
     @Test
@@ -60,7 +63,7 @@ public class ServicioUjaPackTest {
     
     @Test
     public void testCargaDatosJSon(){
-        Assertions.assertThat(servicioUjaPack.cargaDatosJSon().size() == 10);
+        Assertions.assertThat(servicioCargarDatos.cargaDatosJSon().size() == 10);
     }
     
     @Test
@@ -91,7 +94,7 @@ public class ServicioUjaPackTest {
                 "555666777",
                 "gmail@gmail.com");
         
-        servicioUjaPack.cargaDatosJSon();
+        servicioCargarDatos.cargaDatosJSon();
         Envio envio = servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario);
         
         Assertions.assertThat(Integer.toString(envio.getLocalizador()).length() == 10);
@@ -125,7 +128,7 @@ public class ServicioUjaPackTest {
                 "555666777",
                 "gmail@gmail.com");
         
-        servicioUjaPack.cargaDatosJSon();
+        servicioCargarDatos.cargaDatosJSon();
         Envio envio = servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario);
         Assertions.assertThat(servicioUjaPack.consultarEstadoEnvio(envio.getLocalizador()) == Estado.PENDIENTE);
     }
@@ -158,7 +161,7 @@ public class ServicioUjaPackTest {
                 "555666777",
                 "gmail@gmail.com");
         
-        servicioUjaPack.cargaDatosJSon();
+        servicioCargarDatos.cargaDatosJSon();
         Envio envio = servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario);
         
         Assertions.assertThat(servicioUjaPack.consultarEstadoEnvio(envio.getLocalizador()).equals(Estado.PENDIENTE));
@@ -192,7 +195,7 @@ public class ServicioUjaPackTest {
                 "555666777",
                 "gmail@gmail.com");
         
-        servicioUjaPack.cargaDatosJSon();
+        servicioCargarDatos.cargaDatosJSon();
         Envio envio = servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario);
         servicioUjaPack.actualizaEstadoEnvio(envio, Estado.ENTREGADO);
         
@@ -227,7 +230,7 @@ public class ServicioUjaPackTest {
                 "555666777",
                 "gmail@gmail.com");
         
-        servicioUjaPack.cargaDatosJSon();
+        servicioCargarDatos.cargaDatosJSon();
         Envio envio = servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario);
         
         Assertions.assertThat(envio.getRuta().get(0).getPuntoDeControl().getProvincia().equals("Jaén"));
@@ -261,7 +264,7 @@ public class ServicioUjaPackTest {
                 "555666777",
                 "gmail@gmail.com");
         
-        servicioUjaPack.cargaDatosJSon();
+        servicioCargarDatos.cargaDatosJSon();
         Envio envio = servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario);
         
         Assertions.assertThat(envio.getRuta().get(0).getPuntoDeControl().getProvincia().equals("Jaén"));
@@ -297,7 +300,7 @@ public class ServicioUjaPackTest {
                 "555666777",
                 "gmail@gmail.com");
         
-        servicioUjaPack.cargaDatosJSon();
+        servicioCargarDatos.cargaDatosJSon();
         Envio envio = servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario);
         
         List<PasoPuntoControl> listado = servicioUjaPack.listarPuntosDeControlEnvio(envio.getLocalizador());
@@ -333,7 +336,7 @@ public class ServicioUjaPackTest {
                 "555666777",
                 "gmail@gmail.com");
         
-        servicioUjaPack.cargaDatosJSon();
+        servicioCargarDatos.cargaDatosJSon();
         Envio envio = servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario);
         
         Assertions.assertThat(!envio.getRuta().isEmpty());
@@ -367,7 +370,7 @@ public class ServicioUjaPackTest {
                 "555666777",
                 "gmail@gmail.com");
         
-        servicioUjaPack.cargaDatosJSon();
+        servicioCargarDatos.cargaDatosJSon();
         
         Assertions.assertThatThrownBy(() -> {
             servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario); })
@@ -402,7 +405,7 @@ public class ServicioUjaPackTest {
                 "555666777",
                 "gmail@gmail.com");
         
-        servicioUjaPack.cargaDatosJSon();
+        servicioCargarDatos.cargaDatosJSon();
         Envio envio = servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario);
         
         List<PasoPuntoControl> ruta = servicioUjaPack.notificarOficina(TipoNotificacion.SALIDA, "Jaén", envio.getLocalizador());
@@ -441,7 +444,7 @@ public class ServicioUjaPackTest {
                 "555666777",
                 "gmail@gmail.com");
         
-        servicioUjaPack.cargaDatosJSon();
+        servicioCargarDatos.cargaDatosJSon();
         Envio envio = servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario);
         
         List<PasoPuntoControl> ruta = servicioUjaPack.notificarCentroLogistico(TipoNotificacion.LLEGADA, 1, envio.getLocalizador());
