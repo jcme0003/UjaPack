@@ -56,7 +56,7 @@ public class EnvioTest {
         Envio envio = new Envio(1234567890, cl1, cl2, paquetes);
         
         List<PasoPuntoControl> listPPC = new ArrayList<>();
-        listPPC.add(new PasoPuntoControl(new Oficina("Jaén")));
+        listPPC.add(new PasoPuntoControl(envio.getLocalizador(), new Oficina("Jaén")));
         envio.setRuta(listPPC);
         envio.calculaImporte();
         float result = 22.5f;
@@ -85,9 +85,9 @@ public class EnvioTest {
         CentroLogistico clAndalucia = new CentroLogistico(1, "CL Andalucía-Extremadura", "Sevilla", of, centro1);
         
         List<PasoPuntoControl> listPPC = new ArrayList<>();
-        listPPC.add(new PasoPuntoControl(ofJaen));
-        listPPC.add(new PasoPuntoControl(clAndalucia));
-        listPPC.add(new PasoPuntoControl(ofSevilla));
+        listPPC.add(new PasoPuntoControl(envio.getLocalizador(), ofJaen));
+        listPPC.add(new PasoPuntoControl(envio.getLocalizador(), clAndalucia));
+        listPPC.add(new PasoPuntoControl(envio.getLocalizador(), ofSevilla));
         envio.setRuta(listPPC);
         
         envio.calculaImporte();
@@ -127,11 +127,11 @@ public class EnvioTest {
         
         
         List<PasoPuntoControl> listPPC = new ArrayList<>();
-        listPPC.add(new PasoPuntoControl(ofJaen));
-        listPPC.add(new PasoPuntoControl(clAndalucia));
-        listPPC.add(new PasoPuntoControl(clCastillaMancha));
-        listPPC.add(new PasoPuntoControl(clMadrid));
-        listPPC.add(new PasoPuntoControl(ofMadrid));
+        listPPC.add(new PasoPuntoControl(envio.getLocalizador(), ofJaen));
+        listPPC.add(new PasoPuntoControl(envio.getLocalizador(), clAndalucia));
+        listPPC.add(new PasoPuntoControl(envio.getLocalizador(), clCastillaMancha));
+        listPPC.add(new PasoPuntoControl(envio.getLocalizador(), clMadrid));
+        listPPC.add(new PasoPuntoControl(envio.getLocalizador(), ofMadrid));
         
         envio.setRuta(listPPC);
         envio.calculaImporte();

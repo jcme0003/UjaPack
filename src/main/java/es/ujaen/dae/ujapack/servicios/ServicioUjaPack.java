@@ -16,12 +16,11 @@ import es.ujaen.dae.ujapack.excepciones.ClienteYaRegistrado;
 import es.ujaen.dae.ujapack.excepciones.EnvioNoEncontrado;
 import es.ujaen.dae.ujapack.excepciones.ProvinciaNoValida;
 import es.ujaen.dae.ujapack.objetosvalor.Paquete;
-import es.ujaen.dae.ujapack.repositorios.RepositorioCentrosLogisticos;
+import es.ujaen.dae.ujapack.repositorios.RepositorioPuntosControl;
 import es.ujaen.dae.ujapack.repositorios.RepositorioEnvios;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -42,7 +41,7 @@ public class ServicioUjaPack {
     RepositorioEnvios repositorioEnvios;
     
     @Autowired
-    RepositorioCentrosLogisticos repositorioCentrosLogisticos;
+    RepositorioPuntosControl repositorioPuntoControl;
     
     /**
      * Constructor del servicio UjaPack
@@ -50,51 +49,6 @@ public class ServicioUjaPack {
     public ServicioUjaPack(){
     }
     
-    /**
-     * Carga datos del fichero json haciendo uso del servicio ServicioJSon
-     * @return Mapa de centros logisticos cargados
-     */
-    @PostConstruct
-    public Map<Integer, CentroLogistico> cargaDatosJSon(){
-        String url = "redujapack.json";
-        ServicioJSon servicioJSon = new ServicioJSon();
-        servicioJSon.cargaJSon(url);
-        insertaOficinasBD(servicioJSon.getOficinas());
-        insertaCentrosBD(servicioJSon.getCentrosLogisticos());
-        servicioJSon.cargaConexiones(url);
-        actualizarCentrosBD(servicioJSon.getCentrosLogisticos());
-        return servicioJSon.getCentrosLogisticos();
-    }
-    
-    /**
-     * Añadimos oficinas a la BD
-     * @param oficinas a insertar en la BD cargadas del json
-     */
-    private void insertaOficinasBD(List<Oficina> oficinas){
-        for(Oficina of : oficinas){
-            repositorioCentrosLogisticos.guardarOf(of);
-        }
-    }
-    
-    /**
-     * Añadimos centros logisticos a la base de datos (sin conexiones)
-     * @param centrosLogisticos centros logisticos cargados del json
-     */
-    private void insertaCentrosBD(Map<Integer, CentroLogistico> centrosLogisticos){
-        for(Map.Entry<Integer, CentroLogistico> cl : centrosLogisticos.entrySet()){
-            repositorioCentrosLogisticos.guardarCL(cl.getValue());
-        }
-    }
-    
-    /**
-     * Añadimos centros logisticos a la base de datos
-     * @param centrosLogisticos centros logisticos cargados del json
-     */
-    private void actualizarCentrosBD(Map<Integer, CentroLogistico> centrosLogisticos){
-        for(Map.Entry<Integer, CentroLogistico> cl : centrosLogisticos.entrySet()){
-            repositorioCentrosLogisticos.actualizarCL(cl.getValue());
-        }
-    }
     
     /**
      * Crear un nuevo cliente en el sistema
@@ -119,16 +73,6 @@ public class ServicioUjaPack {
     }
     
     /**
-     * Guardar ruta del envio en la BD
-     * @param ruta ruta a insertar
-     */
-    private void altaRuta(List<PasoPuntoControl> ruta){
-        for(PasoPuntoControl pasoPuntoControl : ruta){
-            repositorioEnvios.guardarPuntoControl(pasoPuntoControl);
-        }
-    }
-    
-    /**
      * Crear un nuevo envio en el sistema y calcular su ruta
      * @param paquetes paquetes que componen el envio
      * @param remitente cliente que realiza el envio
@@ -143,9 +87,7 @@ public class ServicioUjaPack {
         altaCliente(destinatario);
         
         Envio envio = new Envio(localizador, remitente, destinatario, paquetes);
-        List<PasoPuntoControl> ruta = calculaRuta(remitente.getProvincia(), destinatario.getProvincia());
-        
-        altaRuta(ruta);
+        List<PasoPuntoControl> ruta = calculaRuta(envio.getLocalizador(), remitente.getProvincia(), destinatario.getProvincia());
         
         envio.setRuta(ruta);
         envio.calculaImporte();
@@ -176,7 +118,7 @@ public class ServicioUjaPack {
      * @param pDestinatario provincia del destinatario
      * @return ruta que debe seguir el paquete para llegar a su destino
      */
-    private List<PasoPuntoControl> calculaRuta(String pRemitente, String pDestinatario){
+    private List<PasoPuntoControl> calculaRuta(int localizador, String pRemitente, String pDestinatario){
         // Comprueba si las provincias introducidas son validas
         if(!provinciasValidas(pRemitente, pDestinatario)){
             throw new ProvinciaNoValida();
@@ -186,7 +128,7 @@ public class ServicioUjaPack {
         
         // Tipo de envio 1
         if(pRemitente.equals(pDestinatario)){
-            PasoPuntoControl ppc = new PasoPuntoControl(buscaProvincia(pRemitente));
+            PasoPuntoControl ppc = new PasoPuntoControl(localizador, buscaProvincia(pRemitente));
             ruta.add(ppc);
         }
         
@@ -195,29 +137,18 @@ public class ServicioUjaPack {
         // Tipo de envio 2
         if(!pRemitente.equals(pDestinatario) && mismoCentroLogistico(pRemitente, pDestinatario)){
             
-            PasoPuntoControl paso = new PasoPuntoControl(buscaProvincia(pRemitente));
+            PasoPuntoControl paso = new PasoPuntoControl(localizador, buscaProvincia(pRemitente));
             ruta.add(paso);
             
-            PasoPuntoControl pasoCl = new PasoPuntoControl(buscaCentroLogistico(pRemitente));
+            PasoPuntoControl pasoCl = new PasoPuntoControl(localizador, buscaCentroLogistico(pRemitente));
             ruta.add(pasoCl);
             
-            PasoPuntoControl pasoDestino = new PasoPuntoControl(buscaProvincia(pDestinatario));
+            PasoPuntoControl pasoDestino = new PasoPuntoControl(localizador, buscaProvincia(pDestinatario));
             ruta.add(pasoDestino);
             
         }
         
-        // Tipo de envio 3
-//        if(!pRemitente.equals(pDestinatario) && !mismoCentroLogistico(pRemitente, pDestinatario)){
-//            calculaRutaTipo3(buscaCentroLogistico(pRemitente), buscaCentroLogistico(pDestinatario));
-//        }
-        
         return ruta;
-    }
-    
-    private void calculaRutaTipo3(CentroLogistico remitente, CentroLogistico destinatario){
-        
-        
-        
     }
     
     /**
@@ -237,8 +168,8 @@ public class ServicioUjaPack {
      * @return id del centro logistico al que pertenece la provincia
      */
     private CentroLogistico buscaCentroLogistico(String provincia){
-        Oficina oficina = repositorioCentrosLogisticos.buscarOf(provincia).orElseThrow(ProvinciaNoValida::new);
-        CentroLogistico centroLogistico = repositorioCentrosLogisticos.buscarCLIdCentro(oficina.getIdCentro()).orElseThrow(CentroLogisticoNoValido::new);
+        Oficina oficina = repositorioPuntoControl.buscarOf(provincia).orElseThrow(ProvinciaNoValida::new);
+        CentroLogistico centroLogistico = repositorioPuntoControl.buscarCLIdCentro(oficina.getIdCentro()).orElseThrow(CentroLogisticoNoValido::new);
         
         return centroLogistico;
     }
@@ -249,7 +180,7 @@ public class ServicioUjaPack {
      * @return el objeto provincia encontrado
      */
     private Oficina buscaProvincia(String provincia){
-        Oficina oficina = repositorioCentrosLogisticos.buscarOf(provincia).orElseThrow(ProvinciaNoValida::new);
+        Oficina oficina = repositorioPuntoControl.buscarOf(provincia).orElseThrow(ProvinciaNoValida::new);
         
         return oficina;
     }
@@ -281,5 +212,101 @@ public class ServicioUjaPack {
     public List<PasoPuntoControl> listarPuntosDeControlEnvio(int localizador){
         Envio envio = repositorioEnvios.buscarEnvio(localizador).orElseThrow(EnvioNoEncontrado::new);
         return envio.getRuta();
-    }  
+    }
+    
+    /**
+     * Notificar llegada o salida de oficina
+     * @param tipoNotificacion llegada o salida
+     * @param oficina oficina a modificar
+     * @param localizador localizador del envio
+     * @return 
+     */
+    public List<PasoPuntoControl> notificarOficina(TipoNotificacion tipoNotificacion, String oficina, int localizador){
+        Envio envio = repositorioEnvios.buscarEnvio(localizador).orElseThrow(EnvioNoEncontrado::new);
+        List<PasoPuntoControl> ruta = envio.getRuta();
+        
+        if(tipoNotificacion == TipoNotificacion.SALIDA){
+            for(PasoPuntoControl ppc : ruta){
+                if(ppc.getPuntoDeControl().getProvincia().equals(oficina) && ppc.getFechaSalida() == null){
+                    ppc.setFechaSalida(LocalDateTime.now());
+                }
+            }
+        }
+        
+        if(tipoNotificacion == TipoNotificacion.LLEGADA){
+            for(PasoPuntoControl ppc : ruta){
+                if(ppc.getPuntoDeControl().getProvincia().equals(oficina) && ppc.getFechaSalida() == null){
+                    ppc.setFechaLlegada(LocalDateTime.now());
+                }
+            }
+        }
+        
+        repositorioEnvios.actualizarEnvio(envio);
+        
+        return envio.getRuta();
+    }
+    
+    /**
+     * Notificar llegada o salida de paquete de un centro logistico
+     * @param tipoNotificacion entrada o salida
+     * @param idCentro identificador del centro logistico
+     * @param localizador localizador del envio
+     * @return 
+     */
+    public List<PasoPuntoControl> notificarCentroLogistico(TipoNotificacion tipoNotificacion, int idCentro, int localizador){
+        Envio envio = repositorioEnvios.buscarEnvio(localizador).orElseThrow(EnvioNoEncontrado::new);
+        List<PasoPuntoControl> ruta = envio.getRuta();
+        
+        if(tipoNotificacion == TipoNotificacion.SALIDA){
+            for(PasoPuntoControl ppc : ruta){
+                if(ppc.getPuntoDeControl().getIdCentro() == idCentro && ppc.getFechaSalida() == null){
+                    ppc.setFechaSalida(LocalDateTime.now());
+                }
+            }
+        }
+        
+        if(tipoNotificacion == TipoNotificacion.LLEGADA){
+            for(PasoPuntoControl ppc : ruta){
+                if(ppc.getPuntoDeControl().getIdCentro() == idCentro && ppc.getFechaSalida() == null){
+                    ppc.setFechaLlegada(LocalDateTime.now());
+                }
+            }
+        }
+        
+        repositorioEnvios.actualizarEnvio(envio);
+        
+        return ruta;
+    }
+    
+    /**
+     * Marca envio como entregado
+     * @param localizador localizador del envio
+     */
+    void notificarEntrega(int localizador){
+        Envio envio = repositorioEnvios.buscarEnvio(localizador).orElseThrow(EnvioNoEncontrado::new);
+        actualizaEstadoEnvio(envio, Estado.ENTREGADO);
+        repositorioEnvios.actualizarEnvio(envio);
+    }
+    
+    /**
+     * Actualizar estado envio
+     * @param envio envio a actualizar
+     * @param estado estado nuevo del envio
+     */
+    public void actualizaEstadoEnvio(Envio envio, Estado estado){
+        envio.setEstado(estado);
+        
+        // Si algun paso punto de control tiene fecha a null la cambiamos a actual
+        for(PasoPuntoControl ppc : envio.getRuta()){
+            if(ppc.getFechaSalida() == null){
+                ppc.setFechaSalida(LocalDateTime.now());
+            }
+            
+            if(ppc.getFechaLlegada() == null){
+                ppc.setFechaLlegada(LocalDateTime.now());
+            }
+        }
+        
+        repositorioEnvios.actualizarEnvio(envio);
+    }
 }

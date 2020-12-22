@@ -9,13 +9,13 @@ import es.ujaen.dae.ujapack.entidades.puntocontrol.CentroLogistico;
 import es.ujaen.dae.ujapack.entidades.puntocontrol.Oficina;
 import es.ujaen.dae.ujapack.entidades.puntocontrol.PuntoControl;
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 
 /**
  * Puntos de control que componen la ruta del envio
@@ -29,14 +29,17 @@ public class PasoPuntoControl implements Serializable {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
     
+    /** Localizador del envio asociado */
+    private int localizador;
+    
     /** Fecha de llegada al paso por punto de control */
-    private LocalDate fechaLlegada;
+    private LocalDateTime fechaLlegada;
     
     /** Fecha de salida del punto de control */
-    private LocalDate fechaSalida;
+    private LocalDateTime fechaSalida;
     
     /** Punto de control */
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "puntoDeControlId")
     private PuntoControl puntoDeControl;
 
@@ -45,49 +48,67 @@ public class PasoPuntoControl implements Serializable {
     
     /**
      * Constructor de paso por punto de control
+     * @param localizador
      * @param oficina Oficina de origen o destino
      */
-    public PasoPuntoControl(Oficina oficina){
-        this.fechaLlegada = null;
-        this.fechaSalida = null;
+    public PasoPuntoControl(int localizador, Oficina oficina){
+        this.localizador = localizador;
+        this.fechaLlegada = LocalDateTime.now();
+        this.fechaSalida = LocalDateTime.now();
         this.puntoDeControl = oficina;
     }
     
     /**
      * Constructor de paso por punto de control
+     * @param localizador
      * @param centroLogistico Centro logistico de origen, destino o intermediario/s
      */
-    public PasoPuntoControl(CentroLogistico centroLogistico){
-        this.fechaLlegada = null;
-        this.fechaSalida = null;
+    public PasoPuntoControl(int localizador, CentroLogistico centroLogistico){
+        this.localizador = localizador;
+        this.fechaLlegada = LocalDateTime.now();
+        this.fechaSalida = LocalDateTime.now();
         this.puntoDeControl = centroLogistico;
+    }
+
+    /**
+     * @return the localizador
+     */
+    public int getLocalizador() {
+        return localizador;
+    }
+
+    /**
+     * @param localizador the localizador to set
+     */
+    public void setLocalizador(int localizador) {
+        this.localizador = localizador;
     }
 
     /**
      * @return la fecha de llegada
      */
-    public LocalDate getFechaLlegada() {
+    public LocalDateTime getFechaLlegada() {
         return fechaLlegada;
     }
 
     /**
      * @param fechaLlegada la fecha de llegada a insertar
      */
-    public void setFechaLlegada(LocalDate fechaLlegada) {
+    public void setFechaLlegada(LocalDateTime fechaLlegada) {
         this.fechaLlegada = fechaLlegada;
     }
 
     /**
      * @return la fecha de salida
      */
-    public LocalDate getFechaSalida() {
+    public LocalDateTime getFechaSalida() {
         return fechaSalida;
     }
 
     /**
      * @param fechaSalida la fecha de salida a insertar
      */
-    public void setFechaSalida(LocalDate fechaSalida) {
+    public void setFechaSalida(LocalDateTime fechaSalida) {
         this.fechaSalida = fechaSalida;
     }
 
@@ -109,13 +130,13 @@ public class PasoPuntoControl implements Serializable {
      * Notificacion al sistema del paso por punto de control del envio
      */
     public void notificacionLlegada(){
-        this.fechaLlegada = LocalDate.now();
+        this.fechaLlegada = LocalDateTime.now();
     }
     
     /**
      * Notificacion al sistema de la salida por punto de control del envio
      */
     public void notificacionSalida(){
-        this.fechaSalida = LocalDate.now();
+        this.fechaSalida = LocalDateTime.now();
     }
 }
