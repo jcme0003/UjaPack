@@ -3,19 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package es.ujaen.dae.ujapack.controladoresREST.DTOs;
+package es.ujaen.dae.ujapack.RESTcontroladores.DTOs;
 
 import es.ujaen.dae.ujapack.entidades.Cliente;
-import javax.persistence.Id;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 /**
- *
- * @author joseo
+ * DTO para recopilación de datos de cliente
+ * @author joseo, Ana
  */
-public class ClienteDTo {
+public class DTOCliente {
     /** DNI del cliente */
     private String dni;
     
@@ -36,8 +32,8 @@ public class ClienteDTo {
     
     /** Email del cliente */
     private String email;
-
-    public ClienteDTo(String dni, String nombre, String apellidos, String direccion, String provincia, String telefono, String email) {
+    
+    public DTOCliente(String dni, String nombre, String apellidos, String direccion, String provincia, String telefono, String email) {
         this.dni = dni;
         this.nombre = nombre;
         this.apellidos = apellidos;
@@ -47,10 +43,16 @@ public class ClienteDTo {
         this.email = email;
     }
     
-    public Cliente nuevoClienteDTo(){
-        return new Cliente(dni,nombre,apellidos,direccion,provincia,telefono,email);
+    public DTOCliente(Cliente cliente) {
+        this.dni = cliente.getDni();
+        this.nombre = cliente.getNombre();
+        this.apellidos = cliente.getApellidos();
+        this.direccion = cliente.getDireccion();
+        this.provincia = cliente.getProvincia();
+        this.telefono = cliente.getTelefono();
+        this.email = cliente.getEmail();
     }
-
+    
     public String getDni() {
         return dni;
     }
@@ -79,6 +81,8 @@ public class ClienteDTo {
         return email;
     }
     
+    public Cliente nuevoClienteDTO(){
+        return new Cliente(dni,nombre,apellidos,direccion,provincia,telefono,email);
+    }
     
 }
-

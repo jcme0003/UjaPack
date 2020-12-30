@@ -3,25 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package es.ujaen.dae.ujapack.controladoresREST.DTOs;
+package es.ujaen.dae.ujapack.RESTcontroladores.DTOs;
 
-import es.ujaen.dae.ujapack.entidades.Cliente;
 import es.ujaen.dae.ujapack.entidades.Envio;
-import es.ujaen.dae.ujapack.entidades.PasoPuntoControl;
-import es.ujaen.dae.ujapack.objetosvalor.Paquete;
 import java.time.LocalDate;
-import java.util.List;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 /**
- *
- * @author joseo
+ * DTO para recopilación de datos de envio
+ * @author joseo, Ana
  */
-public class EnvioDTo {
+public class DTOEnvio {
     /** Localizador del envio */
     private int localizador;
     
@@ -37,14 +28,13 @@ public class EnvioDTo {
     /** Coste de realizar el envio */
     private float importe;
     
-        
     /** DNI del cliente asociado a remitente */
     String remitente;
     
     /** DNI del cliente asociado a destinatario */
     String destinatario;
 
-    public EnvioDTo(int localizador, Envio.Estado estado, LocalDate fechaLlegada, LocalDate horaLlegada, float importe, String remitente, String destinatario) {
+    public DTOEnvio(int localizador, Envio.Estado estado, LocalDate fechaLlegada, LocalDate horaLlegada, float importe, String remitente, String destinatario) {
         this.localizador = localizador;
         this.estado = estado;
         this.fechaLlegada = fechaLlegada;
@@ -54,15 +44,16 @@ public class EnvioDTo {
         this.destinatario = destinatario;
     }
     
-    public EnvioDTo(Envio envio){
-        this.destinatario = envio.getDestinatario().getDni();
+    public DTOEnvio(Envio envio){
+        this.localizador = envio.getLocalizador();
         this.estado = envio.getEstado();
         this.fechaLlegada = envio.getHoraLlegada();
+        this.horaLlegada = envio.getHoraLlegada();
         this.importe = envio.getImporte();
-        this.localizador = envio.getLocalizador();
         this.remitente = envio.getRemitente().getDni();
-        
+        this.destinatario = envio.getDestinatario().getDni();    
     }
+    
 
     public int getLocalizador() {
         return localizador;
@@ -91,6 +82,5 @@ public class EnvioDTo {
     public String getDestinatario() {
         return destinatario;
     }
-    
     
 }
