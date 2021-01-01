@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package es.ujaen.dae.ujapack.RESTcontroladores.DTOs;
+package es.ujaen.dae.ujapack.controladoresREST.DTO;
 
 import es.ujaen.dae.ujapack.entidades.Envio;
 import java.time.LocalDate;

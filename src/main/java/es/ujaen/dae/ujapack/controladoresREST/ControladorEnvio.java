@@ -3,20 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package es.ujaen.dae.ujapack.RESTcontroladores;
-//import es.ujaen.dae.ujapack.entidades.Cliente;
-//import es.ujaen.dae.ujapack.entidades.Envio;
-//import es.ujaen.dae.ujapack.excepciones.ClienteYaRegistrado;
+package es.ujaen.dae.ujapack.controladoresREST;
+
 import es.ujaen.dae.ujapack.servicios.ServicioUjaPack;
-//import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
 /**
- * 
- * @author joseo
+ * Controlador REST de ujapack para los envios
+ * @author Jose Carlos Mena
  */
 @RestController
 @RequestMapping("/ujapack")
@@ -24,17 +22,8 @@ public class ControladorEnvio {
     @Autowired
     ServicioUjaPack servicios; 
     
-//    @PostConstruct
-//    void controladorIniciado(){
-//        System.out.println("El controlador REST del envio ha sido iniciado");
-//    }
-    
-//    @PostMapping("/Clientes")
-//    ResposeEntity<Envio> AltaEnvio(@RequestBody Envio envio){
-//        try{
-//        servicios.nuevoEnvio(envio);
-//        } catch (ClienteYaRegistrado e){
-//            return ResponseEntity.status(HttpStatus.CONFLICT).build;
-//        }
-//    }
+    @GetMapping("/hola")
+    String hola(){
+        return "Hola Mundo";
+    }
 }
