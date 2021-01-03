@@ -37,18 +37,23 @@ public class ServicioCargaDatosRedLogistica {
     
     /**
     * Carga datos del fichero json haciendo uso del servicio ServicioJSon
+    * Una vez cargado no se vuelve a cargar mas
     * @return Mapa de centros logisticos cargados
     */
     @PostConstruct
     public Map<Integer, CentroLogistico> cargaDatosJSon(){
-        String url = "redujapack.json";
-        ServicioJSon servicioJSon = new ServicioJSon();
-        servicioJSon.cargaJSon(url);
-        insertaOficinasBD(servicioJSon.getOficinas());
-        insertaCentrosBD(servicioJSon.getCentrosLogisticos());
-        servicioJSon.cargaConexiones(url);
-        actualizarCentrosBD(servicioJSon.getCentrosLogisticos());
-        return servicioJSon.getCentrosLogisticos();
+        if(!repositorioPuntoControl.buscarCLIdCentro(1).isPresent()){
+            String url = "redujapack.json";
+            ServicioJSon servicioJSon = new ServicioJSon();
+            servicioJSon.cargaJSon(url);
+            insertaOficinasBD(servicioJSon.getOficinas());
+            insertaCentrosBD(servicioJSon.getCentrosLogisticos());
+            servicioJSon.cargaConexiones(url);
+            actualizarCentrosBD(servicioJSon.getCentrosLogisticos());
+            return servicioJSon.getCentrosLogisticos();
+        }
+        
+        return null;
     }
     
     /**
