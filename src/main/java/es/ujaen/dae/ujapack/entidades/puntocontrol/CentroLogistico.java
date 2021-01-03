@@ -40,10 +40,10 @@ public class CentroLogistico extends PuntoControl {
     /**
      * Constructor CentroLogistico
      * @param idCentro identificador del centro logistico
-     * @param nombre
-     * @param localizacion
-     * @param oficinas
-     * @param conexiones
+     * @param nombre nombre del centro logistico
+     * @param localizacion ciudad donde se encuentra la central del centro logistico
+     * @param oficinas lista de oficinas del centro logistico
+     * @param conexiones lista de conexiones que tiene este centro logistico con otros centros
      */
     public CentroLogistico(int idCentro, String nombre, String localizacion, List<Oficina> oficinas, List<CentroLogistico> conexiones){
         super(idCentro, localizacion);

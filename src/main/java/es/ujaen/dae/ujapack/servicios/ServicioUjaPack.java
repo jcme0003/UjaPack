@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 /**
@@ -162,6 +163,17 @@ public class ServicioUjaPack {
     }
     
     /**
+     * Buscar centro logistico segun su id de centro
+     * @param idCentro identificador a buscar
+     * @return centro logistico encontrado
+     */
+    public CentroLogistico buscaCentroLogistico(int idCentro){
+        CentroLogistico centro = repositorioPuntoControl.buscarCLIdCentro(idCentro).orElseThrow(CentroLogisticoNoValido::new);
+        
+        return centro;
+    }
+    
+    /**
      * Busca el identificador del centro logistico de una provincia.
      * Si no la encuentra devuelve -1
      * @param provincia Provincia de la que buscaremos su centro logistico
@@ -179,7 +191,7 @@ public class ServicioUjaPack {
      * @param provincia provincia a buscar
      * @return el objeto provincia encontrado
      */
-    private Oficina buscaProvincia(String provincia){
+    public Oficina buscaProvincia(String provincia){
         Oficina oficina = repositorioPuntoControl.buscarOf(provincia).orElseThrow(ProvinciaNoValida::new);
         
         return oficina;
