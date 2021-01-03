@@ -17,13 +17,15 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Jose Carlos Mena
  */
 @RestController
-@RequestMapping("/ujapack")
+@RequestMapping("/ujapack/envios")
 public class ControladorEnvio {
     @Autowired
     ServicioUjaPack servicios; 
     
+    /** Hola mundo */
     @GetMapping("/hola")
     String hola(){
         return "Hola Mundo";
     }
+    
 }
