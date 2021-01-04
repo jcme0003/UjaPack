@@ -7,6 +7,7 @@ package es.ujaen.dae.ujapack.controladoresREST;
 
 import es.ujaen.dae.ujapack.controladoresREST.DTO.DTOCliente;
 import es.ujaen.dae.ujapack.controladoresREST.DTO.DTOEnvio;
+import es.ujaen.dae.ujapack.controladoresREST.DTO.DTOEnvioContext;
 import es.ujaen.dae.ujapack.controladoresREST.DTO.DTOPaquete;
 import es.ujaen.dae.ujapack.entidades.Cliente;
 import es.ujaen.dae.ujapack.entidades.Envio;
@@ -43,15 +44,13 @@ public class ControladorEnvio {
     
     /** Creacion de envios */
     @PostMapping("/")
-    ResponseEntity<DTOEnvio> altaEnvio(@RequestBody DTOPaquete paquetes, @RequestBody DTOCliente remitente, @RequestBody DTOCliente destinatario){
-//    ResponseEntity<DTOEnvio> altaEnvio(@RequestBody List<DTOPaquete> paquetes, @RequestBody DTOCliente remitente, @RequestBody DTOCliente destinatario){
+    ResponseEntity<DTOEnvio> altaEnvio(@RequestBody DTOEnvioContext envioContext){
         try{
             List<Paquete> aPaquetes = new ArrayList<>();
-//            for(DTOPaquete paquete : paquetes){
-//                aPaquetes.add(paquete.aPaquete());
-//            }
-            aPaquetes.add(paquetes.aPaquete());
-            Envio envio = servicios.nuevoEnvio(aPaquetes, remitente.aCliente(), destinatario.aCliente());
+            for(DTOPaquete paquete : envioContext.getPaquetes()){
+                aPaquetes.add(paquete.aPaquete());
+            }
+            Envio envio = servicios.nuevoEnvio(aPaquetes, envioContext.getRemitente().aCliente(), envioContext.getDestinatario().aCliente());
             return ResponseEntity.status(HttpStatus.CREATED).body(new DTOEnvio(envio));
         } catch(ClienteYaRegistrado e){
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
