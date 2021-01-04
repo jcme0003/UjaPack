@@ -42,18 +42,17 @@ public class ServicioCargaDatosRedLogistica {
     */
     @PostConstruct
     public Map<Integer, CentroLogistico> cargaDatosJSon(){
+        String url = "redujapack.json";
+        ServicioJSon servicioJSon = new ServicioJSon();
         if(!repositorioPuntoControl.buscarCLIdCentro(1).isPresent()){
-            String url = "redujapack.json";
-            ServicioJSon servicioJSon = new ServicioJSon();
             servicioJSon.cargaJSon(url);
             insertaOficinasBD(servicioJSon.getOficinas());
             insertaCentrosBD(servicioJSon.getCentrosLogisticos());
             servicioJSon.cargaConexiones(url);
             actualizarCentrosBD(servicioJSon.getCentrosLogisticos());
-            return servicioJSon.getCentrosLogisticos();
         }
         
-        return null;
+        return servicioJSon.getCentrosLogisticos();
     }
     
     /**
