@@ -26,15 +26,16 @@ import org.json.JSONObject;
  */
 public class ServicioJSon {
     /** Centros logisticos */
-    private final Map<Integer, CentroLogistico> centrosLogisticos = new TreeMap<>();
+    private final Map<Integer, CentroLogistico> centrosLogisticos;
     /** Oficinas */
-    private final List<Oficina> oficinas = new ArrayList<>();
+    private final List<Oficina> oficinas;
     
     /**
      * Constructor por defecto de ServicioJson
      */
     public ServicioJSon(){
-        
+        this.centrosLogisticos  = new TreeMap<>();
+        this.oficinas = new ArrayList<>();
     }
 
     /**

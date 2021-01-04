@@ -56,7 +56,7 @@ public class ServicioUjaPack {
      * @param cliente Cliente a añadir al sistema
      */
     public void altaCliente(Cliente cliente){
-        if(repositorioEnvios.buscarCliente(cliente.getDni()).isPresent()){
+        if(buscarCliente(cliente)){
             throw new ClienteYaRegistrado();
         }
         
@@ -64,10 +64,18 @@ public class ServicioUjaPack {
     }
     
     /**
+     * Buscar cliente
+     * @param cliente Cliente a buscar en el sistema
+     */
+    private boolean buscarCliente(Cliente cliente){
+        return repositorioEnvios.buscarCliente(cliente.getDni()).isPresent();
+    }
+    
+    /**
      * Insertar paquetes de un envio en la BD
      * @param paquetes paquetes a insertar
      */
-    private void altaPaquetes(List<Paquete> paquetes){
+    public void altaPaquetes(List<Paquete> paquetes){
         for(Paquete paquete : paquetes){
             repositorioEnvios.guardarPaquete(paquete);
         }
@@ -84,8 +92,13 @@ public class ServicioUjaPack {
         int localizador = generaLocalizador();
         
         altaPaquetes(paquetes);
-        altaCliente(remitente);
-        altaCliente(destinatario);
+        
+        if(!buscarCliente(remitente)){
+            altaCliente(remitente);
+        }
+        if(!buscarCliente(destinatario)){
+            altaCliente(destinatario);
+        }
         
         Envio envio = new Envio(localizador, remitente, destinatario, paquetes);
         List<PasoPuntoControl> ruta = calculaRuta(envio.getLocalizador(), remitente.getProvincia(), destinatario.getProvincia());
