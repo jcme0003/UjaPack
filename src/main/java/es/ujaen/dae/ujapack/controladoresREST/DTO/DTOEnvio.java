@@ -10,7 +10,7 @@ import java.time.LocalDate;
 
 /**
  * DTO para recopilación de datos de envio
- * @author joseo, Ana
+ * @author joseo, Ana, Jose Carlos Mena
  */
 public class DTOEnvio {
     /** Localizador del envio */
@@ -47,7 +47,7 @@ public class DTOEnvio {
     public DTOEnvio(Envio envio){
         this.localizador = envio.getLocalizador();
         this.estado = envio.getEstado();
-        this.fechaLlegada = envio.getHoraLlegada();
+        this.fechaLlegada = envio.getFechaLlegada();
         this.horaLlegada = envio.getHoraLlegada();
         this.importe = envio.getImporte();
         this.remitente = envio.getRemitente().getDni();
