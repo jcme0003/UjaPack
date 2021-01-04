@@ -9,7 +9,7 @@ import es.ujaen.dae.ujapack.entidades.Cliente;
 
 /**
  * DTO para recopilación de datos de cliente
- * @author joseo, Ana
+ * @author joseo, Ana, Jose Carlos Mena
  */
 public class DTOCliente {
     /** DNI del cliente */
@@ -81,7 +81,7 @@ public class DTOCliente {
         return email;
     }
     
-    public Cliente nuevoClienteDTO(){
+    public Cliente aCliente(){
         return new Cliente(dni,nombre,apellidos,direccion,provincia,telefono,email);
     }
     
