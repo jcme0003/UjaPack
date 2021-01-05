@@ -7,7 +7,7 @@ package es.ujaen.dae.ujapack.controladoresREST;
 
 import es.ujaen.dae.ujapack.controladoresREST.DTO.DTOCliente;
 import es.ujaen.dae.ujapack.servicios.ServicioLimpiadoBaseDeDatos;
-import java.util.List;
+import java.util.Arrays;
 import javax.annotation.PostConstruct;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -21,8 +21,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
 /**
- *
- * @author joseo, Ana
+ * Test para controlador REST de envios
+ * @author joseo, Ana, Jose Carlos Mena
  */
 @SpringBootTest(classes = es.ujaen.dae.ujapack.app.UjaPackApp.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ControladorEnvioTest {
@@ -39,13 +39,16 @@ public class ControladorEnvioTest {
     //TestRestTemplate restTemplateBuilder;
     RestTemplateBuilder restTemplateBuilder;
     
-//    @PostConstruct
-//    void crearRestTemplateBuilder() {
-//        restTemplateBuilder = new RestTemplateBuilder()
-//                .rootUri("http://localhost:" + localPort + "/ujacoin")
-//                .additionalMessageConverters(List.of(springBootJacksonConverter));
-//    }
-
+    /**
+     * Crear RestTemplate para las pruebas
+     */
+    @PostConstruct
+    void crearRestTemplateBuilder(){
+        restTemplateBuilder = new RestTemplateBuilder()
+                .rootUri("http://localhost:" + localPort + "/ujapack")
+                .additionalMessageConverters(Arrays.asList(springBootJacksonConverter));
+    }
+    
     @Test
     public void testAltaClienteDuplicado() {
         DTOCliente cliente = new DTOCliente(
@@ -66,4 +69,5 @@ public class ControladorEnvioTest {
 //    void limpiarBaseDatos() {
 //        limpiadorBaseDatos.limpiar();
 //    }
+    
 }
