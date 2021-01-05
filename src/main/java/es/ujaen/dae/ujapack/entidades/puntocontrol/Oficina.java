@@ -27,7 +27,7 @@ public class Oficina extends PuntoControl{
      * @param nombreProvincia nombre de provincia a la que pertenece la oficina
      */
     public Oficina(String nombreProvincia){
-        super(nombreProvincia);
+        super(Tipo.OFICINA, nombreProvincia);
         this.nombreProvincia = nombreProvincia;
     }
     
@@ -37,7 +37,7 @@ public class Oficina extends PuntoControl{
      * @param nombreProvincia nombre de provincia a la que pertenece la oficina
      */
     public Oficina(int idCentro, String nombreProvincia){
-        super(idCentro, nombreProvincia);
+        super(Tipo.OFICINA, idCentro, nombreProvincia);
         this.nombreProvincia = nombreProvincia;
     }
  

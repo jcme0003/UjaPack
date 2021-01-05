@@ -36,9 +36,4 @@ public class DTOCentroLogistico {
         return localizacion;
     }
     
-    /** Creo que no es necesario este metodo porque no vamos a crear centros logisticos con nuestro proyecto */
-    // PREGUNTAR A ANTONIO
-//    public Optional<CentroLogistico> aCentroLogistico(){
-//        
-//    }
 }

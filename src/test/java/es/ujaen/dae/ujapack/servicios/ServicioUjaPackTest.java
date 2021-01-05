@@ -396,7 +396,8 @@ public class ServicioUjaPackTest {
         
         Envio envio = servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario);
         
-        List<PasoPuntoControl> ruta = servicioUjaPack.notificarOficina(TipoNotificacion.SALIDA, "Jaén", envio.getLocalizador());
+        servicioUjaPack.notificarOficina(TipoNotificacion.SALIDA, "Jaén", envio.getLocalizador());
+        List<PasoPuntoControl> ruta = servicioUjaPack.buscarEnvio(envio.getLocalizador()).getRuta();
         
         Assertions.assertThat(!ruta.isEmpty());
         Assertions.assertThat(ruta.get(0).getFechaSalida() != null);
@@ -434,7 +435,8 @@ public class ServicioUjaPackTest {
         
         Envio envio = servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario);
         
-        List<PasoPuntoControl> ruta = servicioUjaPack.notificarCentroLogistico(TipoNotificacion.LLEGADA, 1, envio.getLocalizador());
+        servicioUjaPack.notificarCentroLogistico(TipoNotificacion.LLEGADA, 1, envio.getLocalizador());
+        List<PasoPuntoControl> ruta = servicioUjaPack.buscarEnvio(envio.getLocalizador()).getRuta();
         
         Assertions.assertThat(!ruta.isEmpty());
         Assertions.assertThat(ruta.get(0).getFechaLlegada() != null);
