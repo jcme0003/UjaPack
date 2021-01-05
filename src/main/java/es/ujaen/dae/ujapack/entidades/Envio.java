@@ -53,7 +53,7 @@ public class Envio implements Serializable {
     @JoinColumn(name = "envioPaquetes")
     private List<Paquete> paquetes;
     
-    /** Envios asociados al cliente */
+    /** Ruta asociada al pedido */
     @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
     @JoinColumn(name = "envioLocalizador")
     private List<PasoPuntoControl> ruta;
