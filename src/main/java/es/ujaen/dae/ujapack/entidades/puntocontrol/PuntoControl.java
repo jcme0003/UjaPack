@@ -21,6 +21,11 @@ import javax.validation.constraints.NotBlank;
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class PuntoControl implements Serializable {
+    /** Enum que indicara el tipo de punto de control */
+    public enum Tipo{
+        CENTRO_LOGISTICO,  //centro logistico
+        OFICINA;   //oficina
+    }
     
     /** Identificador tabla */
     @Id
@@ -28,22 +33,27 @@ public abstract class PuntoControl implements Serializable {
     private int id;
     
     /** Centro logistico del punto de control */
-    private final int idCentro;
+    private int idCentro;
+    
+    private Tipo tipo;
     
     /** Provincia en la que se encuentra el punto de control */
     @NotBlank
-    private final String oficinaEntrega;
+    private String oficinaEntrega;
 
     public PuntoControl() {
+        this.tipo = Tipo.OFICINA;
         this.idCentro = -1;
         this.oficinaEntrega = null;
     }
     
     /**
      * Constructor de punto de control
+     * @param tipo
      * @param oficinaEntrega nombre de la provincia
      */
-    public PuntoControl(String oficinaEntrega){
+    public PuntoControl(Tipo tipo, String oficinaEntrega){
+        this.tipo = tipo;
         this.idCentro = -1;
         this.oficinaEntrega = oficinaEntrega;
     }
@@ -53,7 +63,8 @@ public abstract class PuntoControl implements Serializable {
      * @param idCentro identificador del centro logistico
      * @param oficinaEntrega nombre de la provincia
      */
-    public PuntoControl(int idCentro, String oficinaEntrega){
+    public PuntoControl(Tipo tipo, int idCentro, String oficinaEntrega){
+        this.tipo = tipo;
         this.idCentro = idCentro;
         this.oficinaEntrega = oficinaEntrega;
     }
@@ -77,6 +88,13 @@ public abstract class PuntoControl implements Serializable {
      */
     public String getProvincia() {
         return oficinaEntrega;
+    }
+
+    /**
+     * @return tipo punto de control
+     */
+    public Tipo getTipo() {
+        return tipo;
     }
     
 }
