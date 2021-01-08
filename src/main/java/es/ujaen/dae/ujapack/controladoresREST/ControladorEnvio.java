@@ -21,9 +21,11 @@ import es.ujaen.dae.ujapack.objetosvalor.Paquete;
 import es.ujaen.dae.ujapack.servicios.ServicioUjaPack;
 import java.util.ArrayList;
 import java.util.List;
+import javax.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,9 +42,15 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/ujapack/envios")
+@CrossOrigin(origins = "*")
 public class ControladorEnvio {
     @Autowired
     ServicioUjaPack servicios;
+    
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void handlerViolacionRestricciones(ConstraintViolationException e){
+    }
     
     /** Handler para excepciones de accesos de Envios no encontrados */
     @ExceptionHandler(EnvioNoEncontrado.class)
@@ -148,7 +156,7 @@ public class ControladorEnvio {
         try{
             Cliente nCliente = cliente.aCliente();
             servicios.altaCliente(nCliente);
-            return ResponseEntity.status(HttpStatus.CREATED).body(cliente);
+            return ResponseEntity.status(HttpStatus.CREATED).body(new DTOCliente(nCliente));
         } catch(ClienteYaRegistrado e){
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
