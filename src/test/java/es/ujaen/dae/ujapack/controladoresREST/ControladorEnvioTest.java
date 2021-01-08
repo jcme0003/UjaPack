@@ -64,11 +64,11 @@ public class ControladorEnvioTest {
                             "Sevilla",
                             "555666777",
                             "gmail@gmail.com");
-        
         TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder);
-        ResponseEntity<DTOCliente> respuestaCDuplicado = restTemplate.postForEntity("/clientes", cliente, DTOCliente.class);
-        ResponseEntity<DTOCliente> respuestaC = restTemplate.postForEntity("/clientes", cliente, DTOCliente.class);
-        Assertions.assertThat(respuestaC.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+        ResponseEntity<DTOCliente> respuesta = restTemplate.postForEntity("/clientes", cliente, DTOCliente.class);
+        ResponseEntity<DTOCliente> respuesta2 = restTemplate.postForEntity("/clientes", cliente, DTOCliente.class);
+        
+        Assertions.assertThat(respuesta2.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
     }
 //    
 //    @Test
