@@ -44,7 +44,7 @@ public class ControladorEnvioTest {
     @PostConstruct
     void crearRestTemplateBuilder(){
         restTemplateBuilder = new RestTemplateBuilder()
-                .rootUri("http://localhost:" + localPort + "/ujapack")
+                .rootUri("http://localhost:" + localPort + "/ujapack/envios")
                 .additionalMessageConverters(Arrays.asList(springBootJacksonConverter));
     }
     
@@ -60,9 +60,9 @@ public class ControladorEnvioTest {
                             "gmail@gmail.com");
         TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder);
         ResponseEntity<DTOCliente> respuesta = restTemplate.postForEntity("/clientes", cliente, DTOCliente.class);
+        ResponseEntity<DTOCliente> respuesta2 = restTemplate.postForEntity("/clientes", cliente, DTOCliente.class);
         
-        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-    
+        Assertions.assertThat(respuesta2.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
     }
 //    @BeforeEach
 //    void limpiarBaseDatos() {
