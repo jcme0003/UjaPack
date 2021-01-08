@@ -36,7 +36,7 @@ public class ServicioLimpiadoBaseDeDatos {
     final String deleteFrom = "delete from ";
     
     /** Realizar borrado */
-    void limpiar() {
+    public void limpiar() {
         transactionTemplate.executeWithoutResult(transactionStatus -> {
             for (String tabla : entidades) {
                 em.createQuery(deleteFrom + tabla).executeUpdate();
