@@ -45,6 +45,8 @@ public class ControladorPuntosControlTest {
                 .additionalMessageConverters(Arrays.asList(springBootJacksonConverter));        
     }
     
+    
+    
     @BeforeEach
     void limpiarBaseDatos() {
         limpiadorBaseDatos.limpiar();
