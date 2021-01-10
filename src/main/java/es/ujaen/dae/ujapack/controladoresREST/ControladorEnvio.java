@@ -124,7 +124,6 @@ public class ControladorEnvio {
      * @return 
      */
     @PostMapping("/{localizador}/notificaroficina/{oficina}")
-//    ResponseEntity<Void> notificarPasoOficina(@RequestBody String tipoNotificacion, @PathVariable int localizador, @PathVariable String oficina){
     ResponseEntity<Void> notificarPasoOficina(@RequestBody TextNode tipoNotificacion, @PathVariable int localizador, @PathVariable String oficina){
         try{
             if(ServicioUjaPack.TipoNotificacion.LLEGADA.name().equalsIgnoreCase(tipoNotificacion.asText())){
