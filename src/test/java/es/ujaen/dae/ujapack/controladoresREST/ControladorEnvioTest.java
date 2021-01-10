@@ -66,7 +66,7 @@ public class ControladorEnvioTest {
                             "Sevilla",
                             "555666777",
                             "gmail@gmail.com");
-        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder);
+        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
         ResponseEntity<DTOCliente> respuestaCliente = restTemplate.postForEntity("/clientes", cliente, DTOCliente.class);
         
         Assertions.assertThat(respuestaCliente.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -82,7 +82,7 @@ public class ControladorEnvioTest {
                             "Sevilla",
                             "555666777",
                             "gmail@gmail.com");
-        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder);
+        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
         ResponseEntity<DTOCliente> respuestaCliente = restTemplate.postForEntity("/clientes", cliente, DTOCliente.class);
         ResponseEntity<DTOCliente> respuestaClienteDuplicado = restTemplate.postForEntity("/clientes", cliente, DTOCliente.class);
         
@@ -119,7 +119,7 @@ public class ControladorEnvioTest {
         
         DTOEnvioContext envio = new DTOEnvioContext(paquetes, clRemitente, clDestinatario);
 
-        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder);
+        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
         ResponseEntity<DTOEnvio> respuesta = restTemplate.postForEntity("/", envio, DTOEnvio.class);
         
         Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -155,12 +155,13 @@ public class ControladorEnvioTest {
         
         DTOEnvioContext envio = new DTOEnvioContext(paquetes, clRemitente, clDestinatario);
 
-        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder);
-        ResponseEntity<DTOEnvio> respuesta = restTemplate.postForEntity("/", envio, DTOEnvio.class);
+        TestRestTemplate restTemplateAdmin = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
+        ResponseEntity<DTOEnvio> respuesta = restTemplateAdmin.postForEntity("/", envio, DTOEnvio.class);
         Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         
         DTOEnvio envioCreado = respuesta.getBody();
-        ResponseEntity<DTOEnvio> respuestaEnvio = restTemplate.getForEntity("/{localizador}", DTOEnvio.class, envioCreado.getLocalizador());
+        TestRestTemplate restTemplateUsuario = new TestRestTemplate(restTemplateBuilder.basicAuthentication("usuario", "usuario"));
+        ResponseEntity<DTOEnvio> respuestaEnvio = restTemplateUsuario.getForEntity("/{localizador}", DTOEnvio.class, envioCreado.getLocalizador());
         Assertions.assertThat(respuestaEnvio.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
     
@@ -194,7 +195,7 @@ public class ControladorEnvioTest {
         
         DTOEnvioContext envio = new DTOEnvioContext(paquetes, clRemitente, clDestinatario);
 
-        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder);
+        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
         ResponseEntity<DTOEnvio> respuesta = restTemplate.postForEntity("/", envio, DTOEnvio.class);
         Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         
@@ -232,7 +233,7 @@ public class ControladorEnvioTest {
         
         DTOEnvioContext envio = new DTOEnvioContext(paquetes, clRemitente, clDestinatario);
 
-        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder);
+        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
         ResponseEntity<DTOEnvio> respuesta = restTemplate.postForEntity("/", envio, DTOEnvio.class);
         Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         
@@ -277,7 +278,7 @@ public class ControladorEnvioTest {
         
         DTOEnvioContext envio = new DTOEnvioContext(paquetes, clRemitente, clDestinatario);
 
-        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder);
+        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
         ResponseEntity<DTOEnvio> respuesta = restTemplate.postForEntity("/", envio, DTOEnvio.class);
         Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         
@@ -324,7 +325,7 @@ public class ControladorEnvioTest {
         
         DTOEnvioContext envio = new DTOEnvioContext(paquetes, clRemitente, clDestinatario);
 
-        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder);
+        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
         ResponseEntity<DTOEnvio> respuesta = restTemplate.postForEntity("/", envio, DTOEnvio.class);
         Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
@@ -359,7 +360,7 @@ public class ControladorEnvioTest {
         
         DTOEnvioContext envio = new DTOEnvioContext(paquetes, clRemitente, clDestinatario);
 
-        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder);
+        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
         ResponseEntity<DTOEnvio> respuesta = restTemplate.postForEntity("/", envio, DTOEnvio.class);
         Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
@@ -394,7 +395,7 @@ public class ControladorEnvioTest {
         
         DTOEnvioContext envio = new DTOEnvioContext(paquetes, clRemitente, clDestinatario);
 
-        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder);
+        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
         ResponseEntity<DTOEnvio> respuesta = restTemplate.postForEntity("/", envio, DTOEnvio.class);
         Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         
@@ -443,7 +444,7 @@ public class ControladorEnvioTest {
         
         DTOEnvioContext envio = new DTOEnvioContext(paquetes, clRemitente, clDestinatario);
 
-        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder);
+        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
         ResponseEntity<DTOEnvio> respuesta = restTemplate.postForEntity("/", envio, DTOEnvio.class);
         Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         
