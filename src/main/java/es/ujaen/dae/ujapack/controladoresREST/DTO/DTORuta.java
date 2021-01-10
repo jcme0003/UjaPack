@@ -21,6 +21,11 @@ public class DTORuta {
     /** Ruta asociada al pedido */
     private List<DTOPasoPuntoControl> ruta;
     
+    public DTORuta(){
+        this.estado = Envio.Estado.PENDIENTE.toString();
+        this.ruta = new ArrayList<>();
+    }
+    
     public DTORuta(Envio.Estado estado, List<PasoPuntoControl> ruta){
         this.estado = estado.toString();
         this.ruta = new ArrayList<>();

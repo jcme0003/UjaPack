@@ -11,12 +11,12 @@ import es.ujaen.dae.ujapack.controladoresREST.DTO.DTOEnvio;
 import es.ujaen.dae.ujapack.controladoresREST.DTO.DTOEnvioContext;
 import es.ujaen.dae.ujapack.controladoresREST.DTO.DTOPaquete;
 import es.ujaen.dae.ujapack.controladoresREST.DTO.DTORuta;
-import es.ujaen.dae.ujapack.controladoresREST.DTO.DTOTipoNotificacion;
 import es.ujaen.dae.ujapack.entidades.Cliente;
 import es.ujaen.dae.ujapack.entidades.Envio;
 import es.ujaen.dae.ujapack.excepciones.ClienteYaRegistrado;
 import es.ujaen.dae.ujapack.excepciones.EnvioNoEncontrado;
 import es.ujaen.dae.ujapack.excepciones.PedidoEntregado;
+import es.ujaen.dae.ujapack.excepciones.ProvinciaNoValida;
 import es.ujaen.dae.ujapack.objetosvalor.Paquete;
 import es.ujaen.dae.ujapack.servicios.ServicioUjaPack;
 import java.util.ArrayList;
@@ -47,6 +47,7 @@ public class ControladorEnvio {
     @Autowired
     ServicioUjaPack servicios;
     
+    /** Handler para excepciones de violación de restricciones */
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public void handlerViolacionRestricciones(ConstraintViolationException e){
@@ -56,6 +57,12 @@ public class ControladorEnvio {
     @ExceptionHandler(EnvioNoEncontrado.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public void HandlerCentroLogisticoNoValido(EnvioNoEncontrado e){
+    }
+    
+    /** Handler para excepciones de Provincias invalidas */
+    @ExceptionHandler(ProvinciaNoValida.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void HandlerProvinciaNoValida(ProvinciaNoValida e){
     }
     
     /** Creacion de envios */
@@ -98,8 +105,6 @@ public class ControladorEnvio {
      * @return 
      */
     @PostMapping("/{localizador}/notificarcentrologistico/{idCentro}")
-//    ResponseEntity<Void> notificarPasoCentroLogistico(@RequestBody DTOTipoNotificacion tipo, @PathVariable int localizador, @PathVariable int idCentro){
-//    ResponseEntity<Void> notificarPasoCentroLogistico(@RequestBody String tipo, @PathVariable int localizador, @PathVariable int idCentro){
     ResponseEntity<Void> notificarPasoCentroLogistico(@RequestBody TextNode tipoNotificacion, @PathVariable int localizador, @PathVariable int idCentro){
         try{
             if(ServicioUjaPack.TipoNotificacion.LLEGADA.name().equalsIgnoreCase(tipoNotificacion.asText())){
@@ -112,7 +117,6 @@ public class ControladorEnvio {
         } catch(PedidoEntregado e){
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
-//        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     
     /** Notificar paso por punto de control (Oficina)
@@ -131,21 +135,6 @@ public class ControladorEnvio {
             
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch(PedidoEntregado e){
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
-    }
-    
-    /** Creacion de paquetes */
-    @PostMapping("/paquetes")
-    ResponseEntity<List<DTOPaquete>> altaPaquete(@RequestBody List<DTOPaquete> paquetes){
-        try{
-            List<Paquete> aPaquetes = new ArrayList<>();
-            for(DTOPaquete paquete : paquetes){
-                aPaquetes.add(paquete.aPaquete());
-            }
-            servicios.altaPaquetes(aPaquetes);
-            return ResponseEntity.status(HttpStatus.CREATED).body(paquetes);
-        } catch(Exception e){
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }

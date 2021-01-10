@@ -9,6 +9,8 @@ import es.ujaen.dae.ujapack.controladoresREST.DTO.DTOCliente;
 import es.ujaen.dae.ujapack.controladoresREST.DTO.DTOEnvio;
 import es.ujaen.dae.ujapack.controladoresREST.DTO.DTOEnvioContext;
 import es.ujaen.dae.ujapack.controladoresREST.DTO.DTOPaquete;
+import es.ujaen.dae.ujapack.controladoresREST.DTO.DTORuta;
+import es.ujaen.dae.ujapack.entidades.Envio;
 import es.ujaen.dae.ujapack.servicios.ServicioLimpiadoBaseDeDatos;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,6 +57,22 @@ public class ControladorEnvioTest {
     }
     
     @Test
+    public void testAltaCliente() {
+        DTOCliente cliente = new DTOCliente(
+                            "87654321B",
+                            "Maria",
+                            "Muñoz",
+                            "Calle verdadera",
+                            "Sevilla",
+                            "555666777",
+                            "gmail@gmail.com");
+        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder);
+        ResponseEntity<DTOCliente> respuestaCliente = restTemplate.postForEntity("/clientes", cliente, DTOCliente.class);
+        
+        Assertions.assertThat(respuestaCliente.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    }
+    
+    @Test
     public void testAltaClienteDuplicado() {
         DTOCliente cliente = new DTOCliente(
                             "87654321B",
@@ -65,329 +83,384 @@ public class ControladorEnvioTest {
                             "555666777",
                             "gmail@gmail.com");
         TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder);
-        ResponseEntity<DTOCliente> respuesta = restTemplate.postForEntity("/clientes", cliente, DTOCliente.class);
-        ResponseEntity<DTOCliente> respuesta2 = restTemplate.postForEntity("/clientes", cliente, DTOCliente.class);
+        ResponseEntity<DTOCliente> respuestaCliente = restTemplate.postForEntity("/clientes", cliente, DTOCliente.class);
+        ResponseEntity<DTOCliente> respuestaClienteDuplicado = restTemplate.postForEntity("/clientes", cliente, DTOCliente.class);
         
-        Assertions.assertThat(respuesta2.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+        Assertions.assertThat(respuestaClienteDuplicado.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
     }
     
-//    @Test
-//    public void testNuevoEnvio(){
-//        DTOPaquete paquete = new DTOPaquete(
-//                1.5f,
-//                50.0f,
-//                10.0f,
-//                15.0f);
-//        TestRestTemplate restTemplatePaq = new TestRestTemplate(restTemplateBuilder);
-//        restTemplatePaq.postForEntity("/paquetes", paquete, DTOPaquete.class);
-//        //ResponseEntity<DTOEnvio> respuestaPaq = restTemplate.postForEntity("/paquetes", paquete, DTOEnvio.class);
-//        
-////        List<DTOPaquete> paquetes = new ArrayList<>();
-////        paquetes.add(paquete);
-////        List<DTOPaquete> aPaquetes = new ArrayList<>();
-////                aPaquetes.add(DTOPaquete.aPaquete());
-//        
-//        DTOCliente clRemitente = new DTOCliente(
-//                "12345678A",
-//                "Paco",
-//                "Perez",
-//                "Calle falsa",
-//                "Jaén",
-//                "999000111",
-//                "email@email.com");
-//        
-//        TestRestTemplate restTemplateC1 = new TestRestTemplate(restTemplateBuilder);
-//        restTemplateC1.postForEntity("/clientes", clRemitente, DTOCliente.class);
-//        
-//        DTOCliente clDestinatario = new DTOCliente(
-//                "87654321B",
-//                "Maria",
-//                "Muñoz",
-//                "Calle verdadera",
-//                "Sevilla",
-//                "555666777",
-//                "gmail@gmail.com");
-//        
-//        TestRestTemplate restTemplateC2 = new TestRestTemplate(restTemplateBuilder);
-//        restTemplateC2.postForEntity("/clientes", clDestinatario, DTOCliente.class);
-//        
-//       //ResponseEntity<DTOEnvio> respuestaPaq = restTemplate.postForEntity("/paquetes", paquete, DTOEnvio.class);
-//        DTOEnvioContext envio = DTOEnvioContext.nuevoEnvio(paquete, clRemitente, clDestinatario);
-//        Assertions.assertThat(servicioUjaPack.consultarEstadoEnvio(envio.getLocalizador()) == Estado.PENDIENTE);
-//    }
-    
-    
-//    @Test
-//    public void testConsultarEstadoEnvioEntregado(){
-//        DTOPaquete paquete = new DTOPaquete(
-//                1.5f,
-//                50.0f,
-//                10.0f,
-//                15.0f);
-//        List<Paquete> paquetes = new ArrayList<>();
-//        paquetes.add(paquete);
-//        
-//        DTOCliente clRemitente = new DTOCliente(
-//                "12345678A",
-//                "Paco",
-//                "Perez",
-//                "Calle falsa",
-//                "Jaén",
-//                "999000111",
-//                "email@email.com");
-//        
-//        DTOCliente clDestinatario = new DTOCliente(
-//                "87654321B",
-//                "Maria",
-//                "Muñoz",
-//                "Calle verdadera",
-//                "Sevilla",
-//                "555666777",
-//                "gmail@gmail.com");
-//        
-//        Envio envio = servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario);
-//        servicioUjaPack.actualizaEstadoEnvio(envio, Estado.ENTREGADO);
-//        
-//        Assertions.assertThat(servicioUjaPack.consultarEstadoEnvio(envio.getLocalizador()) == Estado.ENTREGADO);
-//    }
-    
-//    @Test
-//    public void testCalculaRutaTipo1(){
-//        DTOPaquete paquete = new DTOPaquete(
-//                1.5f,
-//                50.0f,
-//                10.0f,
-//                15.0f);
-//        List<Paquete> paquetes = new ArrayList<>();
-//        paquetes.add(paquete);
-//        
-//        DTOCliente clRemitente = new DTOCliente(
-//                "12345678A",
-//                "Paco",
-//                "Perez",
-//                "Calle falsa",
-//                "Jaén",
-//                "999000111",
-//                "email@email.com");
-//        
-//        DTOCliente clDestinatario = new DTOCliente(
-//                "87654321B",
-//                "Maria",
-//                "Muñoz",
-//                "Calle verdadera",
-//                "Jaén",
-//                "555666777",
-//                "gmail@gmail.com");
-//        
-//        Envio envio = servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario);
-//        
-//        Assertions.assertThat(envio.getRuta().get(0).getPuntoDeControl().getProvincia().equals("Jaén"));
-//    }
-    
-//    @Test
-//    public void testCalculaRutaTipo2(){
-//        DTOPaquete paquete = new DTOPaquete(
-//                1.5f,
-//                50.0f,
-//                10.0f,
-//                15.0f);
-//        List<Paquete> paquetes = new ArrayList<>();
-//        paquetes.add(paquete);
-//        
-//        DTOCliente clRemitente = new DTOCliente(
-//                "12345678A",
-//                "Paco",
-//                "Perez",
-//                "Calle falsa",
-//                "Jaén",
-//                "999000111",
-//                "email@email.com");
-//        
-//        DTOCliente clDestinatario = new DTOCliente(
-//                "87654321B",
-//                "Maria",
-//                "Muñoz",
-//                "Calle verdadera",
-//                "Sevilla",
-//                "555666777",
-//                "gmail@gmail.com");
-//        
-//        Envio envio = servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario);
-//        
-//        Assertions.assertThat(envio.getRuta().get(0).getPuntoDeControl().getProvincia().equals("Jaén"));
-//        Assertions.assertThat(envio.getRuta().get(1).getPuntoDeControl().getProvincia().equals("Sevilla"));
-//        Assertions.assertThat(envio.getRuta().get(2).getPuntoDeControl().getProvincia().equals("Sevilla"));
-//    }
-    
+    @Test
+    public void testNuevoEnvio(){
+        DTOPaquete paquete = new DTOPaquete(
+                1.5f,
+                50.0f,
+                10.0f,
+                15.0f);
+        List<DTOPaquete> paquetes = new ArrayList<>();
+        paquetes.add(paquete);
         
-//    @Test
-//    public void testProvinciasValida(){
-//        DTOPaquete paquete = new DTOPaquete(
-//                1.5f,
-//                50.0f,
-//                10.0f,
-//                15.0f);
-//        List<Paquete> paquetes = new ArrayList<>();
-//        paquetes.add(paquete);
-//        
-//        DTOCliente clRemitente = new DTOCliente(
-//                "12345678A",
-//                "Paco",
-//                "Perez",
-//                "Calle falsa",
-//                "Jaén",
-//                "999000111",
-//                "email@email.com");
-//        
-//        TestRestTemplate restTemplateC1 = new TestRestTemplate(restTemplateBuilder);
-//        restTemplateC1.postForEntity("/clientes", clRemitente, DTOCliente.class);
-//        
-//        DTOCliente clDestinatario = new DTOCliente(
-//                "87654321B",
-//                "Maria",
-//                "Muñoz",
-//                "Calle verdadera",
-//                "Sevilla",
-//                "555666777",
-//                "gmail@gmail.com");
-//        
-//        TestRestTemplate restTemplateC2 = new TestRestTemplate(restTemplateBuilder);
-//        restTemplateC2.postForEntity("/clientes", clDestinatario, DTOCliente.class);
-    
-//        Envio envio = servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario);
-//        
-//        Assertions.assertThat(!envio.getRuta().isEmpty());
-//    }
-    
-//    @Test
-//    public void testProvinciasNoValidas(){
-//        DTOPaquete paquete = new DTOPaquete(
-//                1.5f,
-//                50.0f,
-//                10.0f,
-//                15.0f);
-//        
-//        TestRestTemplate restTemplatePaq = new TestRestTemplate(restTemplateBuilder);
-//        restTemplatePaq.postForEntity("/paquetes", paquete, DTOPaquete.class);
-////        List<Paquete> paquetes = new ArrayList<>();
-////        paquetes.add(paquete);
-//        
-//        DTOCliente clRemitente = new DTOCliente(
-//                "12345678A",
-//                "Paco",
-//                "Perez",
-//                "Calle falsa",
-//                "Jaén",
-//                "999000111",
-//                "email@email.com");
-//        
-//        TestRestTemplate restTemplateC1 = new TestRestTemplate(restTemplateBuilder);
-//        restTemplateC1.postForEntity("/clientes", clRemitente, DTOCliente.class);
-//        
-//        DTOCliente clDestinatario = new DTOCliente(
-//                "87654321B",
-//                "Maria",
-//                "Muñoz",
-//                "Calle verdadera",
-//                "jlsd",
-//                "555666777",
-//                "gmail@gmail.com");
-//        TestRestTemplate restTemplateC2 = new TestRestTemplate(restTemplateBuilder);
-//        restTemplateC2.postForEntity("/clientes", clDestinatario, DTOCliente.class);
-//        
-//        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder);
-//        DTOEnvioContext envio = DTOEnvioContext.nuevoEnvio(paquete, clRemitente, clDestinatario);
-//        ResponseEntity<DTOEnvioContext> respuestaProvNV = restTemplate.postForEntity(
-//                "/",
-//                envio,
-//                DTOEnvioContext.class
-//        );
-//
-//        Assertions.assertThat(respuestaProvNV.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        DTOCliente clRemitente = new DTOCliente(
+                "12345678A",
+                "Paco",
+                "Perez",
+                "Calle falsa",
+                "Jaén",
+                "999000111",
+                "email@email.com");
+        
+        DTOCliente clDestinatario = new DTOCliente(
+                "87654321B",
+                "Maria",
+                "Muñoz",
+                "Calle verdadera",
+                "Sevilla",
+                "555666777",
+                "gmail@gmail.com");
+        
+        DTOEnvioContext envio = new DTOEnvioContext(paquetes, clRemitente, clDestinatario);
 
-//        Assertions.assertThatThrownBy(() -> {
-//            servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario); })
-//                .isInstanceOf(ProvinciaNoValida.class);
-//    }
+        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder);
+        ResponseEntity<DTOEnvio> respuesta = restTemplate.postForEntity("/", envio, DTOEnvio.class);
+        
+        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    }
     
-//    @Test
-//    public void testActualizarPasoPuntoControlOficina(){
-//        DTOPaquete paquete = new DTOPaquete(
-//                1.5f,
-//                50.0f,
-//                10.0f,
-//                15.0f);
-//        List<Paquete> paquetes = new ArrayList<>();
-//        paquetes.add(paquete);
-//        
-//        DTOCliente clRemitente = new DTOCliente(
-//                "12345678A",
-//                "Paco",
-//                "Perez",
-//                "Calle falsa",
-//                "Jaén",
-//                "999000111",
-//                "email@email.com");
-//        
-//        DTOCliente clDestinatario = new DTOCliente(
-//                "87654321B",
-//                "Maria",
-//                "Muñoz",
-//                "Calle verdadera",
-//                "Jaén",
-//                "555666777",
-//                "gmail@gmail.com");
-//        
-//        Envio envio = servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario);
-//        
-//        servicioUjaPack.notificarOficina(TipoNotificacion.SALIDA, "Jaén", envio.getLocalizador());
-//        List<PasoPuntoControl> ruta = servicioUjaPack.buscarEnvio(envio.getLocalizador()).getRuta();
-//        
-//        Assertions.assertThat(!ruta.isEmpty());
-//        Assertions.assertThat(ruta.get(0).getFechaSalida() != null);
-//        Assertions.assertThat(ruta.get(0).getFechaSalida().isAfter(LocalDateTime.MIN));
-//        Assertions.assertThat(ruta.get(0).getFechaSalida().isBefore(LocalDateTime.now()));
-//    }
-//    
-//    @Test
-//    public void testActualizarPasoPuntoControlCentroLogistico(){
-//        DTOPaquete paquete = new DTOPaquete(
-//                1.5f,
-//                50.0f,
-//                10.0f,
-//                15.0f);
-//        List<Paquete> paquetes = new ArrayList<>();
-//        paquetes.add(paquete);
-//        
-//        DTOCliente clRemitente = new DTOCliente(
-//                "12345678A",
-//                "Paco",
-//                "Perez",
-//                "Calle falsa",
-//                "Jaén",
-//                "999000111",
-//                "email@email.com");
-//        
-//        DTOCliente clDestinatario = new DTOCliente(
-//                "87654321B",
-//                "Maria",
-//                "Muñoz",
-//                "Calle verdadera",
-//                "Sevilla",
-//                "555666777",
-//                "gmail@gmail.com");
-//        
-//        Envio envio = servicioUjaPack.nuevoEnvio(paquetes, clRemitente, clDestinatario);
-//        
-//        servicioUjaPack.notificarCentroLogistico(TipoNotificacion.LLEGADA, 1, envio.getLocalizador());
-//        List<PasoPuntoControl> ruta = servicioUjaPack.buscarEnvio(envio.getLocalizador()).getRuta();
-//        
-//        Assertions.assertThat(!ruta.isEmpty());
-//        Assertions.assertThat(ruta.get(0).getFechaLlegada() != null);
-//        Assertions.assertThat(ruta.get(0).getFechaLlegada().isAfter(LocalDateTime.MIN));
-//        Assertions.assertThat(ruta.get(0).getFechaLlegada().isBefore(LocalDateTime.now()));
-//    }
+    @Test
+    public void testBuscarEnvio(){
+        DTOPaquete paquete = new DTOPaquete(
+                1.5f,
+                50.0f,
+                10.0f,
+                15.0f);
+        List<DTOPaquete> paquetes = new ArrayList<>();
+        paquetes.add(paquete);
+        
+        DTOCliente clRemitente = new DTOCliente(
+                "12345678A",
+                "Paco",
+                "Perez",
+                "Calle falsa",
+                "Jaén",
+                "999000111",
+                "email@email.com");
+        
+        DTOCliente clDestinatario = new DTOCliente(
+                "87654321B",
+                "Maria",
+                "Muñoz",
+                "Calle verdadera",
+                "Sevilla",
+                "555666777",
+                "gmail@gmail.com");
+        
+        DTOEnvioContext envio = new DTOEnvioContext(paquetes, clRemitente, clDestinatario);
+
+        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder);
+        ResponseEntity<DTOEnvio> respuesta = restTemplate.postForEntity("/", envio, DTOEnvio.class);
+        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        
+        DTOEnvio envioCreado = respuesta.getBody();
+        ResponseEntity<DTOEnvio> respuestaEnvio = restTemplate.getForEntity("/{localizador}", DTOEnvio.class, envioCreado.getLocalizador());
+        Assertions.assertThat(respuestaEnvio.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
     
+    @Test
+    public void testConsultarEstadoEnvio(){
+        DTOPaquete paquete = new DTOPaquete(
+                1.5f,
+                50.0f,
+                10.0f,
+                15.0f);
+        List<DTOPaquete> paquetes = new ArrayList<>();
+        paquetes.add(paquete);
+        
+        DTOCliente clRemitente = new DTOCliente(
+                "12345678A",
+                "Paco",
+                "Perez",
+                "Calle falsa",
+                "Jaén",
+                "999000111",
+                "email@email.com");
+        
+        DTOCliente clDestinatario = new DTOCliente(
+                "87654321B",
+                "Maria",
+                "Muñoz",
+                "Calle verdadera",
+                "Sevilla",
+                "555666777",
+                "gmail@gmail.com");
+        
+        DTOEnvioContext envio = new DTOEnvioContext(paquetes, clRemitente, clDestinatario);
+
+        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder);
+        ResponseEntity<DTOEnvio> respuesta = restTemplate.postForEntity("/", envio, DTOEnvio.class);
+        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        
+        DTOEnvio envioEstado = respuesta.getBody();
+        Assertions.assertThat(envioEstado.getEstado()).isEqualTo(Envio.Estado.PENDIENTE);
+    }
+    
+    @Test
+    public void testCalculaRutaTipo1(){
+        DTOPaquete paquete = new DTOPaquete(
+                1.5f,
+                50.0f,
+                10.0f,
+                15.0f);
+        List<DTOPaquete> paquetes = new ArrayList<>();
+        paquetes.add(paquete);
+        
+        DTOCliente clRemitente = new DTOCliente(
+                "12345678A",
+                "Paco",
+                "Perez",
+                "Calle falsa",
+                "Jaén",
+                "999000111",
+                "email@email.com");
+        
+        DTOCliente clDestinatario = new DTOCliente(
+                "87654321B",
+                "Maria",
+                "Muñoz",
+                "Calle verdadera",
+                "Jaén",
+                "555666777",
+                "gmail@gmail.com");
+        
+        DTOEnvioContext envio = new DTOEnvioContext(paquetes, clRemitente, clDestinatario);
+
+        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder);
+        ResponseEntity<DTOEnvio> respuesta = restTemplate.postForEntity("/", envio, DTOEnvio.class);
+        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        
+        DTOEnvio envioCreado = respuesta.getBody();
+        ResponseEntity<DTOEnvio> respuestaEnvio = restTemplate.getForEntity("/{localizador}", DTOEnvio.class, envioCreado.getLocalizador());
+        Assertions.assertThat(respuestaEnvio.getStatusCode()).isEqualTo(HttpStatus.OK);
+        
+        ResponseEntity<DTORuta> respuestaEnvioRuta = restTemplate.getForEntity("/{localizador}/ruta", DTORuta.class, envioCreado.getLocalizador());
+        Assertions.assertThat(respuestaEnvioRuta.getStatusCode()).isEqualTo(HttpStatus.OK);
+        
+        DTORuta ruta = respuestaEnvioRuta.getBody();
+        Assertions.assertThat(ruta.getRuta().get(0).getTipo() == "OFICINA");
+    }
+    
+    @Test
+    public void testCalculaRutaTipo2(){
+        DTOPaquete paquete = new DTOPaquete(
+                1.5f,
+                50.0f,
+                10.0f,
+                15.0f);
+        List<DTOPaquete> paquetes = new ArrayList<>();
+        paquetes.add(paquete);
+        
+        DTOCliente clRemitente = new DTOCliente(
+                "12345678A",
+                "Paco",
+                "Perez",
+                "Calle falsa",
+                "Jaén",
+                "999000111",
+                "email@email.com");
+        
+        DTOCliente clDestinatario = new DTOCliente(
+                "87654321B",
+                "Maria",
+                "Muñoz",
+                "Calle verdadera",
+                "Sevilla",
+                "555666777",
+                "gmail@gmail.com");
+        
+        DTOEnvioContext envio = new DTOEnvioContext(paquetes, clRemitente, clDestinatario);
+
+        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder);
+        ResponseEntity<DTOEnvio> respuesta = restTemplate.postForEntity("/", envio, DTOEnvio.class);
+        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        
+        DTOEnvio envioCreado = respuesta.getBody();
+        ResponseEntity<DTOEnvio> respuestaEnvio = restTemplate.getForEntity("/{localizador}", DTOEnvio.class, envioCreado.getLocalizador());
+        Assertions.assertThat(respuestaEnvio.getStatusCode()).isEqualTo(HttpStatus.OK);
+        
+        ResponseEntity<DTORuta> respuestaEnvioRuta = restTemplate.getForEntity("/{localizador}/ruta", DTORuta.class, envioCreado.getLocalizador());
+        Assertions.assertThat(respuestaEnvioRuta.getStatusCode()).isEqualTo(HttpStatus.OK);
+        
+        DTORuta ruta = respuestaEnvioRuta.getBody();
+        Assertions.assertThat(ruta.getRuta().get(0).getTipo() == "OFICINA");
+        Assertions.assertThat(ruta.getRuta().get(1).getTipo() == "CENTRO_LOGISTICO");
+        Assertions.assertThat(ruta.getRuta().get(2).getTipo() == "OFICINA");
+    }
+    
+    @Test
+    public void testProvinciasEnvioValida(){
+        DTOPaquete paquete = new DTOPaquete(
+                1.5f,
+                50.0f,
+                10.0f,
+                15.0f);
+        List<DTOPaquete> paquetes = new ArrayList<>();
+        paquetes.add(paquete);
+        
+        DTOCliente clRemitente = new DTOCliente(
+                "12345678A",
+                "Paco",
+                "Perez",
+                "Calle falsa",
+                "Jaén",
+                "999000111",
+                "email@email.com");
+        
+        DTOCliente clDestinatario = new DTOCliente(
+                "87654321B",
+                "Maria",
+                "Muñoz",
+                "Calle verdadera",
+                "Jaén",
+                "555666777",
+                "gmail@gmail.com");
+        
+        DTOEnvioContext envio = new DTOEnvioContext(paquetes, clRemitente, clDestinatario);
+
+        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder);
+        ResponseEntity<DTOEnvio> respuesta = restTemplate.postForEntity("/", envio, DTOEnvio.class);
+        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    }
+    
+    @Test
+    public void testProvinciasEnvioNoValidas(){
+        DTOPaquete paquete = new DTOPaquete(
+                1.5f,
+                50.0f,
+                10.0f,
+                15.0f);
+        List<DTOPaquete> paquetes = new ArrayList<>();
+        paquetes.add(paquete);
+        
+        DTOCliente clRemitente = new DTOCliente(
+                "12345678A",
+                "Paco",
+                "Perez",
+                "Calle falsa",
+                "Jaén",
+                "999000111",
+                "email@email.com");
+        
+        DTOCliente clDestinatario = new DTOCliente(
+                "87654321B",
+                "Maria",
+                "Muñoz",
+                "Calle verdadera",
+                "Jan",
+                "555666777",
+                "gmail@gmail.com");
+        
+        DTOEnvioContext envio = new DTOEnvioContext(paquetes, clRemitente, clDestinatario);
+
+        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder);
+        ResponseEntity<DTOEnvio> respuesta = restTemplate.postForEntity("/", envio, DTOEnvio.class);
+        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+    
+    @Test
+    public void testActualizarPasoPuntoControlOficina(){
+        DTOPaquete paquete = new DTOPaquete(
+                1.5f,
+                50.0f,
+                10.0f,
+                15.0f);
+        List<DTOPaquete> paquetes = new ArrayList<>();
+        paquetes.add(paquete);
+        
+        DTOCliente clRemitente = new DTOCliente(
+                "12345678A",
+                "Paco",
+                "Perez",
+                "Calle falsa",
+                "Jaén",
+                "999000111",
+                "email@email.com");
+        
+        DTOCliente clDestinatario = new DTOCliente(
+                "87654321B",
+                "Maria",
+                "Muñoz",
+                "Calle verdadera",
+                "Jaén",
+                "555666777",
+                "gmail@gmail.com");
+        
+        DTOEnvioContext envio = new DTOEnvioContext(paquetes, clRemitente, clDestinatario);
+
+        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder);
+        ResponseEntity<DTOEnvio> respuesta = restTemplate.postForEntity("/", envio, DTOEnvio.class);
+        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        
+        DTOEnvio envioCreado = respuesta.getBody();
+        DTORuta rutaEnvioCreado = envioCreado.getRuta();
+        String fechaOriginal = rutaEnvioCreado.getRuta().get(0).getFechaLlegada();
+        
+        ResponseEntity<Void> respuestaNotificarOficina = restTemplate.postForEntity("/{localizador}/notificaroficina/{oficina}", "llegada", Void.class, envioCreado.getLocalizador(), clDestinatario.getProvincia());
+        Assertions.assertThat(respuestaNotificarOficina.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        
+        ResponseEntity<DTORuta> respuestaRutaEnvioModificado = restTemplate.getForEntity("/{localizador}/ruta", DTORuta.class, envioCreado.getLocalizador());
+        Assertions.assertThat(respuestaRutaEnvioModificado.getStatusCode()).isEqualTo(HttpStatus.OK);
+        DTORuta rutaEnvioModificado = respuestaRutaEnvioModificado.getBody();
+        String fechaModificada = rutaEnvioModificado.getRuta().get(0).getFechaLlegada();
+        
+        Assertions.assertThat(!fechaOriginal.equals(fechaModificada));
+    }
+    
+    @Test
+    public void testActualizarPasoPuntoControlCentro(){
+        DTOPaquete paquete = new DTOPaquete(
+                1.5f,
+                50.0f,
+                10.0f,
+                15.0f);
+        List<DTOPaquete> paquetes = new ArrayList<>();
+        paquetes.add(paquete);
+        
+        DTOCliente clRemitente = new DTOCliente(
+                "12345678A",
+                "Paco",
+                "Perez",
+                "Calle falsa",
+                "Jaén",
+                "999000111",
+                "email@email.com");
+        
+        DTOCliente clDestinatario = new DTOCliente(
+                "87654321B",
+                "Maria",
+                "Muñoz",
+                "Calle verdadera",
+                "Sevilla",
+                "555666777",
+                "gmail@gmail.com");
+        
+        DTOEnvioContext envio = new DTOEnvioContext(paquetes, clRemitente, clDestinatario);
+
+        TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder);
+        ResponseEntity<DTOEnvio> respuesta = restTemplate.postForEntity("/", envio, DTOEnvio.class);
+        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        
+        DTOEnvio envioCreado = respuesta.getBody();
+        DTORuta rutaEnvioCreado = envioCreado.getRuta();
+        String fechaOriginal = rutaEnvioCreado.getRuta().get(1).getFechaSalida();
+        
+        ResponseEntity<Void> respuestaNotificarPasoCentroLogistico = restTemplate.postForEntity("/{localizador}/notificarcentrologistico/{idCentro}", "salida", Void.class, envioCreado.getLocalizador(), 1);
+        Assertions.assertThat(respuestaNotificarPasoCentroLogistico.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        
+        ResponseEntity<DTORuta> respuestaRutaEnvioModificado = restTemplate.getForEntity("/{localizador}/ruta", DTORuta.class, envioCreado.getLocalizador());
+        Assertions.assertThat(respuestaRutaEnvioModificado.getStatusCode()).isEqualTo(HttpStatus.OK);
+        DTORuta rutaEnvioModificado = respuestaRutaEnvioModificado.getBody();
+        String fechaModificada = rutaEnvioModificado.getRuta().get(1).getFechaSalida();
+        
+        Assertions.assertThat(!fechaOriginal.equals(fechaModificada));
+    }
     
     @BeforeEach
     void limpiarBaseDatos() {
