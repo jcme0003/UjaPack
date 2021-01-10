@@ -51,8 +51,13 @@ public class ControladorPuntosControl {
      */
     @GetMapping("/centroslogisticos/{idCentro}")
     @ResponseStatus(HttpStatus.OK)
-    public DTOCentroLogistico verCentroLogistico(@PathVariable int idCentro) {
-        return new DTOCentroLogistico(servicios.buscaCentroLogistico(idCentro));
+    public DTOCentroLogistico verCentroLogistico(@PathVariable String idCentro) {
+        try{
+            int id = Integer.parseInt(idCentro);
+            return new DTOCentroLogistico(servicios.buscaCentroLogistico(id));
+        } catch(NumberFormatException e) {
+            throw new CentroLogisticoNoValido();
+        }
     }
     
     /** Obtener una oficina a través de una provincia
