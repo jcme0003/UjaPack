@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/ujapack/puntoscontrol")
 @CrossOrigin(origins = "*")
-//(origins = "*", methods = {RequestMethod.GET,RequestMethod.POST})
 public class ControladorPuntosControl {
     
     @Autowired
