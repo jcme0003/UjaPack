@@ -5,10 +5,13 @@
  */
 package es.ujaen.dae.ujapack.controladoresREST;
 
+import es.ujaen.dae.ujapack.controladoresREST.DTO.DTOCliente;
+import es.ujaen.dae.ujapack.controladoresREST.DTO.DTOPaquete;
 import es.ujaen.dae.ujapack.servicios.ServicioLimpiadoBaseDeDatos;
-import java.util.List;
+import java.util.Arrays;
 import javax.annotation.PostConstruct;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -33,27 +36,19 @@ public class ControladorPuntosControlTest {
     MappingJackson2HttpMessageConverter springBootJacksonConverter;
     
     RestTemplateBuilder restTemplateBuilder;
-    //TestRestTemplate restTemplate;
     
-//    @PostConstruct
-//    void crearRestTemplateBuilder(){
-//        RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder()
-//                .rootUri("http://localhost:" + localPort + "/ujapack")
-//                .additionalMessageConverters(List.of(springBootJacksonConverter));
-//        restTemplate = new TestRestTemplate(restTemplateBuilder);
-//    }
     
-//    @PostConstruct
-//    void crearRestTemplateBuilder() {
-//        restTemplateBuilder = new RestTemplateBuilder()
-//                .rootUri("http://localhost:" + localPort + "/ujapack")
-//                .additionalMessageConverters(List.of(springBootJacksonConverter));        
-//    }
+    @PostConstruct
+    void crearRestTemplateBuilder() {
+        restTemplateBuilder = new RestTemplateBuilder()
+                .rootUri("http://localhost:" + localPort + "/ujapack/puntoscontrol")
+                .additionalMessageConverters(Arrays.asList(springBootJacksonConverter));        
+    }
     
     
     
-//    @BeforeEach
-//    void limpiarBaseDatos() {
-//        limpiadorBaseDatos.limpiar();
-//    }
+    @BeforeEach
+    void limpiarBaseDatos() {
+        limpiadorBaseDatos.limpiar();
+    }
 }

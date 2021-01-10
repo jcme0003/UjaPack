@@ -6,8 +6,6 @@
 package es.ujaen.dae.ujapack.controladoresREST.DTO;
 
 import es.ujaen.dae.ujapack.entidades.PasoPuntoControl;
-import es.ujaen.dae.ujapack.entidades.puntocontrol.PuntoControl;
-import es.ujaen.dae.ujapack.entidades.puntocontrol.PuntoControl.Tipo;
 
 /**
  * DTO que mostrará los datos correspondientes a la ruta
