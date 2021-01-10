@@ -34,7 +34,7 @@ public class ServicioSeguridadUjaPack extends WebSecurityConfigurerAdapter {
         httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/ujapack/").permitAll();
         httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/ujapack/envios/").hasRole("ADMIN");
         httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/ujapack/envios/**").hasRole("ADMIN");
-        httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/ujapack/envios/**").hasRole("USUARIO");
-        httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/ujapack/puntoscontrol/**").hasRole("USUARIO");
+        httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/ujapack/envios/**").hasAnyRole("USUARIO", "ADMIN");
+        httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/ujapack/puntoscontrol/**").hasAnyRole("USUARIO", "ADMIN");
     }
 }
