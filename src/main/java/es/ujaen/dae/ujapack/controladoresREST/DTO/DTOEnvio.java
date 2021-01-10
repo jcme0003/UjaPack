@@ -33,6 +33,8 @@ public class DTOEnvio {
     
     /** DNI del cliente asociado a destinatario */
     String destinatario;
+    
+    DTORuta ruta;
 
     public DTOEnvio(int localizador, Envio.Estado estado, LocalDate fechaLlegada, LocalDate horaLlegada, float importe, String remitente, String destinatario) {
         this.localizador = localizador;
@@ -42,6 +44,7 @@ public class DTOEnvio {
         this.importe = importe;
         this.remitente = remitente;
         this.destinatario = destinatario;
+        this.ruta = new DTORuta();
     }
     
     public DTOEnvio(Envio envio){
@@ -51,7 +54,8 @@ public class DTOEnvio {
         this.horaLlegada = envio.getHoraLlegada();
         this.importe = envio.getImporte();
         this.remitente = envio.getRemitente().getDni();
-        this.destinatario = envio.getDestinatario().getDni();    
+        this.destinatario = envio.getDestinatario().getDni();
+        this.ruta = new DTORuta(envio.getEstado(), envio.getRuta());
     }
     
 
@@ -81,6 +85,10 @@ public class DTOEnvio {
 
     public String getDestinatario() {
         return destinatario;
+    }
+    
+    public DTORuta getRuta(){
+        return ruta;
     }
     
 }
