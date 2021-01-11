@@ -61,7 +61,7 @@ public class ControladorEnvio {
     
     /** Handler para excepciones de Provincias invalidas */
     @ExceptionHandler(ProvinciaNoValida.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public void HandlerProvinciaNoValida(ProvinciaNoValida e){
     }
     
@@ -80,30 +80,32 @@ public class ControladorEnvio {
         }
     }
     
-    /** Datos del envio
-     * @param localizador
-     * @return 
-     */
+    /** Datos del envio */
     @GetMapping("/{localizador}")
     @ResponseStatus(HttpStatus.OK)
-    public DTOEnvio verEnvio(@PathVariable int localizador){
-        return new DTOEnvio(servicios.buscarEnvio(localizador));
+    public DTOEnvio verEnvio(@PathVariable String localizador){
+        try {
+            int id = Integer.parseInt(localizador);
+            return new DTOEnvio(servicios.buscarEnvio(id));
+        } catch(NumberFormatException e){
+            throw new EnvioNoEncontrado();
+        }
+        
     }
     
-    /** Datos de la ruta del envio
-     * @param localizador
-     * @return 
-     */
+    /** Datos de la ruta del envio */
     @GetMapping("/{localizador}/ruta")
     @ResponseStatus(HttpStatus.OK)
-    public DTORuta verRutaEnvio(@PathVariable int localizador){
-        return new DTORuta(servicios.buscarEnvio(localizador));
+    public DTORuta verRutaEnvio(@PathVariable String localizador){
+        try {
+            int id = Integer.parseInt(localizador);
+            return new DTORuta(servicios.buscarEnvio(id));
+        } catch(NumberFormatException e){
+            throw new EnvioNoEncontrado();
+        }
     }
     
-    /** Notificar paso por punto de control (Centro logistico)
-     * @param localizador
-     * @return 
-     */
+    /** Notificar paso por punto de control (Centro logistico) */
     @PostMapping("/{localizador}/notificarcentrologistico/{idCentro}")
     ResponseEntity<Void> notificarPasoCentroLogistico(@RequestBody TextNode tipoNotificacion, @PathVariable int localizador, @PathVariable int idCentro){
         try{
@@ -119,10 +121,7 @@ public class ControladorEnvio {
         }
     }
     
-    /** Notificar paso por punto de control (Oficina)
-     * @param localizador
-     * @return 
-     */
+    /** Notificar paso por punto de control (Oficina) */
     @PostMapping("/{localizador}/notificaroficina/{oficina}")
     ResponseEntity<Void> notificarPasoOficina(@RequestBody TextNode tipoNotificacion, @PathVariable int localizador, @PathVariable String oficina){
         try{
