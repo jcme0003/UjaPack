@@ -11,10 +11,10 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.ApplicationContext;
 
 /**
- *
+ * Clase principal
  * @author Jose Carlos Mena
  */
-@SpringBootApplication(scanBasePackages={"es.ujaen.dae.ujapack.servicios", "es.ujaen.dae.ujapack.repositorios","es.ujaen.dae.ujapack.controladoresREST"})
+@SpringBootApplication(scanBasePackages={"es.ujaen.dae.ujapack.servicios", "es.ujaen.dae.ujapack.repositorios","es.ujaen.dae.ujapack.controladoresREST", "es.ujaen.dae.ujapack.servicios.seguridad"})
 @EntityScan(basePackages={"es.ujaen.dae.ujapack.entidades", "es.ujaen.dae.ujapack.objetosvalor"})
 public class UjaPackApp {
     public static void main(String[] args) throws Exception {

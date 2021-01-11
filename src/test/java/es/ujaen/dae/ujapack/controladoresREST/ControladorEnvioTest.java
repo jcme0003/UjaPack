@@ -362,7 +362,7 @@ public class ControladorEnvioTest {
 
         TestRestTemplate restTemplate = new TestRestTemplate(restTemplateBuilder.basicAuthentication("admin", "admin"));
         ResponseEntity<DTOEnvio> respuesta = restTemplate.postForEntity("/", envio, DTOEnvio.class);
-        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
     
     @Test

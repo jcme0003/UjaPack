@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Repositorio de entidades CentroLogistico, Oficina, PuntoControl, PasoPuntoControl
- * @author Ana
+ * @author Ana, Jose Carlos Mena
  */
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
@@ -40,25 +40,6 @@ public class RepositorioPuntosControl {
         return centrosLogisticos.isEmpty() ? Optional.empty() : Optional.of(centrosLogisticos.get(0));
     }
     
-    // ELIMINAR
-//    @Transactional(propagation=Propagation.SUPPORTS, readOnly = true)
-//    public Optional<CentroLogistico> buscarCLIdCentro(int idCentro){
-//        List<CentroLogistico> centrosLogisticos;
-//        centrosLogisticos = em.createQuery(
-//                "SELECT cl FROM CentroLogistico cl WHERE cl.idCentro = '" + idCentro + "'",
-//                CentroLogistico.class
-//        ).getResultList();
-//
-//        return centrosLogisticos.isEmpty() ? Optional.empty() : Optional.of(centrosLogisticos.get(0));
-//    }
-    
-//    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-//    public Optional<CentroLogistico> buscarCLIdCentro(int idCentro){
-//        CentroLogistico cl = em.createQuery("Select c from CentroLogistico c where c.idCentro = :idCentro", CentroLogistico.class).setParameter("idCentro", idCentro).getSingleResult();
-//        return Optional.ofNullable(cl);
-//    }
-    // END ELIMINAR
-    
     public void guardarCL(CentroLogistico cl){
         em.persist(cl);
     }
@@ -77,19 +58,6 @@ public class RepositorioPuntosControl {
 
         return oficinas.isEmpty() ? Optional.empty() : Optional.of(oficinas.get(0));
     }
-    
-    // ELIMINAR
-//    @Transactional(propagation=Propagation.SUPPORTS, readOnly = true)
-//    public Optional<Oficina> buscarOf(String provincia){
-//        List<Oficina> oficinas;
-//        oficinas = em.createQuery(
-//                "SELECT o FROM Oficina o WHERE o.nombreProvincia = '" + provincia + "'",
-//                Oficina.class
-//        ).getResultList();
-//
-//        return oficinas.isEmpty() ? Optional.empty() : Optional.of(oficinas.get(0));
-//    }
-    // END ELIMINAR
     
     @Transactional(propagation=Propagation.SUPPORTS, readOnly = true)
     public Optional<Oficina> buscarOf(int idOficina){
