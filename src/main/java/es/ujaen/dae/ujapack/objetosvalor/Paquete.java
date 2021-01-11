@@ -14,7 +14,7 @@ import javax.validation.constraints.Positive;
 
 /**
  * Clase que contiene las caracteristicas necesarias de un paquete
- * @author joseo
+ * @author joseo, Ana, Jose Carlos Mena
  */
 @Entity
 public class Paquete implements Serializable {

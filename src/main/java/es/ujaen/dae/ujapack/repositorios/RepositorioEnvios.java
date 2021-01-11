@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Repositorio de entidades Envio, Cliente, Paquete
- * @author Ana
+ * @author Ana, Jose Carlos Mena
  */
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)

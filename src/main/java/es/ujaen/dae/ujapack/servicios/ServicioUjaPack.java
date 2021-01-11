@@ -11,7 +11,6 @@ import es.ujaen.dae.ujapack.entidades.Envio;
 import es.ujaen.dae.ujapack.entidades.Envio.Estado;
 import es.ujaen.dae.ujapack.entidades.PasoPuntoControl;
 import es.ujaen.dae.ujapack.entidades.puntocontrol.Oficina;
-import es.ujaen.dae.ujapack.entidades.puntocontrol.PuntoControl;
 import es.ujaen.dae.ujapack.entidades.puntocontrol.PuntoControl.Tipo;
 import es.ujaen.dae.ujapack.excepciones.CentroLogisticoNoValido;
 import es.ujaen.dae.ujapack.excepciones.ClienteYaRegistrado;
@@ -112,9 +111,9 @@ public class ServicioUjaPack {
     }
     
     /**
-     * 
-     * @param localizador
-     * @return 
+     * Buscar envio por su localizador
+     * @param localizador localizador del envio a buscar
+     * @return Devuelve envio
      */
     public Envio buscarEnvio(int localizador){
         return repositorioEnvios.buscarEnvio(localizador).orElseThrow(EnvioNoEncontrado::new);
@@ -261,9 +260,6 @@ public class ServicioUjaPack {
         
         if(tipoNotificacion == TipoNotificacion.SALIDA){
             for(PasoPuntoControl ppc : ruta){
-//                if(ppc.getPuntoDeControl().getProvincia().equals(oficina) && ppc.getFechaSalida() == null){
-//                    ppc.setFechaSalida(LocalDateTime.now());
-//                }
                 if((ppc.getPuntoDeControl().getTipo().equals(Tipo.OFICINA) && ppc.getPuntoDeControl().getProvincia().equals(oficina) && ppc.getFechaSalida() == null) || (ppc.getPuntoDeControl().getTipo().equals(Tipo.OFICINA) && ppc.getPuntoDeControl().getProvincia().equals(oficina) && ppc.getFechaSalida().isBefore(LocalDateTime.now()))){
                     ppc.setFechaSalida(LocalDateTime.now());
                 }
@@ -272,9 +268,6 @@ public class ServicioUjaPack {
         
         if(tipoNotificacion == TipoNotificacion.LLEGADA){
             for(PasoPuntoControl ppc : ruta){
-//                if(ppc.getPuntoDeControl().getProvincia().equals(oficina) && ppc.getFechaSalida() == null){
-//                    ppc.setFechaLlegada(LocalDateTime.now());
-//                }
                 if((ppc.getPuntoDeControl().getTipo().equals(Tipo.OFICINA) && ppc.getPuntoDeControl().getProvincia().equals(oficina) && ppc.getFechaLlegada() == null) || (ppc.getPuntoDeControl().getTipo().equals(Tipo.OFICINA) && ppc.getPuntoDeControl().getProvincia().equals(oficina) && ppc.getFechaLlegada().isBefore(LocalDateTime.now()))){
                     ppc.setFechaLlegada(LocalDateTime.now());
                 }
@@ -296,9 +289,6 @@ public class ServicioUjaPack {
         
         if(tipoNotificacion == TipoNotificacion.SALIDA){
             for(PasoPuntoControl ppc : ruta){
-//                if((ppc.getPuntoDeControl().getIdCentro() == idCentro && ppc.getFechaSalida() == null) || (ppc.getPuntoDeControl().getIdCentro() == idCentro && ppc.getFechaSalida().isBefore(LocalDateTime.now()))){
-//                    ppc.setFechaSalida(LocalDateTime.now());
-//                }
                 if((ppc.getPuntoDeControl().getTipo().equals(Tipo.CENTRO_LOGISTICO) && ppc.getPuntoDeControl().getIdCentro() == idCentro && ppc.getFechaSalida() == null) || (ppc.getPuntoDeControl().getTipo().equals(Tipo.CENTRO_LOGISTICO) && ppc.getPuntoDeControl().getIdCentro() == idCentro && ppc.getFechaSalida().isBefore(LocalDateTime.now()))){
                     ppc.setFechaSalida(LocalDateTime.now());
                 }
@@ -307,14 +297,6 @@ public class ServicioUjaPack {
         
         if(tipoNotificacion == TipoNotificacion.LLEGADA){
             for(PasoPuntoControl ppc : ruta){
-//                System.out.println(ppc.getPuntoDeControl().getId());
-//                System.out.println(ppc.getPuntoDeControl().getIdCentro() + " == " + idCentro + " => " + (ppc.getPuntoDeControl().getIdCentro() == idCentro));
-//                System.out.println(ppc.getFechaLlegada());
-//                if((ppc.getPuntoDeControl().getId() == idCentro && ppc.getFechaLlegada() == null) || (ppc.getPuntoDeControl().getId() == idCentro && ppc.getFechaLlegada().isBefore(LocalDateTime.now()))){
-//                    System.out.println("ENTRA");
-//                    ppc.setFechaLlegada(LocalDateTime.now());
-//                    System.out.println("HORA CAMBIADA");
-//                }
                 if((ppc.getPuntoDeControl().getTipo().equals(Tipo.CENTRO_LOGISTICO) && ppc.getPuntoDeControl().getIdCentro() == idCentro && ppc.getFechaLlegada() == null) || (ppc.getPuntoDeControl().getTipo().equals(Tipo.CENTRO_LOGISTICO) && ppc.getPuntoDeControl().getIdCentro() == idCentro && ppc.getFechaLlegada().isBefore(LocalDateTime.now()))){
                     ppc.setFechaLlegada(LocalDateTime.now());
                 }
