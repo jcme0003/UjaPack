@@ -21,7 +21,7 @@ public class ServicioSeguridadUjaPack extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
-            .withUser("usuario").roles("USUARIO").password("{noop}usuario")
+            .withUser("operario").roles("OPERARIO").password("{noop}operario")
             .and()
             .withUser("admin").roles("ADMIN", "USUARIO").password("{noop}admin");
     }
@@ -33,8 +33,9 @@ public class ServicioSeguridadUjaPack extends WebSecurityConfigurerAdapter {
         
         httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/ujapack/").permitAll();
         httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/ujapack/envios/").hasRole("ADMIN");
-        httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/ujapack/envios/**").hasRole("ADMIN");
-        httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/ujapack/envios/**").hasAnyRole("USUARIO", "ADMIN");
-        httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/ujapack/puntoscontrol/**").hasAnyRole("USUARIO", "ADMIN");
+        httpSecurity.authorizeRequests().antMatchers(HttpMethod.POST, "/ujapack/envios/**").hasRole("OPERARIO");
+        httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/ujapack/envios/{localizador}").hasAnyRole("OPERARIO", "ADMIN");
+        httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/ujapack/envios/{localizador}/ruta").hasRole("OPERARIO");
+        httpSecurity.authorizeRequests().antMatchers(HttpMethod.GET, "/ujapack/puntoscontrol/**").hasAnyRole("OPERARIO", "ADMIN");
     }
 }
